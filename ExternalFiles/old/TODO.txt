@@ -1,0 +1,9 @@
+PERSONAL PROJECTS - City
+
+City:
+* finish last building sprite: spr_bulldozer
+* deduct money when placing buildings
+* Cannot place objects if the current held object is colliding with a SU object that has the property isWater set to true, or if colliding with an object that has the "building" parent. 
+* fix placement mode boarders by passing in an argument for the size of the current object being placed: 1x1SU for trees, pline, 3x3 for zones, etc..
+
+
