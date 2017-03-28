@@ -1,3 +1,4 @@
+#pragma once
 /********************************************************************
   * Author: James Cameron Abreu
   * Date: 03/07/2017
@@ -19,13 +20,29 @@
 */
 
 // Include files ------------------------------------------
+#include <string> // used to convert tiles to strings for GM
 #include <stdlib.h>
 #include <ctime>
-#include <string> // used to convert tiles to strings for GM
-#include <vector> // used for building struct
+#include <vector>
 
-// ENUMS---------------------------------------------------
 
+
+// CONSTANTS -------------------------------
+const int MAP_DIMENSION = 60;
+const int MAX_STRING = MAP_DIMENSION * 3;
+
+const char CHAR_GRASS = '.';
+const char CHAR_TREE = 'T';
+const char CHAR_BUILDING = '+';
+const char CHAR_WATER = '~';
+const char CHAR_ERROR = '!';
+
+
+
+
+
+
+// ENUMS -----------------------------------
 enum {
   TT_GRASS = 0, // default
   TT_TREE,
@@ -47,32 +64,23 @@ enum {
 };
 
 
-// CONSTANTS ----------------------------------------------
-const int MAP_DIMENSION = 60;
-const int MAX_STRING = MAP_DIMENSION * 3;
 
-const char CHAR_GRASS = '.';
-const char CHAR_TREE = 'T';
-const char CHAR_BUILDING = '+';
-const char CHAR_WATER = '~';
-const char CHAR_ERROR = '!';
 
-// DATA STRUCTURE DEFINITIONS------------------------------
+
+
+
+
+
+
+
+// STRUCT DEFINITIONS ----------------------
 typedef struct tile {
   int x;
   int y;
   int trueIndex;
   int tileType;
-  int val;
 }tile;
- 
-typedef struct powerLine {
 
-};
-
-typedef struct road {
-
-};
 
 typedef struct building {
 
@@ -94,28 +102,134 @@ typedef struct building {
   int pollution;
 
   // connected power lines or roads
-  std::vector<powerLine*> adjacentPowerLines;
-  std::vector<road*> adjacentRoads;
-};
+  //std::vector<powerLine*> adjacentPowerLines;
+  //std::vector<road*> adjacentRoads;
+}building;
 
 
-// FUNCTION PROTOTYPES ------------------------------------
 
-// INTERNAL FUNCTIONS -------------------------------------
-tile* map(int x, int y); // to access map (2d array of tile pointers)
-void _randomize();
-int _getIntRange(int min, int max);
-void _growSeeds(int type);
-void _grow(int type, int r, int c);
-void _fillSeedHoles(int type);
+//typedef struct powerLine {
+//};
+
+//typedef struct road {
+//};
+
+
+
+
+
+// used to access static data struct:
+tile* map(int x, int y);
+
+
+
+
+
+
+
+
+
+
+
+// TILE FUNCTIONS --------------------------
 
 std::string _tileTypeToString();
 
+void _setTileType(int xCoord, int yCoord, int type);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// BUILDING FUNCTIONS ----------------------
 int _getBuildingDimension(int type);
+
 void _setBuildingTiles(building* buildingID, int x, int y, int dimension);
+
 building* _newBuilding(int type, int x, int y);
 
-void _removeBuilding(building* buildingPtr);
+int _checkPlacement(int type, int x, int y);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// MAP GENERATION FUNCTIONS ----------------
+void _growSeeds(int type);
+
+void _grow(int type, int r, int c);
+
+void _fillSeedHoles(int type);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// UTILITY FUNCTIONS------------------------
+void _randomize();
+
+int _getIntRange(int min, int max);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // INTERFACE ----------------------------------------------
 GMEXPORT double initDLL();
@@ -125,10 +239,6 @@ GMEXPORT double initMap();
 GMEXPORT double seedMap(double type, double seedAmount);
 GMEXPORT double growSeeds(double type, double amount);
 
-
-GMEXPORT double getTileVal(double xCoord, double yCoord);
-
-GMEXPORT double setTileVal(double xCoord, double yCoord, double value);
 GMEXPORT double setTileType(double xCoord, double yCoord, double type);
 
 GMEXPORT char* tileTypeToString();
@@ -142,3 +252,4 @@ GMEXPORT void _printMapTypes();
 GMEXPORT void _testPrintBuildingList();
 
 #endif
+

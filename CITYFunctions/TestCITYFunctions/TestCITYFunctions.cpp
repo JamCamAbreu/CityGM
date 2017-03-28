@@ -4,44 +4,9 @@
 #include "stdafx.h" // do I really need this...microsoft? Thanks.
 #include <iostream>
 #include <stdlib.h>
-
 #include "../CITYFunctions/CITYFunctions.h"
 
 
-int getInt() {
-
-  std::cout << "Please choose an integer: ";
-  int number;
-  std::cin >> number;
-
-  return number;
-}
-
-void testGetSetFunctions() {
-
-  // TEST my get and set functions:
-  int userX;
-  int userY;
-  int userVal;
-
-  do {
-    std::cout << "Enter x: ";
-    std::cin >> userX;
-
-    std::cout << "Enter y: ";
-    std::cin >> userY;
-
-    std::cout << "Enter value to be stored at " << userX << ", " << userY << ": ";
-    std::cin >> userVal;
-
-    setTileVal(userX, userY, userVal);
-
-    std::cout << "Testing, Value at " << userX << ", " << userY << " = " << getTileVal(userX, userY) << std::endl;
-  } while (userVal != -1);
-}
-
-
-// WHOOO build success!
 
 int main() {
   std::cout << "[PROGRAM_DEBUG BEGIN]" << std::endl;

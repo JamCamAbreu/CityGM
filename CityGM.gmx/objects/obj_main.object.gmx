@@ -129,7 +129,7 @@ image_speed = 0;
         </arguments>
       </action>
     </event>
-    <event eventtype="9" enumb="32">
+    <event eventtype="9" enumb="69">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -148,6 +148,33 @@ image_speed = 0;
             <kind>1</kind>
             <string>scr_placeBuilding(2);
 
+
+// update DLL string:
+tileString = DLL_tileTypeToString();
+tileStringSize = string_length(tileString);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="32">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_removeBuilding();
 
 // update DLL string:
 tileString = DLL_tileTypeToString();

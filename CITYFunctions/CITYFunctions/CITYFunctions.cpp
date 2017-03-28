@@ -5,6 +5,7 @@
 // (for DEBUGGING):
 #include <iostream>
 
+
 // GLOBAL VARIABLES AND POINTERS (because GM doesn't allow direct access)----
 // main map 2d array of pointers pointer
 
@@ -13,15 +14,6 @@ tile* mapStartAddress = &newMap[0][0];
 
 std::vector<building*> v_buildings;
 
-
-// INTERNAL FUNCTIONS ---------------------------------------------
-void _randomize() {
-  unsigned seed;
-  seed = std::time(0);
-  srand(seed);
-}
-
-
 tile* map(int x, int y) {
 
   tile* iter = mapStartAddress;
@@ -29,320 +21,87 @@ tile* map(int x, int y) {
   return iter;
 }
 
-int _getIntRange(int min, int max) {
 
-  // find a random number using that seed:
-  int roll = (std::rand() % (max - min + 1)) + min;
-  return roll;
+
+//-----------------------------------------------------------------
+// -----------------------INTERNAL FUNCTIONS ----------------------
+//-----------------------------------------------------------------
+
+// initiation -------------------
+void _randomize() {
+  unsigned seed;
+  seed = std::time(0);
+  srand(seed);
 }
 
-void _fillSeedHoles(int type) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Tile Functions ---------------
+void _setTileType(int xCoord, int yCoord, int type) {
+    map(xCoord,yCoord)->tileType = type;
+}
+
+std::string _tileTypeToString() {
+  std::string typeData;
 
   tile* iter = map(0, 0);
-  tile* above = map(0, 0);
-  tile* below = map(0, 0);
-  tile* right = map(0, 0);
-  tile* left = map(0, 0);
-  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
-    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
 
-      iter = map(c, r);
+      switch (iter->tileType) {
+        case TT_GRASS: 
+          typeData += CHAR_GRASS;
+          break;
 
-      // set above:
-      if (r > 1)
-        above = map(c, r - 1);
-      else
-        above = map(c, r);
+        case TT_TREE:
+          typeData += CHAR_TREE;
+          break;
 
-      // set below
-      if (r < MAP_DIMENSION - 1)
-        below = map(c, r + 1);
-      else
-        below = map(c, r);
+        case TT_BUILDING:
+          typeData += CHAR_BUILDING;
+          break;
 
-      // set left
-      if (c > 1)
-        left = map(c - 1, r);
-      else
-        left = map(c, r);
+        case TT_WATER:
+          typeData += CHAR_WATER;
+          break;
 
-      // set right:
-      if (c < MAP_DIMENSION - 1)
-        right = map(c + 1, r);
-      else
-        right = map(c, r);
-
-
-      if (
-        (above->tileType == type) &&
-        (below->tileType == type) &&
-        (right->tileType == type) &&
-        (left->tileType == type)
-        ) {
-        // set hole also equal:
-        iter->tileType = type;
-      }
-
-
-    } // end inner for loop
-  } // end outter for loop
-
-}
-
-
-void _grow(int type, int r, int c) {
-  tile* iter = map(r, c);
-  int seed = 0;
-  int dir = 0;
-
-  if (iter->tileType == type) {// CHANGE BUILDING TO 'TYPE LATER' <<-----FIXME
-    seed = _getIntRange(0, 3);
-  }
-  else
-    seed = 0;
-
-  if (seed) {
-    dir = _getIntRange(0, 3); // don't grow each direction, only 1 direction
-      //std::cout << "map(" << r << ", " << c << "), dir = " << dir << std::endl;
-
-      // check left:
-      if (dir == 0) {
-        setTileType(c - 1, r, type);
-      }
-
-      // check right:
-      else if (dir == 1) {
-        setTileType(c + 1, r, type);
-      }
-
-      // check above:
-      else if (dir == 2) {
-        setTileType(c, r + 1, type);
-      }
-
-      // check below:
-      else if (dir == 2) {
-        setTileType(c, r - 1, type);
-      }
-
-    //iter++;
-    } // end if !seed
-
-
-
-}
-
-
-
-
-
-
-
-void _growSeeds(int type) {
-
-  int roll;
-
-
-  // start by growing topleft to bottomright:
-  roll = _getIntRange(0, 2);
-  if (roll) {
-  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
-    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
-        _grow(type, r, c);
-      } // end inner for loop
-    } // end outter for loop
-  }
-
-
-    // next grow bottom right to top left:
-  roll = _getIntRange(0, 2);
-  if (roll) {
-    for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
-      for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
-        _grow(type, r, c);
-      } // end inner for loop
-    } // end outter for loop
-  }
-
-
-
-    // next grow bottom left to top right:
-  roll = _getIntRange(0, 2);
-  if (roll) {
-    for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
-      for (int c = 1; c < MAP_DIMENSION - 1; c++) {
-        _grow(type, r, c);
-      } // end inner for loop
-    } // end outter for loop
-  }
-
-
-
-    // next grow top right to bottom left:
-  roll = _getIntRange(0, 2);
-  if (roll) {
-    for (int r = 1; r < MAP_DIMENSION - 1; r++) {
-      for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
-        _grow(type, r, c);
-      } // end inner for loop
-    } // end outter for loop
-  }
-
-
-
-  }
-
-  std::string _tileTypeToString() {
-    std::string typeData;
-
-    tile* iter = map(0, 0);
-    for (int r = 0; r < MAP_DIMENSION; r++) {
-      for (int c = 0; c < MAP_DIMENSION; c++) {
-
-        switch (iter->tileType) {
-          case TT_GRASS: 
-            typeData += CHAR_GRASS;
-            break;
-
-          case TT_TREE:
-            typeData += CHAR_TREE;
-            break;
-
-          case TT_BUILDING:
-            typeData += CHAR_BUILDING;
-            break;
-
-          case TT_WATER:
-            typeData += CHAR_WATER;
-            break;
-
-          default:
-            typeData += CHAR_ERROR;
-        } // end switch
-       iter++;
-      }
-    }
-
-
-    return typeData;
-  }
-
-
-
-
-
-  // INTERFACE (EXPORTED FUNCTIONS)----------------------------------
-
-
-  // used to initialize the DLL. RUN THIS BEFORE ANY OTHER FUNCTIONS!
-  double initDLL() {
-    _randomize();
-    return 0;
-  }
-
-  // sets up data structure for use.
-  double initMap() {
-
-    tile* iter = map(0,0);
-
-    int accumulator = 0;
-    for (int r = 0; r < MAP_DIMENSION; r++) {
-      for (int c = 0; c < MAP_DIMENSION; c++) {
-        iter->x = c;
-        iter->y = r;
-        iter->trueIndex = accumulator;
-        iter->tileType = TT_GRASS;
-        iter->val = 1;
-
-      accumulator++;
-      iter++; // increments sizeof(tile)
+        default:
+          typeData += CHAR_ERROR;
+      } // end switch
+     iter++;
     }
   }
 
-  return 0;
-}
 
-
-// Returns a tile object's (value?) into game maker for access
-double getTileVal(double xCoord, double yCoord) {
-  // convert to int (game maker only passes and receives doubles)
-  int x = (int)xCoord;
-  int y = (int)yCoord;
-
-  double val = (double)map(x,y)->val;
-  return val;
-}
-
-// set tile's (value?):
-double setTileVal(double xCoord, double yCoord, double value) {
-  // convert to int (game maker only passes and receives doubles)
-  int x = (int)xCoord;
-  int y = (int)yCoord;
-  int val = (int)value;
-
-  map(x,y)->val = val;
-  return 0;
-}
-
-// set tile's type (use ENUM in .h file!) 
-double setTileType(double xCoord, double yCoord, double type) {
-  // convert to int (game maker only passes and receives doubles)
-  int x = (int)xCoord;
-  int y = (int)yCoord;
-  int val = (int)type;
-
-  map(x,y)->tileType = val;
-  return 0;
-}
-
-
-// set some initial seeds LATER UPDATE TO INCLUDE TYPE ---------------FIXME
-double seedMap(double type, double seedAmount) {
-
-  int typeInt = (int)type;
-  int seedAmountInt = (int)seedAmount;
-
-  int randomX;
-  int randomY;
-  for (int i = 0; i < seedAmountInt; i++) {
-    randomX = _getIntRange(0, MAP_DIMENSION);
-    randomY = _getIntRange(0, MAP_DIMENSION);
-
-    setTileType(randomX, randomY, typeInt);
-  }
-
-  return 0;
-}
-
-double growSeeds(double type, double amount) {
-
-  int typeInt = (int)type;
-  int amountInt = (int)amount;
-
-  for (int i = 0; i < amountInt; i++) {
-    _growSeeds(typeInt);
-  }
-
-  // attempt to fill holes: (multiply times needed?)
-  _fillSeedHoles(typeInt);
-
-  return 0;
+  return typeData;
 }
 
 
 
-// export MAP tile types to string for Game Maker to process quickly:
-char* tileTypeToString() {
-
-  std::string getString = _tileTypeToString();            // <--------START HERE! I might use an internal function to 
-
-  char* cstr = new char[getString.length() + 1];
-  std::strcpy(cstr, getString.c_str());
-
-  return cstr;
-}
 
 
+
+
+
+
+
+
+
+// Building Functions------------
 int _getBuildingDimension(int type) {
 
   // use a switch and enum to return width:
@@ -426,7 +185,360 @@ building* _newBuilding(int type, int x, int y) {
   return newBuilding;
 }
 
+// checks the given x and y coord and sees is building is possible
+// with the given building type
+int _checkPlacement(int type, int x, int y) {
 
+  int dimension = _getBuildingDimension(type);
+  // check and see if ANY of those tiles have a building already
+  tile* containedTile;
+  for (int i = 0; i < dimension; i++) {
+    for (int j = 0; j < dimension; j++) {
+      containedTile = map(x + i, y + j);
+      if (containedTile->tileType == TT_BUILDING)
+        return false;
+      if (containedTile->tileType == TT_WATER)
+        return false;
+    } // inner for loop
+  } // outer for loop
+
+  // none were buildings:
+  return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Map Generation Functions------
+void _fillSeedHoles(int type) {
+
+  tile* iter = map(0, 0);
+  tile* above = map(0, 0);
+  tile* below = map(0, 0);
+  tile* right = map(0, 0);
+  tile* left = map(0, 0);
+  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
+    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
+
+      iter = map(c, r);
+
+      // set above:
+      if (r > 1)
+        above = map(c, r - 1);
+      else
+        above = map(c, r);
+
+      // set below
+      if (r < MAP_DIMENSION - 1)
+        below = map(c, r + 1);
+      else
+        below = map(c, r);
+
+      // set left
+      if (c > 1)
+        left = map(c - 1, r);
+      else
+        left = map(c, r);
+
+      // set right:
+      if (c < MAP_DIMENSION - 1)
+        right = map(c + 1, r);
+      else
+        right = map(c, r);
+
+
+      if (
+        (above->tileType == type) &&
+        (below->tileType == type) &&
+        (right->tileType == type) &&
+        (left->tileType == type)
+        ) {
+        // set hole also equal:
+        iter->tileType = type;
+      }
+
+
+    } // end inner for loop
+  } // end outter for loop
+
+}
+
+void _grow(int type, int r, int c) {
+  tile* iter = map(r, c);
+  int seed = 0;
+  int dir = 0;
+
+  if (iter->tileType == type) {// CHANGE BUILDING TO 'TYPE LATER' <<-----FIXME
+    seed = _getIntRange(0, 3);
+  }
+  else
+    seed = 0;
+
+  if (seed) {
+    dir = _getIntRange(0, 3); // don't grow each direction, only 1 direction
+      //std::cout << "map(" << r << ", " << c << "), dir = " << dir << std::endl;
+
+      // check left:
+      if (dir == 0) {
+        _setTileType(c - 1, r, type);
+      }
+
+      // check right:
+      else if (dir == 1) {
+        _setTileType(c + 1, r, type);
+      }
+
+      // check above:
+      else if (dir == 2) {
+        _setTileType(c, r + 1, type);
+      }
+
+      // check below:
+      else if (dir == 2) {
+        _setTileType(c, r - 1, type);
+      }
+
+    //iter++;
+    } // end if !seed
+
+
+
+}
+
+void _growSeeds(int type) {
+
+  int roll;
+
+
+  // start by growing topleft to bottomright:
+  roll = _getIntRange(0, 2);
+  if (roll) {
+  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
+    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
+        _grow(type, r, c);
+      } // end inner for loop
+    } // end outter for loop
+  }
+
+
+    // next grow bottom right to top left:
+  roll = _getIntRange(0, 2);
+  if (roll) {
+    for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
+      for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
+        _grow(type, r, c);
+      } // end inner for loop
+    } // end outter for loop
+  }
+
+
+
+    // next grow bottom left to top right:
+  roll = _getIntRange(0, 2);
+  if (roll) {
+    for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
+      for (int c = 1; c < MAP_DIMENSION - 1; c++) {
+        _grow(type, r, c);
+      } // end inner for loop
+    } // end outter for loop
+  }
+
+
+
+    // next grow top right to bottom left:
+  roll = _getIntRange(0, 2);
+  if (roll) {
+    for (int r = 1; r < MAP_DIMENSION - 1; r++) {
+      for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
+        _grow(type, r, c);
+      } // end inner for loop
+    } // end outter for loop
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Utility and Other--------------
+int _getIntRange(int min, int max) {
+
+  // find a random number using that seed:
+  int roll = (std::rand() % (max - min + 1)) + min;
+  return roll;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------------
+// ----------------INTERFACE (EXPORTED FUNCTIONS)------------------
+//-----------------------------------------------------------------
+
+// INITIALIZATION -----------------------
+// used to initialize the DLL. RUN THIS BEFORE ANY OTHER FUNCTIONS!
+double initDLL() {
+  _randomize();
+  return 0;
+}
+
+// sets up data structure for use.
+double initMap() {
+
+  tile* iter = map(0,0);
+
+  int accumulator = 0;
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      iter->x = c;
+      iter->y = r;
+      iter->trueIndex = accumulator;
+      iter->tileType = TT_GRASS;
+
+    accumulator++;
+    iter++; // increments sizeof(tile)
+  }
+}
+
+return 0;
+}
+
+
+
+
+
+
+
+
+// MAP GENERATION -----------------------
+// set some initial seeds LATER UPDATE TO INCLUDE TYPE ---------------FIXME
+double seedMap(double type, double seedAmount) {
+
+  int typeInt = (int)type;
+  int seedAmountInt = (int)seedAmount;
+
+  int randomX;
+  int randomY;
+  for (int i = 0; i < seedAmountInt; i++) {
+    randomX = _getIntRange(0, MAP_DIMENSION);
+    randomY = _getIntRange(0, MAP_DIMENSION);
+
+    setTileType(randomX, randomY, typeInt);
+  }
+
+  return 0;
+}
+
+double growSeeds(double type, double amount) {
+
+  int typeInt = (int)type;
+  int amountInt = (int)amount;
+
+  for (int i = 0; i < amountInt; i++) {
+    _growSeeds(typeInt);
+  }
+
+  // attempt to fill holes: (multiply times needed?)
+  _fillSeedHoles(typeInt);
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+// TILE FUNCTIONS ----------------------
+// set tile's type (use ENUM in .h file!) 
+double setTileType(double xCoord, double yCoord, double type) {
+  // convert to int (game maker only passes and receives doubles)
+  int x = (int)xCoord;
+  int y = (int)yCoord;
+  int val = (int)type;
+
+  _setTileType(xCoord, yCoord, type);
+  return 0;
+}
+
+// export MAP tile types to string for Game Maker to process quickly:
+char* tileTypeToString() {
+
+  std::string getString = _tileTypeToString();            // <--------START HERE! I might use an internal function to 
+
+  char* cstr = new char[getString.length() + 1];
+  std::strcpy(cstr, getString.c_str());
+
+  return cstr;
+}
+
+
+
+
+
+
+
+
+// BUILDING FUNCTIONS ------------------
 double addBuilding(double type, double x, double y) {
 
   // convert doubles to ints:
@@ -434,17 +546,22 @@ double addBuilding(double type, double x, double y) {
   int xInt = (int)x;
   int yInt = (int)y;
 
-  // create a new building:
-  building* newBuilding = _newBuilding(typeInt, xInt, yInt);
+  // check if position is okay to build:
+  int canBuild = _checkPlacement(typeInt, xInt, yInt);
 
-  // add building to vector
-  v_buildings.push_back(newBuilding);
+  if (canBuild) {
+    // create a new building:
+    building* newBuilding = _newBuilding(typeInt, xInt, yInt);
+
+    // add building to vector
+    v_buildings.push_back(newBuilding);
+
+    return 1;
+  }
+  else
+    return 0;
 
   return 0;
-}
-
-
-void _removeBuilding(building* buildingPtr) {
 }
 
 double removeBuilding(double xOrigin, double yOrigin) {
@@ -479,6 +596,7 @@ double removeBuilding(double xOrigin, double yOrigin) {
         if ((*tileIter)->x == xOrigin && (*tileIter)->y == yOrigin)
           found = 1;
       } // end tile iterator for loop
+      
 
       if (!found)
         iter++;
@@ -499,7 +617,7 @@ double removeBuilding(double xOrigin, double yOrigin) {
    std::vector<tile*>::iterator tileIter = (*iter)->tiles.begin();
    for (tileIter; tileIter != (*iter)->tiles.end(); tileIter++) {
      (*tileIter)->tileType = TT_GRASS;
-    } // end tile iterator for loop
+   } // end tile iterator for loop
 
    v_buildings.erase(iter);
   }
@@ -508,8 +626,20 @@ double removeBuilding(double xOrigin, double yOrigin) {
 }
 
 
-// TESTING/DEBUGGING FUNCTIONS ------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+// TESTING/DEBUGGING FUNCTIONS ------------------------------------
 void _printMapTypes() {
 
   tile* iter = map(0,0);

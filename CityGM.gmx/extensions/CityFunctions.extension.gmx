@@ -76,26 +76,13 @@
           </args>
         </function>
         <function>
-          <name>DLL_getTileVal</name>
-          <externalName>getTileVal</externalName>
+          <name>DLL_removeBuilding</name>
+          <externalName>removeBuilding</externalName>
           <kind>12</kind>
-          <help>DLL_getTileVal(int xCoord, int yCoord)</help>
+          <help>DLL_removeBuilding</help>
           <returnType>2</returnType>
           <argCount>2</argCount>
           <args>
-            <arg>2</arg>
-            <arg>2</arg>
-          </args>
-        </function>
-        <function>
-          <name>DLL_setTileVal</name>
-          <externalName>setTileVal</externalName>
-          <kind>12</kind>
-          <help>DLL_setTileVal(int xCoord, int yCoord, int val)</help>
-          <returnType>2</returnType>
-          <argCount>3</argCount>
-          <args>
-            <arg>2</arg>
             <arg>2</arg>
             <arg>2</arg>
           </args>
@@ -134,6 +121,15 @@
             <arg>2</arg>
             <arg>2</arg>
           </args>
+        </function>
+        <function>
+          <name>DLL_initDLL</name>
+          <externalName>initDLL</externalName>
+          <kind>12</kind>
+          <help>DLL_initDLL()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
+          <args/>
         </function>
       </functions>
       <constants>
