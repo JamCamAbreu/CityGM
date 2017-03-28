@@ -21,6 +21,8 @@
 // Include files ------------------------------------------
 #include <stdlib.h>
 #include <ctime>
+#include <string> // used to convert tiles to strings for GM
+#include <vector> // used for building struct
 
 // ENUMS---------------------------------------------------
 
@@ -32,10 +34,28 @@ enum {
 }tileType;
 
 
+enum {
+  BT_POLICE = 0,
+  BT_FIRE, 
+  BT_SCHOOL,
+  BT_HOSPITAL,
+  BT_NUCLEAR, 
+  BT_AIRPORT,
+  BT_WATERTOWER,
+  BT_ARCADE,
+  BT_GYM
+};
 
 
 // CONSTANTS ----------------------------------------------
-const int MAP_DIMENSION = 30;
+const int MAP_DIMENSION = 60;
+const int MAX_STRING = MAP_DIMENSION * 3;
+
+const char CHAR_GRASS = '.';
+const char CHAR_TREE = 'T';
+const char CHAR_BUILDING = '+';
+const char CHAR_WATER = '~';
+const char CHAR_ERROR = '!';
 
 // DATA STRUCTURE DEFINITIONS------------------------------
 typedef struct tile {
@@ -46,27 +66,79 @@ typedef struct tile {
   int val;
 }tile;
  
+typedef struct powerLine {
+
+};
+
+typedef struct road {
+
+};
+
+typedef struct building {
+
+  // tiles covered by this building
+  std::vector<tile*> tiles;
+  
+  // type uses an enum:
+  int type;
+
+  // top left x and y
+  int xOrigin;
+  int yOrigin;
+
+  // dimensions using tiles as unit:
+  int buildingDimension;
+
+  // other attributes:
+  bool isPowered;
+  int pollution;
+
+  // connected power lines or roads
+  std::vector<powerLine*> adjacentPowerLines;
+  std::vector<road*> adjacentRoads;
+};
+
 
 // FUNCTION PROTOTYPES ------------------------------------
 
 // INTERNAL FUNCTIONS -------------------------------------
 tile* map(int x, int y); // to access map (2d array of tile pointers)
-int _getIntRange(int min, int max, int forRandom);
-void _growSeeds(int type, int forRandom);
+void _randomize();
+int _getIntRange(int min, int max);
+void _growSeeds(int type);
+void _grow(int type, int r, int c);
+void _fillSeedHoles(int type);
+
+std::string _tileTypeToString();
+
+int _getBuildingDimension(int type);
+void _setBuildingTiles(building* buildingID, int x, int y, int dimension);
+building* _newBuilding(int type, int x, int y);
+
+void _removeBuilding(building* buildingPtr);
 
 // INTERFACE ----------------------------------------------
-GMEXPORT void initMap();
+GMEXPORT double initDLL();
 
-GMEXPORT void seedMap(int type, int seedAmount);
-GMEXPORT void growSeeds(int type, int amount);
+GMEXPORT double initMap();
+
+GMEXPORT double seedMap(double type, double seedAmount);
+GMEXPORT double growSeeds(double type, double amount);
+
 
 GMEXPORT double getTileVal(double xCoord, double yCoord);
 
 GMEXPORT double setTileVal(double xCoord, double yCoord, double value);
 GMEXPORT double setTileType(double xCoord, double yCoord, double type);
 
+GMEXPORT char* tileTypeToString();
+
+GMEXPORT double addBuilding(double type, double x, double y);
+GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
+
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
 GMEXPORT void _printMapTypes();
 
+GMEXPORT void _testPrintBuildingList();
 
 #endif

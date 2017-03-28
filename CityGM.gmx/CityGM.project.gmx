@@ -3,7 +3,9 @@
   <Configs name="configs">
     <Config>Configs\Default</Config>
   </Configs>
-  <NewExtensions/>
+  <NewExtensions>
+    <extension index="0">extensions\CityFunctions</extension>
+  </NewExtensions>
   <sounds name="sound"/>
   <sprites name="sprites">
     <sprite>sprites\spr_airport</sprite>
@@ -36,16 +38,56 @@
     <sprite>sprites\spr_road</sprite>
     <sprite>sprites\spr_roadPower</sprite>
     <sprite>sprites\spr_school</sprite>
-    <sprite>sprites\spr_SU</sprite>
-    <sprite>sprites\spr_topBarIcon</sprite>
+    <sprite>sprites\spr_icon</sprite>
     <sprite>sprites\spr_tree</sprite>
+    <sprite>sprites\spr_tree2</sprite>
     <sprite>sprites\spr_water</sprite>
     <sprite>sprites\spr_zone</sprite>
     <sprite>sprites\spr_zoneR1x1</sprite>
     <sprite>sprites\sprPIconSelect</sprite>
+    <sprite>sprites\spr_DEBUG</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <scripts name="Camera">
+      <script>scripts\scr_moveKeepInRoom.gml</script>
+      <script>scripts\scr_moveKeepCentered.gml</script>
+      <script>scripts\scr_moveAlarmReset.gml</script>
+      <script>scripts\scr_moveAlarm2.gml</script>
+      <script>scripts\scr_moveAlarm1.gml</script>
+      <script>scripts\scr_moveAlarm0.gml</script>
+      <script>scripts\scr_move.gml</script>
+      <script>scripts\scr_getX.gml</script>
+      <script>scripts\scr_getY.gml</script>
+    </scripts>
+    <scripts name="DrawingMap">
+      <script>scripts\scr_getTileColor.gml</script>
+      <script>scripts\scr_getTileSprite.gml</script>
+      <script>scripts\scr_drawMapColor.gml</script>
+      <script>scripts\scr_drawMapSprites.gml</script>
+      <script>scripts\scr_getViewX1.gml</script>
+      <script>scripts\scr_getViewY1.gml</script>
+      <script>scripts\scr_getViewX2.gml</script>
+      <script>scripts\scr_getViewY2.gml</script>
+    </scripts>
+    <script>scripts\scr_placeBuilding.gml</script>
+  </scripts>
+  <objects name="objects">
+    <object>objects\obj_camera</object>
+    <object>objects\obj_main</object>
+    <object>objects\obj_debugger</object>
+  </objects>
+  <rooms name="rooms">
+    <room>rooms\rm_testRoom</room>
+  </rooms>
+  <constants number="5">
+    <constant name="TILE_SIZE">16</constant>
+    <constant name="CAMERA_ALARM">10</constant>
+    <constant name="CAMERA_ALARM_FAST">5</constant>
+    <constant name="CAMERA_ALARM_SHIFT">3</constant>
+    <constant name="VIEW_BOARDER">16</constant>
+  </constants>
   <help>
     <rtf>help.rtf</rtf>
   </help>
