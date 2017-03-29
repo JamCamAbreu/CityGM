@@ -28,14 +28,38 @@
             <string>// DLL SETUP ---------------------------------
 DLL_initMap();
 
-DLL_seedMap(TT_TREE, 5);
-DLL_growSeeds(TT_TREE, 8);
+var treeSeeds = irandom_range(3, 7);
+DLL_seedMap(TT_TREE, treeSeeds);
+var treeDensity = irandom_range(4, 10);
+DLL_growSeeds(TT_TREE, treeDensity);
 
-DLL_seedMap(TT_WATER, 3);
-DLL_growSeeds(TT_WATER, 10);
+// one large lake:
+DLL_seedMap(TT_WATER, 1);
+DLL_growSeeds(TT_WATER, 14);
 
+// little ponds:
+var waterSeeds = irandom_range(1, 5);
+DLL_seedMap(TT_WATER, waterSeeds);
+var waterDensity = 12 - waterSeeds*2;
+DLL_growSeeds(TT_WATER, waterDensity);
+
+
+
+// TILES:
 tileString = DLL_tileTypeToString();
 tileStringSize = string_length(tileString);
+
+// BUILDINGS:
+buildingString = DLL_buildingsToString();
+buildingElements = DLL_getBuildingVectorSize();
+xArray[MAX_BUILDINGS] = 0;
+yArray[MAX_BUILDINGS] = 0;
+typeArray[MAX_BUILDINGS] = 0;
+
+// MINIMAP:
+surfaceMiniMap = noone; // init surface
+updateSurfaces = true; // draw first time
+toggleMiniMap = true;
 
 canDraw = true;
 
@@ -53,6 +77,36 @@ camera = instance_create(view_wview/2,view_hview/2, obj_camera);
 debugger = instance_create(x,y, obj_debugger);
 
 image_speed = 0;
+
+
+
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="5">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (surface_exists(surfaceMiniMap)) {
+    surface_free(surfaceMiniMap);
+}
 </string>
           </argument>
         </arguments>
@@ -99,7 +153,16 @@ image_speed = 0;
           <argument>
             <kind>1</kind>
             <string>if (canDraw) {
-    scr_drawMapSprites(tileString, tileStringSize);
+    scr_drawScreenTiles(tileString, tileStringSize);
+    scr_drawScreenBuildings(buildingElements, id); // pass in arrays?
+    
+    if (toggleMiniMap) // 'M' key to toggle
+        scr_drawMiniMap(id);
+}
+
+if (updateSurfaces) {
+    scr_setSurfaceMiniMap(tileString, tileStringSize, id);
+    updateSurfaces = false;
 }
 </string>
           </argument>
@@ -129,6 +192,62 @@ image_speed = 0;
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="77">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (toggleMiniMap)
+    toggleMiniMap = false;
+else
+    toggleMiniMap = true;
+    
+// always update surface:
+updateSurfaces = true;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="71">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var buildingVectorSize = DLL_getBuildingVectorSize();
+show_message("size = " + string(buildingVectorSize));
+
+var buildingsString = DLL_buildingsToString();
+show_message("String = " + buildingsString);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="69">
       <action>
         <libid>1</libid>
@@ -146,12 +265,10 @@ image_speed = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_placeBuilding(2);
+            <string>var randomBuilding = irandom_range(0, BT_GYM);
+scr_placeBuilding(randomBuilding); // fixme
 
-
-// update DLL string:
-tileString = DLL_tileTypeToString();
-tileStringSize = string_length(tileString);
+scr_updateAll(id);
 </string>
           </argument>
         </arguments>
@@ -176,9 +293,7 @@ tileStringSize = string_length(tileString);
             <kind>1</kind>
             <string>scr_removeBuilding();
 
-// update DLL string:
-tileString = DLL_tileTypeToString();
-tileStringSize = string_length(tileString);
+scr_updateAll(id);
 </string>
           </argument>
         </arguments>

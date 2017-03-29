@@ -131,6 +131,24 @@
           <argCount>0</argCount>
           <args/>
         </function>
+        <function>
+          <name>DLL_getBuildingVectorSize</name>
+          <externalName>getBuildingVectorSize</externalName>
+          <kind>12</kind>
+          <help>DLL_getBuildingVectorSize()</help>
+          <returnType>2</returnType>
+          <argCount>-1</argCount>
+          <args/>
+        </function>
+        <function>
+          <name>DLL_buildingsToString</name>
+          <externalName>buildingsToString</externalName>
+          <kind>12</kind>
+          <help>DLL_buildingsToString()</help>
+          <returnType>1</returnType>
+          <argCount>-1</argCount>
+          <args/>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -181,6 +199,51 @@
         <constant>
           <name>MAP_DIMENSION</name>
           <value>60</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_POLICE</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_FIRE</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_SCHOOL</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_HOSPITAL</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_NUCLEAR</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_AIRPORT</name>
+          <value>5</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_WATERTOWER</name>
+          <value>6</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_ARCADE</name>
+          <value>7</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_GYM</name>
+          <value>8</value>
           <hidden>0</hidden>
         </constant>
       </constants>

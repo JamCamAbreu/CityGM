@@ -26,7 +26,7 @@ for (r = y1; r < y2; r++) {
         //draw_text_colour(view_xview + 16, view_yview + 16, "X1 = " + string(x1) + ", X2 = " + string(x2), c_white, c_white, c_white, c_white, 1);
         //draw_text_colour(view_xview + 16, view_yview + 32, "Y1 = " + string(y1) + ", Y2 = " + string(y2), c_white, c_white, c_white, c_white, 1);
         
-        sprite = scr_getTileSprite(string_char_at(tileString, charPos));
+        sprite = scr_getTileSprite(string_char_at(tileString, charPos + 1));
         draw_sprite(sprite, image_index, xCoord, yCoord);
     }
 }

@@ -13,7 +13,7 @@ switch (argument0) {
         break;
         
     case CHAR_BUILDING:
-        return spr_road;
+        return spr_empty;
         break;
         
     case CHAR_WATER:

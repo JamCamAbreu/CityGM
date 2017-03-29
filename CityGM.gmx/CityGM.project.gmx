@@ -15,6 +15,7 @@
     <sprite>sprites\spr_dev</sprite>
     <sprite>sprites\spr_fireStation</sprite>
     <sprite>sprites\spr_ground</sprite>
+    <sprite>sprites\spr_empty</sprite>
     <sprite>sprites\spr_hospital</sprite>
     <sprite>sprites\spr_mouse</sprite>
     <sprite>sprites\spr_nucPlant</sprite>
@@ -64,15 +65,24 @@
     <scripts name="DrawingMap">
       <script>scripts\scr_getTileColor.gml</script>
       <script>scripts\scr_getTileSprite.gml</script>
+      <script>scripts\scr_getBuildingSprite.gml</script>
       <script>scripts\scr_drawMapColor.gml</script>
-      <script>scripts\scr_drawMapSprites.gml</script>
+      <script>scripts\scr_drawScreenTiles.gml</script>
       <script>scripts\scr_getViewX1.gml</script>
       <script>scripts\scr_getViewY1.gml</script>
       <script>scripts\scr_getViewX2.gml</script>
       <script>scripts\scr_getViewY2.gml</script>
+      <script>scripts\scr_drawScreenBuildings.gml</script>
+      <script>scripts\scr_updateBuildings.gml</script>
+      <script>scripts\scr_updateBuildingX.gml</script>
+      <script>scripts\scr_updateBuildingY.gml</script>
+      <script>scripts\scr_updateBuildingType.gml</script>
+      <script>scripts\scr_drawMiniMap.gml</script>
+      <script>scripts\scr_setSurfaceMiniMap.gml</script>
     </scripts>
     <script>scripts\scr_placeBuilding.gml</script>
     <script>scripts\scr_removeBuilding.gml</script>
+    <script>scripts\scr_updateAll.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_camera</object>
@@ -82,12 +92,14 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="5">
+  <constants number="7">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
     <constant name="CAMERA_ALARM_SHIFT">3</constant>
     <constant name="VIEW_BOARDER">16</constant>
+    <constant name="MAX_BUILDINGS">999</constant>
+    <constant name="MINIMAP_PIXEL">2</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

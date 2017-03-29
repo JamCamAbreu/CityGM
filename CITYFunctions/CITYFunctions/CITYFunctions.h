@@ -48,7 +48,7 @@ enum {
   TT_TREE,
   TT_BUILDING, 
   TT_WATER
-}tileType;
+}tileTypes;
 
 
 enum {
@@ -61,12 +61,21 @@ enum {
   BT_WATERTOWER,
   BT_ARCADE,
   BT_GYM
-};
+}buildingTypes;
+
+enum {
+  M_NORMAL = 0, // default
+  M_SELECT,
+  M_PLACE
+}modeTypes;
 
 
-
-
-
+enum {
+  S_FALL = 0,
+  S_WINTER,
+  S_SPRING,
+  S_SUMMER
+}seasonTypes;
 
 
 
@@ -165,9 +174,9 @@ building* _newBuilding(int type, int x, int y);
 
 int _checkPlacement(int type, int x, int y);
 
+int _getBuildingVectorSize();
 
-
-
+std::string _buildingInfoToString();
 
 
 
@@ -245,11 +254,17 @@ GMEXPORT char* tileTypeToString();
 
 GMEXPORT double addBuilding(double type, double x, double y);
 GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
+GMEXPORT double getBuildingVectorSize();
+
+GMEXPORT char* buildingsToString();
+
 
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
 GMEXPORT void _printMapTypes();
 
 GMEXPORT void _testPrintBuildingList();
+
+GMEXPORT void _testString();
 
 #endif
 

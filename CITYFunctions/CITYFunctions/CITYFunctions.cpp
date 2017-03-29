@@ -14,6 +14,8 @@ tile* mapStartAddress = &newMap[0][0];
 
 std::vector<building*> v_buildings;
 
+int mode;
+
 tile* map(int x, int y) {
 
   tile* iter = mapStartAddress;
@@ -89,6 +91,9 @@ std::string _tileTypeToString() {
 
   return typeData;
 }
+
+
+
 
 
 
@@ -206,10 +211,75 @@ int _checkPlacement(int type, int x, int y) {
   return true;
 }
 
+int _getBuildingVectorSize() {
+
+  return v_buildings.size();
+}
+
+std::string _buildingInfoToString() {
+
+  /*  EXAMPLE STRING AFTER COMPLETION:
+  Psuedo:
+    myBuildingString = "x,y,type;x,y,type; ... etc"
+
+  Actual:
+    myBuildingString = "3,15,2;22,9,3; ... etc"
+  */
+
+  std::string buildingInfo = "";
+  std::string buffer = "";
+  char dataDivider = ',';
+  char elementDivider = ';';
+
+  int size = _getBuildingVectorSize();
+  std::vector<building*>::iterator iter = v_buildings.begin();
+  std::string data = "";
+  // iterate through each building in the list:
+  for (int i = 0; i < size; i++) {
+    
+    // add x to string:
+    data = std::to_string((*iter)->xOrigin);
+    buildingInfo += data;
+    buildingInfo += dataDivider;
+
+    // add y to string:
+    data = std::to_string((*iter)->yOrigin);
+    buildingInfo += data;
+    buildingInfo += dataDivider;
+
+    // add type to string:
+    data = std::to_string((*iter)->type);
+    buildingInfo += data;
+    buildingInfo += elementDivider;
+
+    // iterate:
+    if (i < size - 1)
+      iter++;
+  }
+
+  return buildingInfo;
+}
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// MODE functions ---------------
+
+// _getMode()
+// setMode(int mode);
 
 
 
@@ -523,7 +593,7 @@ double setTileType(double xCoord, double yCoord, double type) {
 // export MAP tile types to string for Game Maker to process quickly:
 char* tileTypeToString() {
 
-  std::string getString = _tileTypeToString();            // <--------START HERE! I might use an internal function to 
+  std::string getString = _tileTypeToString();  
 
   char* cstr = new char[getString.length() + 1];
   std::strcpy(cstr, getString.c_str());
@@ -625,7 +695,21 @@ double removeBuilding(double xOrigin, double yOrigin) {
   return 0;
 }
 
+double getBuildingVectorSize() {
 
+  return (_getBuildingVectorSize());
+}
+
+// export building info string for Game Maker to process quickly:
+char* buildingsToString() {
+
+  std::string getString = _buildingInfoToString();
+
+  char* cstr = new char[getString.length() + 1];
+  std::strcpy(cstr, getString.c_str());
+
+  return cstr;
+}
 
 
 
@@ -709,5 +793,15 @@ void _testPrintBuildingList() {
       iter++;
   }
 
+
+}
+
+
+void _testString() {
+  std::string testString;
+
+  testString = _buildingInfoToString();
+  std::cout << std::endl;
+  std::cout << "testString = " << testString << std::endl;
 
 }
