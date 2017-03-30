@@ -5,14 +5,11 @@
 // (for DEBUGGING):
 #include <iostream>
 
-
-// GLOBAL VARIABLES AND POINTERS (because GM doesn't allow direct access)----
-// main map 2d array of pointers pointer
-
+// GLOBAL VARIABLES AND POINTERS
+gameData curGameData;
 tile newMap[MAP_DIMENSION][MAP_DIMENSION];
 tile* mapStartAddress = &newMap[0][0];
-
-std::vector<building*> v_buildings;
+std::vector<building*> v_buildings; // cleaned up in mapEnd function
 
 int mode;
 
@@ -35,6 +32,28 @@ void _randomize() {
   seed = std::time(0);
   srand(seed);
 }
+
+void _initGameData() {
+  curGameData.year = 1990;
+  curGameData.month = M_SEP;
+  curGameData.season = S_FALL;
+  curGameData.gameSpeed = SP_NORMAL;
+
+  curGameData.mode = M_NORMAL;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -277,9 +296,6 @@ std::string _buildingInfoToString() {
 
 
 // MODE functions ---------------
-
-// _getMode()
-// setMode(int mode);
 
 
 
@@ -524,11 +540,103 @@ double initMap() {
 
     accumulator++;
     iter++; // increments sizeof(tile)
+    }
   }
+
+  _initGameData();
+  return 0;
 }
 
-return 0;
+double mapEnd() {
+
+  // clean up all tiles in each building:
+  for (int i = 0; i < v_buildings.size(); i++) {
+    std::vector<building*>::iterator building = v_buildings.begin() + i;
+    (*building)->tiles.clear();
+
+    //(*adjacentPowerLines)->tiles.clear();
+    //(*adjacentRoads)->tiles.clear();
+  }
+
+  // clear buildings vector:
+  v_buildings.clear();
+
+  return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// GAME DATA FUNCTIONS ----------
+double getGameYear() { return curGameData.year; }
+double getGameMonth() { return curGameData.month; }
+double getGameSeason() { return curGameData.season; }
+double getGameMode() { return curGameData.mode; }
+double getGameSpeed() { return curGameData.gameSpeed; }
+
+
+double incrementGameMonth() {
+  // update season from Winter to Spring
+  if (curGameData.month == M_FEB) {
+    curGameData.season = S_SPRING;
+    curGameData.month++;
+  }
+
+  // update season from Spring to Summer
+  else if (curGameData.month == M_MAY) {
+    curGameData.season = S_SUMMER;
+    curGameData.month++;
+  }
+
+  // update season from Summer to Fall
+  else if (curGameData.month == M_AUG) {
+    curGameData.season = S_FALL;
+    curGameData.month++;
+  }
+
+  // update season from Fall to Winter
+  else if (curGameData.month == M_NOV) {
+    curGameData.season = S_WINTER;
+    curGameData.month++;
+  }
+
+  // update year, and rotate months:
+  else if (curGameData.month >= M_DEC) {
+    curGameData.year++;
+    curGameData.month = M_JAN;
+  }
+  else 
+    curGameData.month++;
+
+  return 0;
+}
+
+double setGameMode(double mode) {
+  int modeInt = (int)mode;
+  curGameData.mode = modeInt;
+  return 0;
+}
+
+double setGameSpeed(double speed) {
+  int speedInt = (int)speed;
+  curGameData.mode = speedInt;
+  return 0;
+}
+
+
+
+
+
 
 
 
@@ -718,7 +826,13 @@ char* buildingsToString() {
 
 
 
+// UTILITY FUNCTIONS -------------------
+double getRandomRange(double min, double max) {
+  int minInt = (int)min;
+  int maxInt = (int)max;
 
+  return _getIntRange(minInt, maxInt);
+}
 
 
 
@@ -805,3 +919,31 @@ void _testString() {
   std::cout << "testString = " << testString << std::endl;
 
 }
+
+
+void _testGameData(int months) {
+
+  std::cout << std::endl;
+  std::cout << "-----GAME DATA-----" << std::endl;
+
+  for (int i = 0; i < months; i++) {
+
+    if (curGameData.season == S_WINTER)
+      std::cout << "Winter, \t";
+    else if (curGameData.season == S_SPRING)
+      std::cout << "Spring, \t";
+    else if (curGameData.season == S_FALL)
+      std::cout << "Fall,   \t";
+    else 
+      std::cout << "Summer, \t";
+
+    std::cout << curGameData.month << ", \t";
+    std::cout << curGameData.year;
+    std::cout << std::endl;
+
+    incrementGameMonth();
+  }
+  std::cout << std::endl << std::endl;
+}
+
+

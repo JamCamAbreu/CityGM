@@ -60,14 +60,28 @@ enum {
   BT_AIRPORT,
   BT_WATERTOWER,
   BT_ARCADE,
-  BT_GYM
+  BT_GYM,
+  BT_ZRES, // zones hold special data
+  BT_ZCOM,
+  BT_ZIND
 }buildingTypes;
+
+enum {
+  Z_RES = 0,
+  Z_COM,
+  Z_IND
+  // Z_FAR farms maybe?
+}zoneTypes;
+
+
 
 enum {
   M_NORMAL = 0, // default
   M_SELECT,
   M_PLACE
 }modeTypes;
+
+
 
 
 enum {
@@ -78,11 +92,44 @@ enum {
 }seasonTypes;
 
 
+enum {
+  M_JAN = 1,
+  M_FEB,
+  M_MAR,
+  M_APR,
+  M_MAY,
+  M_JUN,
+  M_JUL,
+  M_AUG,
+  M_SEP,
+  M_OCT,
+  M_NOV,
+  M_DEC // 12
+}monthTypes;
 
+enum {
+  SP_PAUSE = 0,
+  SP_SLOW,
+  SP_NORMAL,
+  SP_FAST
+}speedTypes;
 
 
 
 // STRUCT DEFINITIONS ----------------------
+
+typedef struct gameData {
+  int year;
+  int month; // M_JAN, etc..
+  int season; // S_FALL, etc..
+  int gameSpeed; // SP_NORMAL, etc..
+
+  int mode; // M_NORMAL, etc...
+
+
+}gameData;
+
+
 typedef struct tile {
   int x;
   int y;
@@ -116,6 +163,14 @@ typedef struct building {
 }building;
 
 
+// TODO
+typedef struct zone {
+
+  int popCur; // current people residing in
+  int popCap; // capacity for people
+
+}zone;
+
 
 //typedef struct powerLine {
 //};
@@ -132,8 +187,10 @@ tile* map(int x, int y);
 
 
 
+// initiation -------------------
+void _randomize();
 
-
+void _initGameData();
 
 
 
@@ -220,7 +277,6 @@ void _fillSeedHoles(int type);
 
 
 // UTILITY FUNCTIONS------------------------
-void _randomize();
 
 int _getIntRange(int min, int max);
 
@@ -245,6 +301,19 @@ GMEXPORT double initDLL();
 
 GMEXPORT double initMap();
 
+GMEXPORT double mapEnd();
+
+GMEXPORT double getGameYear();
+GMEXPORT double getGameMonth();
+GMEXPORT double getGameSeason();
+GMEXPORT double getGameMode();
+GMEXPORT double getGameSpeed();
+
+GMEXPORT double incrementGameMonth();
+GMEXPORT double setGameMode(double mode);
+GMEXPORT double setGameSpeed(double speed);
+
+
 GMEXPORT double seedMap(double type, double seedAmount);
 GMEXPORT double growSeeds(double type, double amount);
 
@@ -258,13 +327,13 @@ GMEXPORT double getBuildingVectorSize();
 
 GMEXPORT char* buildingsToString();
 
+GMEXPORT double getRandomRange(double min, double max);
 
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
 GMEXPORT void _printMapTypes();
-
 GMEXPORT void _testPrintBuildingList();
-
 GMEXPORT void _testString();
+GMEXPORT void _testGameData(int months);
 
 #endif
 

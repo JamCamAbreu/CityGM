@@ -3,7 +3,7 @@
 var miniMapDimension = MINIMAP_PIXEL*MAP_DIMENSION;
 
 var mapX1 = view_xview + view_wview - miniMapDimension;
-var mapY1 = view_yview + 0;
+var mapY1 = view_yview + MENU_TB_HEIGHT;
 
 var viewBorderWidth = round(miniMapDimension/(room_width/(view_wview)));
 var viewBorderHeight = round(miniMapDimension/(room_height/(view_hview)));
@@ -16,10 +16,12 @@ var viewBorderY2 = viewBorderY1 + viewBorderHeight;
 
 // draw map and black border:
 if (surface_exists(argument0.surfaceMiniMap)) {
+    draw_set_alpha(MENU_ALPHA);
     draw_surface(surfaceMiniMap, mapX1, mapY1);
     
     // draw square border:
     draw_rectangle(viewBorderX1 - 1, viewBorderY1 - 1, viewBorderX2, viewBorderY2, true);
+    draw_set_alpha(1);
 }
 
 

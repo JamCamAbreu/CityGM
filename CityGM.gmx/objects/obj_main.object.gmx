@@ -25,10 +25,20 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// DLL SETUP ---------------------------------
+            <string>draw_set_font(ft_normal);
+
+// DLL SETUP ---------------------------------
+
+//randomize();
+
+DLL_initDLL();
 DLL_initMap();
 
-var treeSeeds = irandom_range(3, 7);
+var randomSeed = DLL_getRandomRange(1,100);
+random_set_seed(randomSeed);
+
+var treeSeeds = irandom_range(2, 7);
+
 DLL_seedMap(TT_TREE, treeSeeds);
 var treeDensity = irandom_range(4, 10);
 DLL_growSeeds(TT_TREE, treeDensity);
@@ -42,8 +52,6 @@ var waterSeeds = irandom_range(1, 5);
 DLL_seedMap(TT_WATER, waterSeeds);
 var waterDensity = 12 - waterSeeds*2;
 DLL_growSeeds(TT_WATER, waterDensity);
-
-
 
 // TILES:
 tileString = DLL_tileTypeToString();
@@ -59,13 +67,33 @@ typeArray[MAX_BUILDINGS] = 0;
 // MINIMAP:
 surfaceMiniMap = noone; // init surface
 updateSurfaces = true; // draw first time
-toggleMiniMap = true;
+toggleMiniMap = false;
 
 canDraw = true;
 
-// Controllers/Setup ---------------
+// Menu and Info:
+toggleDrawMenus = true;
+
+// Time and Seasons ---------------
+gameYear = DLL_getGameYear();
+gameMonth = DLL_getGameMonth();
+gameSeason = DLL_getGameSeason();
+gameTimeString = scr_setTimeString(gameSeason, gameYear);
+gameSpeed = SP_NORMAL;
+gameSpeedMultiplier = TIME_MUL_NORMAL;
+alarm[0] = TIME_MONTH;
+timeAlarmStorage = alarm_get(0);
+drawPause = false;
 
 global.curtainClosed = false;
+
+
+
+// Controllers/Setup ---------------
+gameMode = DLL_getGameMode();
+
+
+
 
 // Menu/Bars------------------
 
@@ -82,6 +110,34 @@ image_speed = 0;
 
 
 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_updateTime(id);
+scr_updateAll(id);
+
+
+
+alarm[0] = TIME_MONTH*gameSpeedMultiplier;
 </string>
           </argument>
         </arguments>
@@ -107,6 +163,8 @@ image_speed = 0;
             <string>if (surface_exists(surfaceMiniMap)) {
     surface_free(surfaceMiniMap);
 }
+
+DLL_mapEnd();
 </string>
           </argument>
         </arguments>
@@ -129,8 +187,7 @@ image_speed = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>randomize();
-</string>
+            <string></string>
           </argument>
         </arguments>
       </action>
@@ -158,6 +215,26 @@ image_speed = 0;
     
     if (toggleMiniMap) // 'M' key to toggle
         scr_drawMiniMap(id);
+    else {
+        if (toggleDrawMenus)
+            scr_drawMiniMapHelp();
+    }
+        
+    // Menus:
+    if (toggleDrawMenus) {
+        scr_drawMenus();
+        
+        // title:
+        scr_drawTitle();
+            
+        // Season and year:
+        scr_drawTime(gameTimeString);
+    }
+    else
+        scr_drawMenuHelp();
+    
+    // Game Paused:
+    scr_drawPause(drawPause);
 }
 
 if (updateSurfaces) {
@@ -187,6 +264,32 @@ if (updateSurfaces) {
           <argument>
             <kind>1</kind>
             <string>room_restart();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="81">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (toggleDrawMenus)
+    toggleDrawMenus = false;
+else
+    toggleDrawMenus = true;
 </string>
           </argument>
         </arguments>
@@ -269,6 +372,104 @@ show_message("String = " + buildingsString);
 scr_placeBuilding(randomBuilding); // fixme
 
 scr_updateAll(id);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="52">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_setSpeed(id, SP_FAST);
+show_message("Fast Speed");
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="51">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_setSpeed(id, SP_NORMAL);
+show_message("Normal Speed");
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="50">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_setSpeed(id, SP_SLOW);
+show_message("Slow Speed");
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="49">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_setSpeed(id, SP_PAUSE);
+show_message("Paused.");
+
+// drawPause = true;
 </string>
           </argument>
         </arguments>
