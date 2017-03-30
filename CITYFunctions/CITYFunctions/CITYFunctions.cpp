@@ -40,6 +40,8 @@ void _initGameData() {
   curGameData.gameSpeed = SP_NORMAL;
 
   curGameData.mode = M_NORMAL;
+
+  curGameData.money = 8000;
 }
 
 
@@ -583,8 +585,9 @@ double getGameMonth() { return curGameData.month; }
 double getGameSeason() { return curGameData.season; }
 double getGameMode() { return curGameData.mode; }
 double getGameSpeed() { return curGameData.gameSpeed; }
+double getGameMoney() { return curGameData.money; }
 
-
+// todo: add taxes in december
 double incrementGameMonth() {
   // update season from Winter to Spring
   if (curGameData.month == M_FEB) {
@@ -612,6 +615,8 @@ double incrementGameMonth() {
 
   // update year, and rotate months:
   else if (curGameData.month >= M_DEC) {
+
+                                            // TODO - taxes
     curGameData.year++;
     curGameData.month = M_JAN;
   }
@@ -633,6 +638,20 @@ double setGameSpeed(double speed) {
   return 0;
 }
 
+double checkCanSpend(double cost) {
+  int costInt = (int)cost;
+
+  if (costInt >= curGameData.money)
+    return 1;
+  else
+    return 0;
+}
+
+double deductFunds(double amount) {
+  int amountInt = (int)amount;
+  curGameData.money -= amountInt;
+  return 0;
+}
 
 
 
@@ -687,7 +706,7 @@ double growSeeds(double type, double amount) {
 
 
 // TILE FUNCTIONS ----------------------
-// set tile's type (use ENUM in .h file!) 
+// set tile's type
 double setTileType(double xCoord, double yCoord, double type) {
   // convert to int (game maker only passes and receives doubles)
   int x = (int)xCoord;
@@ -868,6 +887,8 @@ void _printMapTypes() {
         default:
           std::cout << CHAR_ERROR;
       } // end switch
+
+      std::cout << " ";
 
       iter++; // next element
     } // end inner for-loop

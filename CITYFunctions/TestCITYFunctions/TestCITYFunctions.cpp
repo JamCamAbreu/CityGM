@@ -48,11 +48,10 @@ int main() {
   _testString();
 
   */
-  _testGameData(26);
+  _printMapTypes();
+  //_testGameData(26);
 
   mapEnd();
-
-
   std::cout << std::endl;
   std::cout << "[PROGRAM_DEBUG END]" << std::endl;
     return 0;

@@ -69,8 +69,6 @@ surfaceMiniMap = noone; // init surface
 updateSurfaces = true; // draw first time
 toggleMiniMap = false;
 
-canDraw = true;
-
 // Menu and Info:
 toggleDrawMenus = true;
 
@@ -84,6 +82,9 @@ gameSpeedMultiplier = TIME_MUL_NORMAL;
 alarm[0] = TIME_MONTH;
 timeAlarmStorage = alarm_get(0);
 drawPause = false;
+
+// money
+money = DLL_getGameMoney();
 
 global.curtainClosed = false;
 
@@ -105,10 +106,7 @@ camera = instance_create(view_wview/2,view_hview/2, obj_camera);
 debugger = instance_create(x,y, obj_debugger);
 
 image_speed = 0;
-
-
-
-
+canDraw = true;
 
 </string>
           </argument>
@@ -229,6 +227,9 @@ DLL_mapEnd();
             
         // Season and year:
         scr_drawTime(gameTimeString);
+        
+        // money:
+        scr_drawMoney(id);
     }
     else
         scr_drawMenuHelp();

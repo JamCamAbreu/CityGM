@@ -11,14 +11,6 @@
 
 #define GMEXPORT extern "C" __declspec(dllexport)
 
-/*
-#ifdef GMEXPORT
-#define CITYFUNCTIONS_API __declspec(dllexport)
-#else
-#define CITYFUNCTIONS_API __declspec(dllimport)
-#endif
-*/
-
 // Include files ------------------------------------------
 #include <string> // used to convert tiles to strings for GM
 #include <stdlib.h>
@@ -50,7 +42,6 @@ enum {
   TT_WATER
 }tileTypes;
 
-
 enum {
   BT_POLICE = 0,
   BT_FIRE, 
@@ -73,16 +64,11 @@ enum {
   // Z_FAR farms maybe?
 }zoneTypes;
 
-
-
 enum {
   M_NORMAL = 0, // default
   M_SELECT,
   M_PLACE
 }modeTypes;
-
-
-
 
 enum {
   S_FALL = 0,
@@ -90,7 +76,6 @@ enum {
   S_SPRING,
   S_SUMMER
 }seasonTypes;
-
 
 enum {
   M_JAN = 1,
@@ -126,6 +111,8 @@ typedef struct gameData {
 
   int mode; // M_NORMAL, etc...
 
+  int money;
+
 
 }gameData;
 
@@ -136,7 +123,6 @@ typedef struct tile {
   int trueIndex;
   int tileType;
 }tile;
-
 
 typedef struct building {
 
@@ -162,7 +148,6 @@ typedef struct building {
   //std::vector<road*> adjacentRoads;
 }building;
 
-
 // TODO
 typedef struct zone {
 
@@ -170,7 +155,6 @@ typedef struct zone {
   int popCap; // capacity for people
 
 }zone;
-
 
 //typedef struct powerLine {
 //};
@@ -184,7 +168,6 @@ typedef struct zone {
 
 // used to access static data struct:
 tile* map(int x, int y);
-
 
 
 // initiation -------------------
@@ -298,9 +281,7 @@ int _getIntRange(int min, int max);
 
 // INTERFACE ----------------------------------------------
 GMEXPORT double initDLL();
-
 GMEXPORT double initMap();
-
 GMEXPORT double mapEnd();
 
 GMEXPORT double getGameYear();
@@ -312,6 +293,11 @@ GMEXPORT double getGameSpeed();
 GMEXPORT double incrementGameMonth();
 GMEXPORT double setGameMode(double mode);
 GMEXPORT double setGameSpeed(double speed);
+
+GMEXPORT double getGameMoney();
+GMEXPORT double checkCanSpend(double cost);
+GMEXPORT double deductFunds(double cost);
+
 
 
 GMEXPORT double seedMap(double type, double seedAmount);

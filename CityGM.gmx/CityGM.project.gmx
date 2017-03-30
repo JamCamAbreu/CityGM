@@ -115,17 +115,20 @@
     <script>scripts\scr_removeBuilding.gml</script>
     <script>scripts\scr_updateAll.gml</script>
     <scripts name="GameData">
-      <script>scripts\scr_drawSeasonText.gml</script>
-      <script>scripts\scr_drawMonthText.gml</script>
-      <script>scripts\scr_drawYearText.gml</script>
-      <script>scripts\scr_updateTime.gml</script>
-      <script>scripts\scr_getSeasonString.gml</script>
-      <script>scripts\scr_getMonthString.gml</script>
-      <script>scripts\scr_drawTime.gml</script>
-      <script>scripts\scr_setTimeString.gml</script>
-      <script>scripts\scr_setSpeed.gml</script>
-      <script>scripts\scr_getSpeedMultiplier.gml</script>
-      <script>scripts\scr_drawPause.gml</script>
+      <scripts name="time">
+        <script>scripts\scr_drawSeasonText.gml</script>
+        <script>scripts\scr_drawMonthText.gml</script>
+        <script>scripts\scr_drawYearText.gml</script>
+        <script>scripts\scr_updateTime.gml</script>
+        <script>scripts\scr_getSeasonString.gml</script>
+        <script>scripts\scr_getMonthString.gml</script>
+        <script>scripts\scr_drawTime.gml</script>
+        <script>scripts\scr_setTimeString.gml</script>
+        <script>scripts\scr_setSpeed.gml</script>
+        <script>scripts\scr_getSpeedMultiplier.gml</script>
+        <script>scripts\scr_drawPause.gml</script>
+      </scripts>
+      <script>scripts\scr_drawMoney.gml</script>
     </scripts>
     <scripts name="Menus">
       <script>scripts\scr_drawMenuTopBar.gml</script>
@@ -148,7 +151,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="20">
+  <constants number="24">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -161,14 +164,18 @@
     <constant name="TIME_MUL_SLOW">4</constant>
     <constant name="TIME_MUL_NORMAL">1</constant>
     <constant name="TIME_MUL_FAST">0.5</constant>
-    <constant name="MENU_TB_HEIGHT">view_hview*0.15</constant>
+    <constant name="BAR_UNIT">8</constant>
+    <constant name="BAR_PAD">4</constant>
+    <constant name="MENU_TB_HEIGHT">BAR_UNIT*6 + BAR_PAD*2</constant>
     <constant name="TITLE">"CITYgm"</constant>
     <constant name="PAD_TITLE_LEFT">8</constant>
     <constant name="PAD_TITLE_TOP">4</constant>
-    <constant name="PAD_TIME_LEFT">16</constant>
-    <constant name="PAD_TIME_TOP">32</constant>
+    <constant name="PAD_TIME_LEFT">128</constant>
+    <constant name="PAD_TIME_TOP">6</constant>
     <constant name="MENU_ALPHA">0.5</constant>
-    <constant name="MENU_LB_WIDTH">view_wview*0.25</constant>
+    <constant name="MENU_LB_WIDTH">BAR_UNIT*8 + BAR_PAD*2</constant>
+    <constant name="MONEY_X1">view_xview + view_wview - BAR_UNIT*16</constant>
+    <constant name="MONEY_Y1">view_yview + BAR_UNIT*2</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
