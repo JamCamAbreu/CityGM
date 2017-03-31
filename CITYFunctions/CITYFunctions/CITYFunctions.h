@@ -317,6 +317,9 @@ GMEXPORT double getRandomRange(double min, double max);
 
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
 GMEXPORT void _printMapTypes();
+GMEXPORT void _testStringOutput();
+
+
 GMEXPORT void _testPrintBuildingList();
 GMEXPORT void _testString();
 GMEXPORT void _testGameData(int months);

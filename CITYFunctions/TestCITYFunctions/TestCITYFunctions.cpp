@@ -17,11 +17,10 @@ int main() {
 
   initMap();
 
-  /*
-  seedMap(TT_TREE, 5);
+  seedMap(TT_TREE, 9);
   //_printMapTypes();
 
-  growSeeds(TT_TREE, 7);
+  growSeeds(TT_TREE, 20);
   //_printMapTypes();
 
   seedMap(TT_WATER, 5);
@@ -30,6 +29,7 @@ int main() {
   growSeeds(TT_WATER, 8);
   //_printMapTypes();
 
+  /*
   //_testString();
 
   //addBuilding(BT_FIRE, 4, 10);
@@ -50,6 +50,8 @@ int main() {
   */
   _printMapTypes();
   //_testGameData(26);
+  std::cout << std::endl;
+  _testStringOutput();
 
   mapEnd();
   std::cout << std::endl;

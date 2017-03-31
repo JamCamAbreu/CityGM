@@ -371,7 +371,7 @@ void _fillSeedHoles(int type) {
 }
 
 void _grow(int type, int r, int c) {
-  tile* iter = map(r, c);
+  tile* iter = map(c, r);
   int seed = 0;
   int dir = 0;
 
@@ -401,14 +401,10 @@ void _grow(int type, int r, int c) {
       }
 
       // check below:
-      else if (dir == 2) {
+      else if (dir == 3) {
         _setTileType(c, r - 1, type);
       }
-
-    //iter++;
     } // end if !seed
-
-
 
 }
 
@@ -416,24 +412,27 @@ void _growSeeds(int type) {
 
   int roll;
 
+  // DEBUG
+  //std::cout << std::endl;
+  //std::cout << "Rolls: ";
 
   // start by growing topleft to bottomright:
-  roll = _getIntRange(0, 2);
-  if (roll) {
+  roll = _getIntRange(0, 3);
+  //std::cout << roll << "\t"; // DEBUG
+  if (roll == 0) {
   for (int r = 1; r < MAP_DIMENSION - 1; r++) {
     for (int c = 1; c < MAP_DIMENSION - 1; c++) {
-        _grow(type, r, c);
+        _grow(type, c, r);
       } // end inner for loop
     } // end outter for loop
   }
 
 
     // next grow bottom right to top left:
-  roll = _getIntRange(0, 2);
-  if (roll) {
+  else if (roll == 1) {
     for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
       for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
-        _grow(type, r, c);
+        _grow(type, c, r);
       } // end inner for loop
     } // end outter for loop
   }
@@ -441,11 +440,10 @@ void _growSeeds(int type) {
 
 
     // next grow bottom left to top right:
-  roll = _getIntRange(0, 2);
-  if (roll) {
+  else if (roll == 2) {
     for (int r = MAP_DIMENSION - 1; r >= 0; r--) {
       for (int c = 1; c < MAP_DIMENSION - 1; c++) {
-        _grow(type, r, c);
+        _grow(type, c, r);
       } // end inner for loop
     } // end outter for loop
   }
@@ -453,14 +451,14 @@ void _growSeeds(int type) {
 
 
     // next grow top right to bottom left:
-  roll = _getIntRange(0, 2);
-  if (roll) {
+  else if (roll == 3) {
     for (int r = 1; r < MAP_DIMENSION - 1; r++) {
       for (int c = MAP_DIMENSION - 1; c >= 0; c--) {
-        _grow(type, r, c);
+        _grow(type, c, r);
       } // end inner for loop
     } // end outter for loop
   }
+
 
 }
 
@@ -678,6 +676,10 @@ double seedMap(double type, double seedAmount) {
     randomY = _getIntRange(0, MAP_DIMENSION);
 
     setTileType(randomX, randomY, typeInt);
+
+    // DEBUG
+    //getchar();
+    //_printMapTypes();
   }
 
   return 0;
@@ -690,6 +692,10 @@ double growSeeds(double type, double amount) {
 
   for (int i = 0; i < amountInt; i++) {
     _growSeeds(typeInt);
+
+    // DEBUG
+    //getchar();
+    //_printMapTypes();
   }
 
   // attempt to fill holes: (multiply times needed?)
@@ -888,7 +894,7 @@ void _printMapTypes() {
           std::cout << CHAR_ERROR;
       } // end switch
 
-      std::cout << " ";
+      //std::cout << " ";
 
       iter++; // next element
     } // end inner for-loop
@@ -899,6 +905,27 @@ void _printMapTypes() {
   std::cout << std::endl << std::endl;
 
 }
+
+void _testStringOutput() {
+
+  char* printString = tileTypeToString();
+
+  std::cout << std::endl;
+  std::cout << "Testing String:" << std::endl;
+  tile* iter;
+  int loc;
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      loc = r*MAP_DIMENSION + c;
+      std::cout << printString[loc];
+
+    }
+    std::cout << std::endl;
+  }
+
+
+}
+
 
 void _testPrintBuildingList() {
   
