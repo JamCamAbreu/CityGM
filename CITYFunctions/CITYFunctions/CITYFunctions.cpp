@@ -42,6 +42,9 @@ void _initGameData() {
   curGameData.mode = M_NORMAL;
 
   curGameData.money = 8000;
+
+  curGameData.population = 1;
+  curGameData.cityType = CT_RURAL;
 }
 
 
@@ -49,6 +52,99 @@ void _initGameData() {
 
 
 
+
+
+// GAME DATA functions:
+void _setCityType(int type) {
+  curGameData.cityType = type;
+}
+
+int _checkNewCityType() {
+
+  int population = getPopulation();
+  int curCityType = getCityType();
+
+  switch (curCityType) {
+    case CT_RURAL: {
+      if (population >= (CT_DWELLING)) {
+        _setCityType(CT_DWELLING);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_DWELLING: {
+      if (population >= (CT_HAMLET)) {
+        _setCityType(CT_HAMLET);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_HAMLET: {
+      if (population >= (CT_TOWN)) {
+        _setCityType(CT_TOWN);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_TOWN: {
+      if (population >= (CT_LARGETOWN)) {
+        _setCityType(CT_LARGETOWN);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_LARGETOWN: {
+      if (population >= (CT_CITY)) {
+        _setCityType(CT_CITY);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_CITY: {
+      if (population >= (CT_LARGECITY)) {
+        _setCityType(CT_LARGECITY);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_LARGECITY: {
+      if (population >= (CT_METROPOLIS)) {
+        _setCityType(CT_METROPOLIS);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_METROPOLIS: {
+      if (population >= (CT_MEGALOPOLIS)) {
+        _setCityType(CT_MEGALOPOLIS);
+        return 1;
+      }
+      break;
+    }
+
+    case CT_MEGALOPOLIS: {
+      // do nothing
+      return 0;
+      break;
+    }
+
+    default: {
+      // do nothing
+      return 0;
+      break;
+    }
+  } // end switch
+
+  // not a new type:
+  return 0;
+}
 
 
 
@@ -411,14 +507,8 @@ void _grow(int type, int r, int c) {
 void _growSeeds(int type) {
 
   int roll;
-
-  // DEBUG
-  //std::cout << std::endl;
-  //std::cout << "Rolls: ";
-
   // start by growing topleft to bottomright:
   roll = _getIntRange(0, 3);
-  //std::cout << roll << "\t"; // DEBUG
   if (roll == 0) {
   for (int r = 1; r < MAP_DIMENSION - 1; r++) {
     for (int c = 1; c < MAP_DIMENSION - 1; c++) {
@@ -584,6 +674,8 @@ double getGameSeason() { return curGameData.season; }
 double getGameMode() { return curGameData.mode; }
 double getGameSpeed() { return curGameData.gameSpeed; }
 double getGameMoney() { return curGameData.money; }
+double getPopulation() { return curGameData.population; }
+double getCityType() { return curGameData.cityType; }
 
 // todo: add taxes in december
 double incrementGameMonth() {
@@ -651,8 +743,20 @@ double deductFunds(double amount) {
   return 0;
 }
 
+double setPopulation(double pop) {
+  int population = (int)pop;
+  int newCityType = 0; // false until proven true
 
+  // update population
+  curGameData.population = population;
 
+  // sets new type, and returns 1 if new type achieved
+  newCityType = _checkNewCityType();
+
+  // returns true if REACHED a new city type level!
+  // can check the NEW level with "getCityType"
+  return newCityType;
+}
 
 
 

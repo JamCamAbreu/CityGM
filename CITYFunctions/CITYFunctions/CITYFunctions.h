@@ -39,7 +39,15 @@ enum {
   TT_GRASS = 0, // default
   TT_TREE,
   TT_BUILDING, 
-  TT_WATER
+  TT_WATER,
+
+  // extra tree and water types:
+  TT_TREE2,
+  TT_TREE3,
+  TT_TREE4,
+  TT_WATER2,
+  TT_WATER3,
+  TT_WATER4
 }tileTypes;
 
 enum {
@@ -99,6 +107,19 @@ enum {
   SP_FAST
 }speedTypes;
 
+enum {
+  CT_RURAL = 0, // 0 to 49 
+  CT_DWELLING = 50, // 50 to 99
+  CT_HAMLET = 100, // 100 to 299 
+  CT_TOWN = 300, // 300 to 999
+  CT_LARGETOWN = 1000, // 1000 to 9999
+  CT_CITY = 10000, // 10000 to 24999
+  CT_LARGECITY = 25000, // 25000 to 99999
+  CT_METROPOLIS = 100000, // 100000 to 299999
+  CT_MEGALOPOLIS = 300000 // 300000 and above
+
+}cityType;
+
 
 
 // STRUCT DEFINITIONS ----------------------
@@ -112,6 +133,9 @@ typedef struct gameData {
   int mode; // M_NORMAL, etc...
 
   int money;
+
+  int population;
+  int cityType;
 
 
 }gameData;
@@ -174,6 +198,24 @@ tile* map(int x, int y);
 void _randomize();
 
 void _initGameData();
+
+
+
+
+
+
+
+// GAME DATA functions:
+void _setCityType(int type);
+int _checkNewCityType();
+
+
+
+
+
+
+
+
 
 
 
@@ -289,14 +331,16 @@ GMEXPORT double getGameMonth();
 GMEXPORT double getGameSeason();
 GMEXPORT double getGameMode();
 GMEXPORT double getGameSpeed();
+GMEXPORT double getPopulation();
+GMEXPORT double getCityType();
 
 GMEXPORT double incrementGameMonth();
 GMEXPORT double setGameMode(double mode);
 GMEXPORT double setGameSpeed(double speed);
-
 GMEXPORT double getGameMoney();
 GMEXPORT double checkCanSpend(double cost);
 GMEXPORT double deductFunds(double cost);
+GMEXPORT double setPopulation(double pop);
 
 
 

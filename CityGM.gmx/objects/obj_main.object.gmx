@@ -83,6 +83,9 @@ money = DLL_getGameMoney();
 
 global.curtainClosed = false;
 
+// population and city type
+gamePopulation = DLL_getPopulation();
+gameCityType = DLL_getCityType();
 
 
 // Controllers/Setup ---------------
@@ -125,8 +128,13 @@ canDraw = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_updateTime(id);
+            <string>///UPDATE TIME
+scr_updateTime(id);
 scr_updateAll(id);
+
+
+// debug:
+scr_addPopulation(id, 50);
 
 
 
@@ -225,6 +233,9 @@ DLL_mapEnd();
         
         // money:
         scr_drawMoney(id);
+        
+        // population:
+        scr_drawPopulation(id);
     }
     else
         scr_drawMenuHelp();
@@ -361,7 +372,11 @@ for (i = 0; i &lt; 40; i++) {
 show_message("random numbers using DLL function: " + numString);
 */
 
-DLL_growSeeds(TT_TREE, 1);
+//DLL_growSeeds(TT_TREE, 1);
+
+
+audio_play_sound(sfx_error, 5, false);
+
 
 </string>
           </argument>

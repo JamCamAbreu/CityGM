@@ -277,6 +277,35 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_getPopulation</name>
+          <externalName>getPopulation</externalName>
+          <kind>12</kind>
+          <help>DLL_getPopulation()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
+          <args/>
+        </function>
+        <function>
+          <name>DLL_getCityType</name>
+          <externalName>getCityType</externalName>
+          <kind>12</kind>
+          <help>DLL_getCityType()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
+          <args/>
+        </function>
+        <function>
+          <name>DLL_setPopulation</name>
+          <externalName>setPopulation</externalName>
+          <kind>12</kind>
+          <help>DLL_setPopulation(int newPopulation)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -472,6 +501,51 @@
         <constant>
           <name>SP_FAST</name>
           <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_RURAL</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_DWELLING</name>
+          <value>50</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_HAMLET</name>
+          <value>100</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_TOWN</name>
+          <value>300</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_LARGETOWN</name>
+          <value>1000</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_CITY</name>
+          <value>10000</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_LARGECITY</name>
+          <value>25000</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_METROPOLIS</name>
+          <value>100000</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CT_MEGALOPOLIS</name>
+          <value>300000</value>
           <hidden>0</hidden>
         </constant>
       </constants>
