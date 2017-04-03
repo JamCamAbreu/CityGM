@@ -17,4 +17,8 @@ scr_updateTime(argument0);
 
 // updateMoney:
 argument0.money = DLL_getGameMoney();
+scr_updateMoneyString(argument0);
+
+// update Population:
+scr_updatePopString(argument0);
 

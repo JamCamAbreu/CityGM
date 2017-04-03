@@ -117,6 +117,20 @@
     <script>scripts\scr_removeBuilding.gml</script>
     <script>scripts\scr_updateAll.gml</script>
     <scripts name="GameData">
+      <script>scripts\scr_getCityTypeString.gml</script>
+      <script>scripts\scr_getCityTypeStringPrevious.gml</script>
+      <script>scripts\scr_addCommas.gml</script>
+      <script>scripts\scr_CommaCount.gml</script>
+      <script>scripts\scr_PlaceHolders.gml</script>
+      <scripts name="Population">
+        <script>scripts\scr_drawPopulation.gml</script>
+        <script>scripts\scr_updatePopString.gml</script>
+        <script>scripts\scr_addPopulation.gml</script>
+      </scripts>
+      <scripts name="Money">
+        <script>scripts\scr_drawMoney.gml</script>
+        <script>scripts\scr_updateMoneyString.gml</script>
+      </scripts>
       <scripts name="time">
         <script>scripts\scr_drawSeasonText.gml</script>
         <script>scripts\scr_drawMonthText.gml</script>
@@ -130,11 +144,6 @@
         <script>scripts\scr_getSpeedMultiplier.gml</script>
         <script>scripts\scr_drawPause.gml</script>
       </scripts>
-      <script>scripts\scr_drawMoney.gml</script>
-      <script>scripts\scr_drawPopulation.gml</script>
-      <script>scripts\scr_getCityTypeString.gml</script>
-      <script>scripts\scr_getCityTypeStringPrevious.gml</script>
-      <script>scripts\scr_addPopulation.gml</script>
     </scripts>
     <scripts name="Menus">
       <script>scripts\scr_drawMenuTopBar.gml</script>
@@ -197,7 +206,7 @@
     <constant name="MENU_BUTTONS_Y1">BAR_IN_Y1 + BAR_UNIT*1</constant>
     <constant name="MENU_BUTTONS_WIDTH">BAR_UNIT*4</constant>
     <constant name="MENU_BUTTONS_HEIGHT">BAR_UNIT*4</constant>
-    <constant name="MONEY_X1">BAR_IN_X1 + BAR_UNIT*41</constant>
+    <constant name="MONEY_X1">BAR_IN_X1 + BAR_UNIT*40</constant>
     <constant name="MONEY_Y1">BAR_IN_Y1 + BAR_UNIT + FONT_ADJUST2</constant>
     <constant name="POP_X1">MONEY_X1</constant>
     <constant name="POP_Y1">BAR_IN_Y1 + BAR_UNIT*3 + FONT_ADJUST2</constant>

@@ -4,7 +4,10 @@
 ///TEST population increase
 var amount = argument1;
 var newCityType = DLL_setPopulation(argument0.gamePopulation + amount);
+
+// update population and popString:
 argument0.gamePopulation = DLL_getPopulation();
+scr_updatePopString(argument0);
 
 if (newCityType) {
     var type = DLL_getCityType();

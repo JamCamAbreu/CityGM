@@ -80,12 +80,18 @@ drawPause = false;
 
 // money
 money = DLL_getGameMoney();
+moneyWithCommas = "";
+moneyPlaceholders = "";
+scr_updateMoneyString(id);
 
 global.curtainClosed = false;
 
 // population and city type
 gamePopulation = DLL_getPopulation();
 gameCityType = DLL_getCityType();
+popWithCommas = "";
+popPlaceholders = "";
+scr_updatePopString(id);
 
 
 // Controllers/Setup ---------------
@@ -128,8 +134,7 @@ canDraw = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///UPDATE TIME
-scr_updateTime(id);
+            <string>// UPDATE EVERYTHING
 scr_updateAll(id);
 
 
