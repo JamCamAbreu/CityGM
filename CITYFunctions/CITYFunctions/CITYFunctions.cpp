@@ -39,7 +39,7 @@ void _initGameData() {
   curGameData.season = S_FALL;
   curGameData.gameSpeed = SP_NORMAL;
 
-  curGameData.mode = M_NORMAL;
+  curGameData.mode = MD_NORMAL;
 
   curGameData.money = 8000;
 
@@ -483,25 +483,28 @@ void _grow(int type, int r, int c) {
 
       // check left:
       if (dir == 0) {
-        _setTileType(c - 1, r, type);
+        if (c > 0)
+          _setTileType(c - 1, r, type);
       }
 
       // check right:
       else if (dir == 1) {
-        _setTileType(c + 1, r, type);
+        if (c < MAP_DIMENSION - 1)
+          _setTileType(c + 1, r, type);
       }
 
       // check above:
       else if (dir == 2) {
-        _setTileType(c, r + 1, type);
+        if (r < MAP_DIMENSION - 1)
+          _setTileType(c, r + 1, type);
       }
 
       // check below:
       else if (dir == 3) {
-        _setTileType(c, r - 1, type);
+        if (r > 0)
+          _setTileType(c, r - 1, type);
       }
     } // end if !seed
-
 }
 
 void _growSeeds(int type) {
@@ -724,7 +727,7 @@ double setGameMode(double mode) {
 
 double setGameSpeed(double speed) {
   int speedInt = (int)speed;
-  curGameData.mode = speedInt;
+  curGameData.gameSpeed = speedInt;
   return 0;
 }
 

@@ -548,6 +548,21 @@
           <value>300000</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>MD_NORMAL</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_SELECT</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_PLACE</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

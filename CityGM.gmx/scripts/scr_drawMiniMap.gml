@@ -16,12 +16,12 @@ var viewBorderY2 = viewBorderY1 + viewBorderHeight;
 
 // draw map and black border:
 if (surface_exists(argument0.surfaceMiniMap)) {
-    draw_set_alpha(MENU_ALPHA*1.3);
+    draw_set_alpha(1);
     draw_surface(surfaceMiniMap, mapX1, mapY1);
     
     // draw square border:
     draw_rectangle(viewBorderX1 - 1, viewBorderY1 - 1, viewBorderX2, viewBorderY2, true);
-    draw_set_alpha(1);
+
 }
 
 

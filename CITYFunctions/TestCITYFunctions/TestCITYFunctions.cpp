@@ -49,11 +49,9 @@ int main() {
 
   */
   _printMapTypes();
-  //_testGameData(26);
-  std::cout << std::endl;
-  _testStringOutput();
 
   mapEnd();
+  std::cout << std::endl;
   std::cout << std::endl;
   std::cout << "[PROGRAM_DEBUG END]" << std::endl;
     return 0;

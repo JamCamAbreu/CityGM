@@ -22,3 +22,5 @@ scr_updateMoneyString(argument0);
 // update Population:
 scr_updatePopString(argument0);
 
+// update gameMode
+argument0.gameMode = DLL_getGameMode();

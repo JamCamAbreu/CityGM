@@ -73,9 +73,9 @@ enum {
 }zoneTypes;
 
 enum {
-  M_NORMAL = 0, // default
-  M_SELECT,
-  M_PLACE
+  MD_NORMAL = 0, // default
+  MD_SELECT,
+  MD_PLACE
 }modeTypes;
 
 enum {

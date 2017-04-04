@@ -79,6 +79,12 @@
       <sprite>sprites\spr_mouse</sprite>
       <sprite>sprites\spr_rightHere</sprite>
     </sprites>
+    <sprites name="speedIcons">
+      <sprite>sprites\spr_SPpause</sprite>
+      <sprite>sprites\spr_SPslow</sprite>
+      <sprite>sprites\spr_SPnormal</sprite>
+      <sprite>sprites\spr_SPfast</sprite>
+    </sprites>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -144,6 +150,7 @@
         <script>scripts\scr_getSpeedMultiplier.gml</script>
         <script>scripts\scr_drawPause.gml</script>
       </scripts>
+      <script>scripts\scr_drawPopMoneyBar.gml</script>
     </scripts>
     <scripts name="Menus">
       <script>scripts\scr_drawMenuTopBar.gml</script>
@@ -153,6 +160,11 @@
       <script>scripts\scr_drawMenuHelp.gml</script>
       <scripts name="MenuButtons">
         <script>scripts\scr_drawMenuButtons.gml</script>
+      </scripts>
+      <script>scripts\scr_drawSpeedIcons.gml</script>
+      <scripts name="buildMenu">
+        <script>scripts\scr_drawBuildMenu.gml</script>
+        <script>scripts\scr_drawBuildMenuHelp.gml</script>
       </scripts>
     </scripts>
   </scripts>
@@ -169,7 +181,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="40">
+  <constants number="53">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -210,6 +222,19 @@
     <constant name="MONEY_Y1">BAR_IN_Y1 + BAR_UNIT + FONT_ADJUST2</constant>
     <constant name="POP_X1">MONEY_X1</constant>
     <constant name="POP_Y1">BAR_IN_Y1 + BAR_UNIT*3 + FONT_ADJUST2</constant>
+    <constant name="SPEEDICON_X1">view_xview + BAR_UNIT</constant>
+    <constant name="SPEEDICON_Y1">view_yview + view_hview - 32</constant>
+    <constant name="BUILDMENU_W">BAR_UNIT*15</constant>
+    <constant name="BUILDMENU_H">BAR_UNIT*26</constant>
+    <constant name="BUILDMENU_X1">view_xview + BAR_UNIT</constant>
+    <constant name="BUILDMENU_Y1">view_yview + MENU_TB_HEIGHT + BAR_UNIT</constant>
+    <constant name="BUILDICON_PAD">4</constant>
+    <constant name="BUILDICON_X1">BUILDMENU_X1 + BAR_UNIT</constant>
+    <constant name="BUILDICON_Y1">BUILDMENU_Y1 + BAR_UNIT</constant>
+    <constant name="BUILDICON_W">32</constant>
+    <constant name="BUILDICON_H">32</constant>
+    <constant name="BUILDICON2_X1">BUILDICON_X1 + BUILDICON_W + BUILDICON_PAD</constant>
+    <constant name="BUILDICON3_X1">BUILDICON2_X1 + BUILDICON_W + BUILDICON_PAD</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
