@@ -27,6 +27,7 @@
   </NewExtensions>
   <sounds name="sound">
     <sound>sound\sfx_error</sound>
+    <sound>sound\sfx_placement</sound>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_bulldozer</sprite>
@@ -38,6 +39,8 @@
       <sprite>sprites\spr_fireStation</sprite>
       <sprite>sprites\spr_coalPlant</sprite>
       <sprite>sprites\spr_airport</sprite>
+      <sprite>sprites\spr_waterTower</sprite>
+      <sprite>sprites\spr_arcade</sprite>
     </sprites>
     <sprites name="tileSprites">
       <sprite>sprites\spr_water</sprite>
@@ -60,8 +63,10 @@
       <sprite>sprites\spr_PIconRZone</sprite>
       <sprite>sprites\spr_PIconSchool</sprite>
       <sprite>sprites\spr_PIconTree</sprite>
+      <sprite>sprites\spr_PIconWaterTower</sprite>
+      <sprite>sprites\spr_PIconArcade</sprite>
       <sprite>sprites\spr_icon</sprite>
-      <sprite>sprites\sprPIconSelect</sprite>
+      <sprite>sprites\spr_PIconSelect</sprite>
       <sprite>sprites\spr_purchaseIcon</sprite>
     </sprites>
     <sprites name="connectors">
@@ -165,7 +170,14 @@
       <scripts name="buildMenu">
         <script>scripts\scr_drawBuildMenu.gml</script>
         <script>scripts\scr_drawBuildMenuHelp.gml</script>
+        <script>scripts\scr_buildMenuKeys.gml</script>
+        <script>scripts\scr_buildMenuGetRow.gml</script>
+        <script>scripts\scr_buildMenuGetColumn.gml</script>
       </scripts>
+      <scripts name="buildingPlacement">
+        <script>scripts\scr_drawPlacement.gml</script>
+      </scripts>
+      <script>scripts\scr_drawQtoQuit.gml</script>
     </scripts>
   </scripts>
   <fonts name="fonts">
@@ -181,7 +193,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="53">
+  <constants number="56">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -235,6 +247,9 @@
     <constant name="BUILDICON_H">32</constant>
     <constant name="BUILDICON2_X1">BUILDICON_X1 + BUILDICON_W + BUILDICON_PAD</constant>
     <constant name="BUILDICON3_X1">BUILDICON2_X1 + BUILDICON_W + BUILDICON_PAD</constant>
+    <constant name="BUILDMENU_ROWS">5</constant>
+    <constant name="BUILDMENU_COLUMNS">3</constant>
+    <constant name="PLACEMENT_ALPHA">0.6</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

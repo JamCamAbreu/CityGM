@@ -228,42 +228,81 @@ int _getBuildingDimension(int type) {
 
   // use a switch and enum to return width:
   switch (type) {
+    case BT_TREE: {
+      return 1;
+      break;
+      }
+
+    case BT_ROAD: {
+      return 1;
+      break;
+      }
+
+    case BT_PLINE: {
+      return 1;
+      break;
+      }
+
+    case BT_RZONE: {
+      return 3;
+      break;
+      }
+
+    case BT_CZONE: {
+      return 3;
+      break;
+      }
+
+    case BT_IZONE: {
+      return 3;
+      break;
+      }
+
     case BT_POLICE: {
-      return 2;
+      return 3;
       break;
       }
+
     case BT_FIRE: {
-      return 2;
+      return 3;
       break;
       }
+
     case BT_SCHOOL: {
       return 3;
       break;
       }
+
     case BT_HOSPITAL: {
-      return 3;
+      return 4;
       break;
       }
+
+    case BT_COAL: {
+      return 4;
+      break;
+      }
+
     case BT_NUCLEAR: {
-      return 3;
+      return 4;
       break;
       }
-    case BT_AIRPORT: {
-      return 3;
-      break;
-      }
+
     case BT_WATERTOWER: {
-      return 1;
-      break;
-      }
-    case BT_ARCADE: {
-      return 1;
-      break;
-      }
-    case BT_GYM: {
       return 2;
       break;
       }
+
+    case BT_ARCADE: {
+      return 2;
+      break;
+      }
+
+    case BT_AIRPORT: {
+      return 5;
+      break;
+      }
+
     default: {
       return -1;
       break;

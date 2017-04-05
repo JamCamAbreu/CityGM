@@ -26,6 +26,8 @@
           <argument>
             <kind>1</kind>
             <string>SHIFT_SPEED = 0;
+
+camera_toggle = MD_NORMAL;
 </string>
           </argument>
         </arguments>
@@ -119,20 +121,43 @@
             <kind>1</kind>
             <string>
 // MODE_NORMAL---------
-//if ((global.mainID.mode == MODE_NORMAL) || (global.mainID.mode == MODE_PLACEMENT) )
+if ((camera_toggle == MD_NORMAL) || (camera_toggle == MD_PLACE)) // 0 or 2
     scr_move();
-//else // Reset alarms--------
-    //scr_moveAlarmReset();
-
+else // Reset alarms--------
+    scr_moveAlarmReset();
 
 // keep the camera centered for normal mode:
-//if (global.mainID.mode == MODE_NORMAL)
+if (camera_toggle == MD_NORMAL)
     scr_moveKeepCentered();
 // let camera do the same as the object of placement:
-//else if (global.mainID.mode == MODE_PLACEMENT)
-    //scr_moveKeepInRoom();
+else if (camera_toggle == MD_PLACE)
+    scr_moveKeepInRoom();
 
 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (camera_toggle == MD_NORMAL)
+    draw_self();
 </string>
           </argument>
         </arguments>

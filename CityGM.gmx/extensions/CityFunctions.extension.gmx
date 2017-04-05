@@ -359,48 +359,48 @@
           <hidden>0</hidden>
         </constant>
         <constant>
-          <name>BT_POLICE</name>
-          <value>0</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
           <name>BT_FIRE</name>
-          <value>1</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_SCHOOL</name>
-          <value>2</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_HOSPITAL</name>
-          <value>3</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_NUCLEAR</name>
-          <value>4</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_AIRPORT</name>
-          <value>5</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_WATERTOWER</name>
-          <value>6</value>
-          <hidden>0</hidden>
-        </constant>
-        <constant>
-          <name>BT_ARCADE</name>
           <value>7</value>
           <hidden>0</hidden>
         </constant>
         <constant>
-          <name>BT_GYM</name>
+          <name>BT_SCHOOL</name>
           <value>8</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_HOSPITAL</name>
+          <value>9</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_COAL</name>
+          <value>10</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_NUCLEAR</name>
+          <value>11</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_WATERTOWER</name>
+          <value>12</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_ARCADE</name>
+          <value>13</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_AIRPORT</name>
+          <value>14</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_TREE</name>
+          <value>0</value>
           <hidden>0</hidden>
         </constant>
         <constant>
@@ -561,6 +561,36 @@
         <constant>
           <name>MD_PLACE</name>
           <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_ROAD</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_PLINE</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_RZONE</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_CZONE</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_IZONE</name>
+          <value>5</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BT_POLICE</name>
+          <value>6</value>
           <hidden>0</hidden>
         </constant>
       </constants>

@@ -51,18 +51,21 @@ enum {
 }tileTypes;
 
 enum {
-  BT_POLICE = 0,
+  BT_TREE = 0,
+  BT_ROAD,
+  BT_PLINE,
+  BT_RZONE, // 3
+  BT_CZONE,
+  BT_IZONE,
+  BT_POLICE , // 6
   BT_FIRE, 
   BT_SCHOOL,
-  BT_HOSPITAL,
+  BT_HOSPITAL, // 9
+  BT_COAL,
   BT_NUCLEAR, 
-  BT_AIRPORT,
-  BT_WATERTOWER,
+  BT_WATERTOWER, // 12
   BT_ARCADE,
-  BT_GYM,
-  BT_ZRES, // zones hold special data
-  BT_ZCOM,
-  BT_ZIND
+  BT_AIRPORT
 }buildingTypes;
 
 enum {

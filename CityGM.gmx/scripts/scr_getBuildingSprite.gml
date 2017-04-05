@@ -2,7 +2,31 @@
 
 
 switch (argument0) {
+    
+    case BT_TREE:
+        return spr_tree;
+        break;
+        
+    case BT_ROAD:
+        return spr_road;
+        break;
+        
+    case BT_PLINE:
+        return spr_powerLine;
+        break;
+        
+    case BT_RZONE:
+        return spr_zone;
+        break;
+        
+    case BT_CZONE:
+        return spr_zone;
+        break;
 
+    case BT_IZONE:
+        return spr_zone;
+        break;
+        
     case BT_POLICE:
         return spr_polStation;
         break;
@@ -19,25 +43,24 @@ switch (argument0) {
         return spr_hospital;
         break;
         
+    case BT_COAL:
+        return spr_coalPlant;
+        break;
+        
     case BT_NUCLEAR:
         return spr_nucPlant;
         break;
         
-    case BT_AIRPORT:
-        return spr_airport;
-        break;
-        
-        
     case BT_WATERTOWER:
-        return spr_DEBUG;
+        return spr_waterTower;
         break;
         
     case BT_ARCADE:
-        return spr_DEBUG;
+        return spr_arcade;
         break;
         
-    case BT_GYM:
-        return spr_DEBUG;
+    case BT_AIRPORT:
+        return spr_airport;
         break;
         
     default:

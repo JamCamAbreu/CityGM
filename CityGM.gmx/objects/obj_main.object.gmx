@@ -98,7 +98,7 @@ scr_updatePopString(id);
 gameMode = DLL_getGameMode();
 
 // Build Mode:
-selectedBuilding = BT_SCHOOL; // just a default value...
+selectedBuilding = BT_TREE; // just a default value...
 
 
 // Menu/Bars------------------
@@ -145,6 +145,34 @@ scr_updateAll(id);
 
 
 alarm[0] = TIME_MONTH*gameSpeedMultiplier;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+
+// Keys for build menu:
+if (gameMode == MD_SELECT)
+    scr_buildMenuKeys(id);
+
 </string>
           </argument>
         </arguments>
@@ -260,8 +288,16 @@ DLL_mapEnd();
     scr_drawPause(drawPause);
     
     // Build Menu:
-    if (gameMode == MD_SELECT)
-        scr_drawBuildMenu();
+    if (gameMode == MD_SELECT) {
+        scr_drawBuildMenu(id);
+        scr_drawQtoQuit();
+    }
+        
+    // Building PLACEMENT:
+    if (gameMode == MD_PLACE) {
+        scr_drawPlacement(id);
+        scr_drawQtoQuit();
+    }
 }
 
 if (updateSurfaces) {
@@ -320,8 +356,10 @@ if (updateSurfaces) {
 
 if ((gameMode == MD_SELECT) || (gameMode == MD_PLACE)) {
     DLL_setGameMode(MD_NORMAL);
+    camera.camera_toggle = MD_NORMAL;
     scr_updateAll(id);
 }
+
 </string>
           </argument>
         </arguments>
@@ -400,8 +438,11 @@ show_message("random numbers using DLL function: " + numString);
 //DLL_growSeeds(TT_TREE, 1);
 
 
-audio_play_sound(sfx_error, 5, false);
+//audio_play_sound(sfx_error, 5, false);
 
+var row = scr_buildMenuGetRow(selectedBuilding);
+var column = scr_buildMenuGetColumn(selectedBuilding);
+show_message("Row: " + string(row) + ", column: " + string(column));
 
 </string>
           </argument>
@@ -432,10 +473,21 @@ audio_play_sound(sfx_error, 5, false);
 
 if (gameMode == MD_NORMAL) {
     DLL_setGameMode(MD_SELECT);
+    camera.camera_toggle = MD_SELECT;
     scr_updateAll(id);
 }
     
 // once in MD_SELECT, 'Q' to quit
+
+else if (gameMode == MD_SELECT) {
+    DLL_setGameMode(MD_PLACE);
+    camera.camera_toggle = MD_PLACE;
+    scr_updateAll(id);
+}
+
+else if (gameMode == MD_PLACE) {
+    scr_placeBuilding(id, selectedBuilding);
+}
 </string>
           </argument>
         </arguments>

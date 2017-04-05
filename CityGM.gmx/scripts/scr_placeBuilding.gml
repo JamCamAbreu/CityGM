@@ -1,9 +1,19 @@
-// argument 0 = int type
+// argument 0 = id that holds all the variables
+// argument 1 = int type
+var myX = scr_getX(argument0.camera);
+var myY = scr_getY(argument0.camera);
+var type = argument1;
+var placed = DLL_addBuilding(type, myX, myY);
 
-var myX = scr_getX(camera);
-var myY = scr_getY(camera);
+// SOUND:
+if (placed) {
+    audio_play_sound(sfx_placement, 5, false);
+}
+else
+    audio_play_sound(sfx_error, 5, false);
 
-var type = argument0;
 
-DLL_addBuilding(type, myX, myY);
+
+// Finally, update all:
+scr_updateAll(argument0)
 
