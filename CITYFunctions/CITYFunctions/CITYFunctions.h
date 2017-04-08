@@ -69,6 +69,25 @@ enum {
 }buildingTypes;
 
 enum {
+  BP_TREE = 20, 
+  BP_ROAD = 50,
+  BP_PLINE = 50, 
+  BP_RZONE = 250,
+  BP_CZONE = 350,
+  BP_IZONE = 300,
+  BP_POLICE = 500,
+  BP_FIRE = 500,
+  BP_SCHOOL = 1000,
+  BP_HOSPITAL = 2000,
+  BP_COAL = 1500,
+  BP_NUCLEAR = 5000,
+  BP_WATERTOWER = 800,
+  BP_ARCADE = 700,
+  BP_AIRPORT = 7000
+}BuildingPrices;
+
+
+enum {
   Z_RES = 0,
   Z_COM,
   Z_IND
@@ -263,7 +282,7 @@ int _getBuildingVectorSize();
 
 std::string _buildingInfoToString();
 
-
+int _checkMoney(int amount);
 
 
 
@@ -357,6 +376,7 @@ GMEXPORT char* tileTypeToString();
 GMEXPORT double addBuilding(double type, double x, double y);
 GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
 GMEXPORT double getBuildingVectorSize();
+GMEXPORT double getBuildingPrice(double buildingType);
 
 GMEXPORT char* buildingsToString();
 

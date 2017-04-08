@@ -99,6 +99,7 @@ gameMode = DLL_getGameMode();
 
 // Build Mode:
 selectedBuilding = BT_TREE; // just a default value...
+selectedBuildingString = scr_setBuildingMenuString(selectedBuilding);
 
 
 // Menu/Bars------------------
@@ -290,12 +291,14 @@ DLL_mapEnd();
     // Build Menu:
     if (gameMode == MD_SELECT) {
         scr_drawBuildMenu(id);
+        scr_drawBuildingInfo(id);
         scr_drawQtoQuit();
     }
         
     // Building PLACEMENT:
     if (gameMode == MD_PLACE) {
         scr_drawPlacement(id);
+        scr_drawBuildingInfo(id);
         scr_drawQtoQuit();
     }
 }

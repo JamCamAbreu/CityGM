@@ -39,7 +39,8 @@ else if (keyboard_check_pressed(ord('S'))) {
 }
 
 
-
+// update building info:
+argument0.selectedBuildingString = scr_setBuildingMenuString(argument0.selectedBuilding);
 
 
 

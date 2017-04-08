@@ -416,7 +416,15 @@ std::string _buildingInfoToString() {
   return buildingInfo;
 }
 
+int _checkMoney(int amount) {
 
+  int money = getGameMoney();
+
+  if (amount <= money)
+    return 1;
+  else
+    return 0;
+}
 
 
 
@@ -894,9 +902,14 @@ double addBuilding(double type, double x, double y) {
   int typeInt = (int)type;
   int xInt = (int)x;
   int yInt = (int)y;
+  int price = (int)getBuildingPrice(typeInt);
 
   // check if position is okay to build:
   int canBuild = _checkPlacement(typeInt, xInt, yInt);
+
+  // also check if we have enough money:
+  if (canBuild)
+    canBuild = _checkMoney(price);
 
   if (canBuild) {
     // create a new building:
@@ -904,6 +917,9 @@ double addBuilding(double type, double x, double y) {
 
     // add building to vector
     v_buildings.push_back(newBuilding);
+
+    // subtract money:
+    deductFunds(price);
 
     return 1;
   }
@@ -990,7 +1006,96 @@ char* buildingsToString() {
   return cstr;
 }
 
+double getBuildingPrice(double buildingType) {
+  int typeInt = (int)buildingType;
 
+  switch (typeInt) {
+    case BT_TREE: {
+      return BP_TREE;
+      break;
+      }
+
+    case BT_ROAD: {
+      return BP_ROAD;
+      break;
+      }
+
+    case BT_PLINE: {
+      return BP_PLINE;
+      break;
+      }
+
+    case BT_RZONE: {
+      return BP_RZONE;
+      break;
+      }
+
+    case BT_CZONE: {
+      return BP_CZONE;
+      break;
+      }
+
+    case BT_IZONE: {
+      return BP_IZONE;
+      break;
+      }
+
+    case BT_POLICE: {
+      return BP_POLICE;
+      break;
+      }
+
+    case BT_FIRE: {
+      return BP_FIRE;
+      break;
+      }
+
+    case BT_SCHOOL: {
+      return BP_SCHOOL;
+      break;
+      }
+
+    case BT_HOSPITAL: {
+      return BP_HOSPITAL;
+      break;
+      }
+
+    case BT_COAL: {
+      return BP_COAL;
+      break;
+      }
+
+    case BT_NUCLEAR: {
+      return BP_NUCLEAR;
+      break;
+      }
+
+    case BT_WATERTOWER: {
+      return BP_WATERTOWER;
+      break;
+      }
+
+    case BT_ARCADE: {
+      return BP_ARCADE;
+      break;
+      }
+
+    case BT_AIRPORT: {
+      return BP_AIRPORT;
+      break;
+      }
+
+    // error
+    default: {
+      return -1;
+      break;
+    }
+
+  }
+
+  // error
+  return -1;
+}
 
 
 
