@@ -25,18 +25,18 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_font(ft_normal);
-
-// DLL SETUP ---------------------------------
-
-//randomize();
-
-DLL_initDLL();
-DLL_initMap();
-
+            <string>// GAME MAKER SETUP --------------------------
+draw_set_font(ft_normal);
 var randomSeed = DLL_getRandomRange(1,100);
 random_set_seed(randomSeed);
 
+// DLL SETUP ---------------------------------
+DLL_initDLL();
+DLL_initMap();
+
+
+// Map Generation ----------------------------
+// Trees:
 var treeSeeds = irandom_range(4, 12);
 DLL_seedMap(TT_TREE, treeSeeds);
 var treeDensity = irandom_range(5, 24) + (24 - treeSeeds*2);
@@ -48,6 +48,7 @@ DLL_seedMap(TT_WATER, waterSeeds);
 var waterDensity = (30 - waterSeeds*8) + 10;
 DLL_growSeeds(TT_WATER, waterDensity);
 
+// Map Information ---------------------------
 // TILES:
 tileString = DLL_tileTypeToString();
 tileStringSize = string_length(tileString);
@@ -77,6 +78,11 @@ gameSpeedMultiplier = TIME_MUL_NORMAL;
 alarm[0] = TIME_MONTH;
 timeAlarmStorage = alarm_get(0);
 drawPause = false;
+
+// season change:
+drawCurtain = false;
+currentCurtainAlpha = 0;
+targetCurtainAlpha = 0;
 
 // money
 money = DLL_getGameMoney();
@@ -119,6 +125,58 @@ canDraw = true;
         </arguments>
       </action>
     </event>
+    <event eventtype="2" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// CURTAIN OUT EFFECT FOR SEASON
+
+drawCurtain = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// CURTAIN IN EFFECT FOR SEASON
+
+targetCurtainAlpha = 0;
+
+alarm[2] = CURTAIN_OUT;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="2" enumb="0">
       <action>
         <libid>1</libid>
@@ -136,8 +194,24 @@ canDraw = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// UPDATE EVERYTHING
+            <string>/// Time Update
+
+// UPDATE EVERYTHING
 scr_updateAll(id);
+
+
+// update time (increment month)
+var lastSeason = DLL_getGameSeason();
+scr_incrementMonth(id);
+
+// if season change:
+var curSeason = DLL_getGameSeason();
+if (curSeason != lastSeason) {
+    alarm[1] = CURTAIN_IN;
+    targetCurtainAlpha = 1;
+    drawCurtain = true;
+}
+
 
 
 // debug:
@@ -168,9 +242,7 @@ alarm[0] = TIME_MONTH*gameSpeedMultiplier;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-
-// Keys for build menu:
+            <string>// Keys for build menu:
 if (gameMode == MD_SELECT)
     scr_buildMenuKeys(id);
 
@@ -301,8 +373,23 @@ DLL_mapEnd();
         scr_drawBuildingInfo(id);
         scr_drawQtoQuit();
     }
+    
+    // season change:
+    if (drawCurtain) {
+        scr_updateCurtainAlpha(id);
+        scr_drawCurtain(currentCurtainAlpha);
+    
+    }
+    
+    
 }
 
+
+
+
+
+
+// update:
 if (updateSurfaces) {
     scr_setSurfaceMiniMap(tileString, tileStringSize, id);
     updateSurfaces = false;

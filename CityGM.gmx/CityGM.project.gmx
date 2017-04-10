@@ -94,6 +94,39 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
+    <script>scripts\scr_updateAll.gml</script>
+    <script>scripts\scr_ease.gml</script>
+    <scripts name="Buildings">
+      <script>scripts\scr_drawPlacement.gml</script>
+      <script>scripts\scr_placeBuilding.gml</script>
+      <script>scripts\scr_removeBuilding.gml</script>
+    </scripts>
+    <scripts name="Time&amp;Season">
+      <script>scripts\scr_drawSeasonText.gml</script>
+      <script>scripts\scr_drawMonthText.gml</script>
+      <script>scripts\scr_drawYearText.gml</script>
+      <script>scripts\scr_incrementMonth.gml</script>
+      <script>scripts\scr_getSeasonString.gml</script>
+      <script>scripts\scr_getMonthString.gml</script>
+      <script>scripts\scr_drawTime.gml</script>
+      <script>scripts\scr_setTimeString.gml</script>
+      <script>scripts\scr_setSpeed.gml</script>
+      <script>scripts\scr_getSpeedMultiplier.gml</script>
+      <script>scripts\scr_drawPause.gml</script>
+      <script>scripts\scr_drawCurtain.gml</script>
+      <script>scripts\scr_updateCurtainAlpha.gml</script>
+      <script>scripts\scr_seasonChange.gml</script>
+    </scripts>
+    <scripts name="Population&amp;Money">
+      <script>scripts\scr_drawPopulation.gml</script>
+      <script>scripts\scr_updatePopString.gml</script>
+      <script>scripts\scr_addPopulation.gml</script>
+      <script>scripts\scr_addCommas.gml</script>
+      <script>scripts\scr_CommaCount.gml</script>
+      <script>scripts\scr_PlaceHolders.gml</script>
+      <script>scripts\scr_drawMoney.gml</script>
+      <script>scripts\scr_updateMoneyString.gml</script>
+    </scripts>
     <scripts name="Camera">
       <script>scripts\scr_moveKeepInRoom.gml</script>
       <script>scripts\scr_moveKeepCentered.gml</script>
@@ -105,7 +138,7 @@
       <script>scripts\scr_getX.gml</script>
       <script>scripts\scr_getY.gml</script>
     </scripts>
-    <scripts name="DrawingMap">
+    <scripts name="Map">
       <script>scripts\scr_getTileColor.gml</script>
       <script>scripts\scr_getTileSprite.gml</script>
       <script>scripts\scr_getBuildingSprite.gml</script>
@@ -124,40 +157,11 @@
       <script>scripts\scr_setSurfaceMiniMap.gml</script>
       <script>scripts\scr_drawMiniMapHelp.gml</script>
     </scripts>
-    <script>scripts\scr_placeBuilding.gml</script>
-    <script>scripts\scr_removeBuilding.gml</script>
-    <script>scripts\scr_updateAll.gml</script>
-    <scripts name="GameData">
+    <scripts name="GameDataOther">
       <script>scripts\scr_getCityTypeString.gml</script>
       <script>scripts\scr_getCityTypeStringPrevious.gml</script>
-      <script>scripts\scr_addCommas.gml</script>
-      <script>scripts\scr_CommaCount.gml</script>
-      <script>scripts\scr_PlaceHolders.gml</script>
-      <scripts name="Population">
-        <script>scripts\scr_drawPopulation.gml</script>
-        <script>scripts\scr_updatePopString.gml</script>
-        <script>scripts\scr_addPopulation.gml</script>
-      </scripts>
-      <scripts name="Money">
-        <script>scripts\scr_drawMoney.gml</script>
-        <script>scripts\scr_updateMoneyString.gml</script>
-      </scripts>
-      <scripts name="time">
-        <script>scripts\scr_drawSeasonText.gml</script>
-        <script>scripts\scr_drawMonthText.gml</script>
-        <script>scripts\scr_drawYearText.gml</script>
-        <script>scripts\scr_updateTime.gml</script>
-        <script>scripts\scr_getSeasonString.gml</script>
-        <script>scripts\scr_getMonthString.gml</script>
-        <script>scripts\scr_drawTime.gml</script>
-        <script>scripts\scr_setTimeString.gml</script>
-        <script>scripts\scr_setSpeed.gml</script>
-        <script>scripts\scr_getSpeedMultiplier.gml</script>
-        <script>scripts\scr_drawPause.gml</script>
-      </scripts>
-      <script>scripts\scr_drawPopMoneyBar.gml</script>
     </scripts>
-    <scripts name="Menus">
+    <scripts name="GeneralMenus">
       <script>scripts\scr_drawMenuTopBar.gml</script>
       <script>scripts\scr_drawLeftBar.gml</script>
       <script>scripts\scr_drawMenus.gml</script>
@@ -166,7 +170,6 @@
       <scripts name="MenuButtons">
         <script>scripts\scr_drawMenuButtons.gml</script>
       </scripts>
-      <script>scripts\scr_drawSpeedIcons.gml</script>
       <scripts name="buildMenu">
         <script>scripts\scr_drawBuildMenu.gml</script>
         <script>scripts\scr_drawBuildMenuHelp.gml</script>
@@ -177,10 +180,9 @@
         <script>scripts\scr_getBuildingString.gml</script>
         <script>scripts\scr_drawBuildingInfo.gml</script>
       </scripts>
-      <scripts name="buildingPlacement">
-        <script>scripts\scr_drawPlacement.gml</script>
-      </scripts>
       <script>scripts\scr_drawQtoQuit.gml</script>
+      <script>scripts\scr_drawPopMoneyBar.gml</script>
+      <script>scripts\scr_drawSpeedIcons.gml</script>
     </scripts>
   </scripts>
   <fonts name="fonts">
@@ -196,7 +198,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="58">
+  <constants number="60">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -204,7 +206,7 @@
     <constant name="VIEW_BOARDER">16</constant>
     <constant name="MAX_BUILDINGS">999</constant>
     <constant name="MINIMAP_PIXEL">2</constant>
-    <constant name="TIME_MONTH">60*2</constant>
+    <constant name="TIME_MONTH">60*20</constant>
     <constant name="TIME_MUL_PAUSE">0</constant>
     <constant name="TIME_MUL_SLOW">4</constant>
     <constant name="TIME_MUL_NORMAL">1</constant>
@@ -255,6 +257,8 @@
     <constant name="PLACEMENT_ALPHA">0.6</constant>
     <constant name="BUILDINGINFO_X1">view_xview + (view_wview/2)</constant>
     <constant name="BUILDINGINFO_Y1">BUILDMENU_Y1 + BAR_UNIT*2</constant>
+    <constant name="CURTAIN_IN">60</constant>
+    <constant name="CURTAIN_OUT">60</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
