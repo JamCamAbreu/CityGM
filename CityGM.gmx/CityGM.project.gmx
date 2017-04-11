@@ -143,19 +143,13 @@
       <script>scripts\scr_getTileSprite.gml</script>
       <script>scripts\scr_getBuildingSprite.gml</script>
       <script>scripts\scr_drawMapColor.gml</script>
-      <script>scripts\scr_drawScreenTiles.gml</script>
-      <script>scripts\scr_getViewX1.gml</script>
-      <script>scripts\scr_getViewY1.gml</script>
-      <script>scripts\scr_getViewX2.gml</script>
-      <script>scripts\scr_getViewY2.gml</script>
-      <script>scripts\scr_drawScreenBuildings.gml</script>
-      <script>scripts\scr_updateBuildings.gml</script>
-      <script>scripts\scr_updateBuildingX.gml</script>
-      <script>scripts\scr_updateBuildingY.gml</script>
       <script>scripts\scr_updateBuildingType.gml</script>
       <script>scripts\scr_drawMiniMap.gml</script>
       <script>scripts\scr_setSurfaceMiniMap.gml</script>
       <script>scripts\scr_drawMiniMapHelp.gml</script>
+      <script>scripts\scr_updateBuildingX.gml</script>
+      <script>scripts\scr_updateBuildingY.gml</script>
+      <script>scripts\scr_updateBuildings.gml</script>
     </scripts>
     <scripts name="GameDataOther">
       <script>scripts\scr_getCityTypeString.gml</script>
@@ -184,6 +178,14 @@
       <script>scripts\scr_drawPopMoneyBar.gml</script>
       <script>scripts\scr_drawSpeedIcons.gml</script>
     </scripts>
+    <scripts name="Screen">
+      <script>scripts\scr_drawScreenBuildings.gml</script>
+      <script>scripts\scr_drawScreenTiles.gml</script>
+      <script>scripts\scr_getViewX1.gml</script>
+      <script>scripts\scr_getViewY1.gml</script>
+      <script>scripts\scr_getViewX2.gml</script>
+      <script>scripts\scr_getViewY2.gml</script>
+    </scripts>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_normal</font>
@@ -206,7 +208,7 @@
     <constant name="VIEW_BOARDER">16</constant>
     <constant name="MAX_BUILDINGS">999</constant>
     <constant name="MINIMAP_PIXEL">2</constant>
-    <constant name="TIME_MONTH">60*20</constant>
+    <constant name="TIME_MONTH">60*10</constant>
     <constant name="TIME_MUL_PAUSE">0</constant>
     <constant name="TIME_MUL_SLOW">4</constant>
     <constant name="TIME_MUL_NORMAL">1</constant>

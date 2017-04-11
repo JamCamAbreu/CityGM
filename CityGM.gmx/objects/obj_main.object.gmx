@@ -84,6 +84,7 @@ drawCurtain = false;
 currentCurtainAlpha = 0;
 targetCurtainAlpha = 0;
 
+
 // money
 money = DLL_getGameMoney();
 moneyWithCommas = "";
@@ -171,6 +172,9 @@ drawCurtain = false;
 
 targetCurtainAlpha = 0;
 
+// NOW update the season to draw the correct sprites:
+gameSeason = DLL_getGameSeason();
+
 alarm[2] = CURTAIN_OUT;
 </string>
           </argument>
@@ -211,6 +215,8 @@ if (curSeason != lastSeason) {
     targetCurtainAlpha = 1;
     drawCurtain = true;
 }
+else // update season
+    gameSeason = DLL_getGameSeason();
 
 
 
@@ -318,7 +324,7 @@ DLL_mapEnd();
           <argument>
             <kind>1</kind>
             <string>if (canDraw) {
-    scr_drawScreenTiles(tileString, tileStringSize);
+    scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawScreenBuildings(buildingElements, id); // pass in arrays?
     
     if (toggleMiniMap) // 'M' key to toggle

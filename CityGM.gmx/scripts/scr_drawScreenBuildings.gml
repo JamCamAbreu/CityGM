@@ -27,7 +27,7 @@ for (i = 0; i < argument0; i++) {
 
     if (drawBuilding) {
         var sprite = scr_getBuildingSprite(bT);
-        draw_sprite(sprite, image_index, bX*TILE_SIZE, bY*TILE_SIZE);
+        draw_sprite(sprite, argument1.gameSeason, bX*TILE_SIZE, bY*TILE_SIZE);
     }
 } // end for loop
 
