@@ -109,7 +109,10 @@ selectedBuilding = BT_TREE; // just a default value...
 selectedBuildingString = scr_setBuildingMenuString(selectedBuilding);
 
 
-// Menu/Bars------------------
+// Game Menu ------------------
+selectedMenu = MENU_DATA;   // default value
+
+
 
 // Other: ---------------------
 // camera:
@@ -252,6 +255,9 @@ alarm[0] = TIME_MONTH*gameSpeedMultiplier;
 if (gameMode == MD_SELECT)
     scr_buildMenuKeys(id);
 
+// keys for game menu:
+if (gameMode == MD_MENU)
+    scr_gameMenuKeys(id);
 </string>
           </argument>
         </arguments>
@@ -380,6 +386,12 @@ DLL_mapEnd();
         scr_drawQtoQuit();
     }
     
+    // Game Menu:
+    if (gameMode == MD_MENU) {
+        scr_drawMenuSelected(selectedMenu);
+        scr_drawQtoQuit();
+    }
+    
     // season change:
     if (drawCurtain) {
         scr_updateCurtainAlpha(id);
@@ -450,11 +462,12 @@ if (updateSurfaces) {
 
 // 'E' to turn on build mode
 
-if ((gameMode == MD_SELECT) || (gameMode == MD_PLACE)) {
+if (gameMode != MD_NORMAL) {
     DLL_setGameMode(MD_NORMAL);
     camera.camera_toggle = MD_NORMAL;
     scr_updateAll(id);
 }
+
 
 </string>
           </argument>
@@ -545,6 +558,39 @@ show_message("Row: " + string(row) + ", column: " + string(column));
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="70">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (gameMode != MD_MENU){
+    toggleDrawMenus = true;
+    camera.camera_toggle = MD_MENU;
+    DLL_setGameMode(MD_MENU);
+    gameMode = DLL_getGameMode();
+}
+else {
+    camera.camera_toggle = MD_NORMAL;
+    DLL_setGameMode(MD_NORMAL);
+    gameMode = DLL_getGameMode();
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="69">
       <action>
         <libid>1</libid>
@@ -566,23 +612,30 @@ show_message("Row: " + string(row) + ", column: " + string(column));
 //scr_placeBuilding(randomBuilding); // fixme
 //scr_updateAll(id);
 
-
+// Go to build menu if in normal mode:
 if (gameMode == MD_NORMAL) {
     DLL_setGameMode(MD_SELECT);
     camera.camera_toggle = MD_SELECT;
     scr_updateAll(id);
 }
     
-// once in MD_SELECT, 'Q' to quit
-
+// Select a building in building select mode:
 else if (gameMode == MD_SELECT) {
     DLL_setGameMode(MD_PLACE);
     camera.camera_toggle = MD_PLACE;
     scr_updateAll(id);
 }
 
+// Place a building in placement mode:
 else if (gameMode == MD_PLACE) {
     scr_placeBuilding(id, selectedBuilding);
+}
+
+// Enter a menu option when in menu mode:
+else if (gameMode == MD_MENU) {
+    // SCRIPT HERE
+    // debug:
+    audio_play_sound(sfx_error, 5, false);
 }
 </string>
           </argument>

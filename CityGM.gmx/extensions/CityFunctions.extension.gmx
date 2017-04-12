@@ -604,6 +604,11 @@
           <value>6</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>MD_MENU</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

@@ -3,7 +3,7 @@
 var miniMapDimension = MINIMAP_PIXEL*MAP_DIMENSION;
 
 var mapX1 = view_xview + view_wview - miniMapDimension;
-var mapY1 = view_yview + MENU_TB_HEIGHT;
+var mapY1 = view_yview + MENU_TB_HEIGHT + 1;
 
 var viewBorderWidth = round(miniMapDimension/(room_width/(view_wview)));
 var viewBorderHeight = round(miniMapDimension/(room_height/(view_hview)));

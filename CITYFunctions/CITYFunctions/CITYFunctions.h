@@ -97,7 +97,8 @@ enum {
 enum {
   MD_NORMAL = 0, // default
   MD_SELECT,
-  MD_PLACE
+  MD_PLACE,
+  MD_MENU        // add other modes too, like dataGen mode etc...
 }modeTypes;
 
 enum {

@@ -90,6 +90,12 @@
       <sprite>sprites\spr_SPnormal</sprite>
       <sprite>sprites\spr_SPfast</sprite>
     </sprites>
+    <sprites name="menuIcons">
+      <sprite>sprites\spr_menuData</sprite>
+      <sprite>sprites\spr_menuGraphs</sprite>
+      <sprite>sprites\spr_menuFile</sprite>
+      <sprite>sprites\spr_menuSomething</sprite>
+    </sprites>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -155,15 +161,12 @@
       <script>scripts\scr_getCityTypeString.gml</script>
       <script>scripts\scr_getCityTypeStringPrevious.gml</script>
     </scripts>
-    <scripts name="GeneralMenus">
+    <scripts name="Menus">
       <script>scripts\scr_drawMenuTopBar.gml</script>
       <script>scripts\scr_drawLeftBar.gml</script>
       <script>scripts\scr_drawMenus.gml</script>
       <script>scripts\scr_drawTitle.gml</script>
       <script>scripts\scr_drawMenuHelp.gml</script>
-      <scripts name="MenuButtons">
-        <script>scripts\scr_drawMenuButtons.gml</script>
-      </scripts>
       <scripts name="buildMenu">
         <script>scripts\scr_drawBuildMenu.gml</script>
         <script>scripts\scr_drawBuildMenuHelp.gml</script>
@@ -177,6 +180,12 @@
       <script>scripts\scr_drawQtoQuit.gml</script>
       <script>scripts\scr_drawPopMoneyBar.gml</script>
       <script>scripts\scr_drawSpeedIcons.gml</script>
+      <scripts name="GameMenus">
+        <script>scripts\scr_drawMenuButtons.gml</script>
+        <script>scripts\scr_getGameMenuButtonSprite.gml</script>
+        <script>scripts\scr_gameMenuKeys.gml</script>
+        <script>scripts\scr_drawMenuSelected.gml</script>
+      </scripts>
     </scripts>
     <scripts name="Screen">
       <script>scripts\scr_drawScreenBuildings.gml</script>
@@ -200,7 +209,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="60">
+  <constants number="64">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -261,6 +270,10 @@
     <constant name="BUILDINGINFO_Y1">BUILDMENU_Y1 + BAR_UNIT*2</constant>
     <constant name="CURTAIN_IN">60</constant>
     <constant name="CURTAIN_OUT">60</constant>
+    <constant name="MENU_DATA">0</constant>
+    <constant name="MENU_GRAPHS">1</constant>
+    <constant name="MENU_SOMETHING">2</constant>
+    <constant name="MENU_FILE">3</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
