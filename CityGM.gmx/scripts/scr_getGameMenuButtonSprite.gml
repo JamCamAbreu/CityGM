@@ -10,8 +10,8 @@ switch (argument0) {
         return spr_menuGraphs;
         break;
         
-    case MENU_SOMETHING:
-        return spr_menuSomething;
+    case MENU_MAPS:
+        return spr_menuMaps;
         break;
         
     case MENU_FILE:

@@ -94,7 +94,7 @@
       <sprite>sprites\spr_menuData</sprite>
       <sprite>sprites\spr_menuGraphs</sprite>
       <sprite>sprites\spr_menuFile</sprite>
-      <sprite>sprites\spr_menuSomething</sprite>
+      <sprite>sprites\spr_menuMaps</sprite>
     </sprites>
   </sprites>
   <backgrounds name="background"/>
@@ -209,7 +209,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="64">
+  <constants number="68">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -272,8 +272,12 @@
     <constant name="CURTAIN_OUT">60</constant>
     <constant name="MENU_DATA">0</constant>
     <constant name="MENU_GRAPHS">1</constant>
-    <constant name="MENU_SOMETHING">2</constant>
+    <constant name="MENU_MAPS">2</constant>
     <constant name="MENU_FILE">3</constant>
+    <constant name="VIEW_NORMAL_W">480</constant>
+    <constant name="VIEW_NORMAL_H">320</constant>
+    <constant name="VIEW_ZOUT_W">720</constant>
+    <constant name="VIEW_ZOUT_H">480</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
