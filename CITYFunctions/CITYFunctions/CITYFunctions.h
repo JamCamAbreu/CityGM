@@ -159,8 +159,6 @@ typedef struct gameData {
 
   int population;
   int cityType;
-
-
 }gameData;
 
 
@@ -232,7 +230,7 @@ void _initGameData();
 void _setCityType(int type);
 int _checkNewCityType();
 
-
+void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount);
 
 
 
@@ -252,7 +250,7 @@ std::string _tileTypeToString();
 void _setTileType(int xCoord, int yCoord, int type);
 
 
-
+void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType);
 
 
 

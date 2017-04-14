@@ -17,37 +17,7 @@ int main() {
 
   initMap();
 
-  seedMap(TT_TREE, 9);
-  //_printMapTypes();
 
-  growSeeds(TT_TREE, 20);
-  //_printMapTypes();
-
-  seedMap(TT_WATER, 5);
-  //_printMapTypes();
-
-  growSeeds(TT_WATER, 8);
-  //_printMapTypes();
-
-  /*
-  //_testString();
-
-  //addBuilding(BT_FIRE, 4, 10);
-  //addBuilding(BT_WATERTOWER, 2, 8);
-  addBuilding(BT_AIRPORT, 0, 0);
-  //addBuilding(BT_ARCADE, 1, 1);
-  //_testPrintBuildingList();
-  //_printMapTypes();
-
-  //removeBuilding(22, 22);
-
-  _testPrintBuildingList();
-  std::cout << std::endl;
-  _printMapTypes();
-
-  _testString();
-
-  */
   _printMapTypes();
 
   mapEnd();

@@ -146,6 +146,26 @@ int _checkNewCityType() {
   return 0;
 }
 
+void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount) {
+
+  int x, y;
+
+  for (y = -radius; y <= radius; y++) {
+    for (x = -radius; x <= radius; x++) {
+      if ((x * x) + (y * y) <= (radius * radius)) {
+
+        // bounds checking:
+        if ((xOrigin + x > 0) && (xOrigin + x < MAP_DIMENSION - 1) &&
+          (yOrigin + y > 0) && (yOrigin + y < MAP_DIMENSION - 1)) {
+            // FUNCTION FOR SETTING DATA HERE!
+        }
+
+      } // end if
+    } // inner for loop
+  } // outer for loop
+
+}
+
 
 
 
@@ -209,8 +229,24 @@ std::string _tileTypeToString() {
   return typeData;
 }
 
+void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
 
+  int x, y;
 
+  for (y = -radius; y <= radius; y++) {
+    for (x = -radius; x <= radius; x++) {
+      if ((x * x) + (y * y) <= (radius * radius)) {
+
+        // bounds checking:
+        if ((xOrigin + x > 0) && (xOrigin + x < MAP_DIMENSION - 1) &&
+          (yOrigin + y > 0) && (yOrigin + y < MAP_DIMENSION - 1))
+          _setTileType(xOrigin + x, yOrigin + y, tileType);
+
+      } // end if
+    } // inner for loop
+  } // outer for loop
+
+}
 
 
 
@@ -425,7 +461,6 @@ int _checkMoney(int amount) {
   else
     return 0;
 }
-
 
 
 
