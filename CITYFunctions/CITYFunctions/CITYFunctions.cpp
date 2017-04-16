@@ -146,27 +146,6 @@ int _checkNewCityType() {
   return 0;
 }
 
-void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount) {
-
-  int x, y;
-
-  for (y = -radius; y <= radius; y++) {
-    for (x = -radius; x <= radius; x++) {
-      if ((x * x) + (y * y) <= (radius * radius)) {
-
-        // bounds checking:
-        if ((xOrigin + x > 0) && (xOrigin + x < MAP_DIMENSION - 1) &&
-          (yOrigin + y > 0) && (yOrigin + y < MAP_DIMENSION - 1)) {
-            // FUNCTION FOR SETTING DATA HERE!
-        }
-
-      } // end if
-    } // inner for loop
-  } // outer for loop
-
-}
-
-
 
 
 
@@ -194,8 +173,84 @@ void _setTileType(int xCoord, int yCoord, int type) {
     map(xCoord,yCoord)->tileType = type;
 }
 
+void _setTileData(int xCoord, int yCoord, int dataType, int amount) {
+
+  tile* curTile = map(xCoord, yCoord);
+
+  switch (dataType) {
+
+    case TDT_ALL: { 
+      curTile->pollution = amount;
+      curTile->landValue = amount;
+      curTile->fireDanger = amount;
+      break;
+    }
+
+    case TDT_POLLUTION: { 
+      curTile->pollution = amount;
+      break;
+    }
+
+    case TDT_LANDVALUE: {
+      curTile->landValue = amount;
+      break;
+    }
+
+    case TDT_FIREDANGER: {
+      curTile->fireDanger = amount;
+      break;
+    }
+
+    default: {
+      break;
+    }
+
+  } // end switch
+
+}
+
+void _addTileData(int xCoord, int yCoord, int dataType, int amount) {
+
+  tile* curTile = map(xCoord, yCoord);
+
+  switch (dataType) {
+
+    case TDT_POLLUTION: { 
+      curTile->pollution += amount;
+      break;
+    }
+
+    case TDT_LANDVALUE: {
+      curTile->landValue += amount;
+      break;
+    }
+
+    case TDT_FIREDANGER: {
+      curTile->fireDanger += amount;
+      break;
+    }
+
+    default: {
+      break;
+    }
+
+  } // end switch
+
+}
+
+void _zeroTileData(int dataType) {
+  tile* curTile;
+
+  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
+    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
+      _setTileData(c, r, dataType, 0);
+    }
+  }
+
+}
+
 std::string _tileTypeToString() {
-  std::string typeData;
+  std::string typeData = "";
 
   tile* iter = map(0, 0);
   for (int r = 0; r < MAP_DIMENSION; r++) {
@@ -246,6 +301,81 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
     } // inner for loop
   } // outer for loop
 
+}
+
+int _getTileData(int x, int y, int dataType) {
+  
+  tile* curTile = map(x, y);
+  
+  switch (dataType) {
+    
+    case TDT_ALL: { 
+      return -1; // error code
+      break;
+    }
+
+    case TDT_POLLUTION: { 
+      return curTile->pollution;
+      break;
+    }
+
+    case TDT_LANDVALUE: {
+      return curTile->landValue;
+      break;
+    }
+
+    case TDT_FIREDANGER: {
+      return curTile->fireDanger;
+      break;
+    }
+
+    default: {
+      return -2; // error code
+      break;
+    }
+
+  }
+  
+  return -3; // error code
+}
+
+void _addDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount) {
+
+  int x, y;
+
+  for (y = -radius; y <= radius; y++) {
+    for (x = -radius; x <= radius; x++) {
+      if ((x * x) + (y * y) <= (radius * radius)) {
+
+        // bounds checking:
+        if ((xOrigin + x > 0) && (xOrigin + x < MAP_DIMENSION - 1) &&
+          (yOrigin + y > 0) && (yOrigin + y < MAP_DIMENSION - 1)) {
+          // set data
+          _addTileData(xOrigin + x, yOrigin + y, dataType, amount);
+        }
+
+      } // end if
+    } // inner for loop
+  } // outer for loop
+
+}
+
+
+std::string _tileDataToString(int dataType) {
+  
+  std::string dataString = "";
+  tile* iter;
+  int value;
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+
+      value = _getTileData(r, c, dataType);
+      dataString += std::to_string(value);
+      dataString += ',';
+    }
+  }
+
+  return dataString;
 }
 
 
@@ -850,7 +980,6 @@ double setPopulation(double pop) {
 
 
 
-
 // MAP GENERATION -----------------------
 // set some initial seeds LATER UPDATE TO INCLUDE TYPE ---------------FIXME
 double seedMap(double type, double seedAmount) {
@@ -923,8 +1052,24 @@ char* tileTypeToString() {
   return cstr;
 }
 
+double zeroTileData(double dataType) {
+  int dataTypeInt = (int)dataType;
+  _zeroTileData(dataTypeInt);
+  return 0;
+}
 
+double addDataCircle(double x, double y, double radius, double dataType, double amount) {
 
+  int xInt = (int)x;
+  int yInt = (int)y;
+  int radiusInt = (int)radius;
+  int dataTypeInt = (int)dataType;
+  int amountInt = (int)amount;
+
+  _addDataCircle(xInt, yInt, radiusInt, dataTypeInt, amountInt);
+
+  return 0;
+}
 
 
 
@@ -1281,3 +1426,41 @@ void _testGameData(int months) {
 }
 
 
+void _testPrintTileData(int dataType) {
+
+  std::string dataString = _tileDataToString(dataType);
+
+  // print out using columns:
+  int r, c;
+
+  std::cout << std::endl;
+  std::cout << "Map Data for dataType: " << dataType << std::endl;
+  std::cout << std::endl;
+
+  // convert to cString:
+  char* dataStringC = strdup(dataString.c_str());
+
+  // first token:
+  char* token = strtok(dataStringC, ",");
+  // print first string
+  if (token != NULL)
+    std::cout << token;
+
+  for (r = 0; r < MAP_DIMENSION; r++) {
+    for (c = 1; c < MAP_DIMENSION; c++) { // first already printed
+
+      token = strtok(NULL, ",");
+      if (token != NULL) {
+        if (token[0] != '0')
+          std::cout << token;
+        else
+          std::cout << " ";
+      }
+    }
+    std::cout << std::endl; // new line for rows
+  }
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+}

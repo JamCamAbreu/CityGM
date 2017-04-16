@@ -317,6 +317,32 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_zeroTileData</name>
+          <externalName>zeroTileData</externalName>
+          <kind>12</kind>
+          <help>DLL_zeroTileData(int dataType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_addDataCircle</name>
+          <externalName>addDataCircle</externalName>
+          <kind>12</kind>
+          <help>DLL_addData</help>
+          <returnType>2</returnType>
+          <argCount>5</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -606,6 +632,26 @@
         </constant>
         <constant>
           <name>MD_MENU</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TDT_ALL</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TDT_POLLUTION</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TDT_LANDVALUE</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TDT_FIREDANGER</name>
           <value>3</value>
           <hidden>0</hidden>
         </constant>

@@ -144,6 +144,13 @@ enum {
 }cityType;
 
 
+enum {
+  TDT_ALL,
+  TDT_POLLUTION,
+  TDT_LANDVALUE,
+  TDT_FIREDANGER
+}tileDataType;
+
 
 // STRUCT DEFINITIONS ----------------------
 
@@ -167,6 +174,9 @@ typedef struct tile {
   int y;
   int trueIndex;
   int tileType;
+  int pollution;
+  int landValue;
+  int fireDanger;
 }tile;
 
 typedef struct building {
@@ -245,14 +255,20 @@ void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amou
 
 // TILE FUNCTIONS --------------------------
 
-std::string _tileTypeToString();
 
 void _setTileType(int xCoord, int yCoord, int type);
 
+void _setTileData(int xCoord, int yCoord, int dataType, int amount);
+
+void _addTileData(int xCoord, int yCoord, int dataType, int amount);
+
+void _zeroTileData(int dataType);
+
+std::string _tileTypeToString();
 
 void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType);
 
-
+std::string _tileDataToString(int dataType);
 
 
 
@@ -343,10 +359,13 @@ int _getIntRange(int min, int max);
 
 
 // INTERFACE ----------------------------------------------
+
+// Init
 GMEXPORT double initDLL();
 GMEXPORT double initMap();
 GMEXPORT double mapEnd();
 
+// Game Data:
 GMEXPORT double getGameYear();
 GMEXPORT double getGameMonth();
 GMEXPORT double getGameSeason();
@@ -364,31 +383,32 @@ GMEXPORT double deductFunds(double cost);
 GMEXPORT double setPopulation(double pop);
 
 
-
+// Tile functions
 GMEXPORT double seedMap(double type, double seedAmount);
 GMEXPORT double growSeeds(double type, double amount);
-
 GMEXPORT double setTileType(double xCoord, double yCoord, double type);
-
 GMEXPORT char* tileTypeToString();
+GMEXPORT double zeroTileData(double dataType);
+GMEXPORT double addDataCircle(double x, double y, double radius, double dataType, double amount);
 
+// Building Functions
 GMEXPORT double addBuilding(double type, double x, double y);
 GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
 GMEXPORT double getBuildingVectorSize();
 GMEXPORT double getBuildingPrice(double buildingType);
-
 GMEXPORT char* buildingsToString();
 
+// Utility functions
 GMEXPORT double getRandomRange(double min, double max);
+
 
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
 GMEXPORT void _printMapTypes();
 GMEXPORT void _testStringOutput();
-
-
 GMEXPORT void _testPrintBuildingList();
 GMEXPORT void _testString();
 GMEXPORT void _testGameData(int months);
+GMEXPORT void _testPrintTileData(int dataType);
 
 #endif
 
