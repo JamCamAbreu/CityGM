@@ -91,10 +91,13 @@
       <sprite>sprites\spr_SPfast</sprite>
     </sprites>
     <sprites name="menuIcons">
-      <sprite>sprites\spr_menuData</sprite>
+      <sprite>sprites\spr_menuTax</sprite>
       <sprite>sprites\spr_menuGraphs</sprite>
       <sprite>sprites\spr_menuFile</sprite>
       <sprite>sprites\spr_menuMaps</sprite>
+      <sprite>sprites\spr_MapsOverview</sprite>
+      <sprite>sprites\spr_MapsPollution</sprite>
+      <sprite>sprites\spr_MapsError</sprite>
     </sprites>
   </sprites>
   <backgrounds name="background"/>
@@ -189,6 +192,20 @@
         <script>scripts\scr_getGameMenuButtonSprite.gml</script>
         <script>scripts\scr_gameMenuKeys.gml</script>
         <script>scripts\scr_drawMenuSelected.gml</script>
+        <script>scripts\scr_selectMenuOption.gml</script>
+      </scripts>
+      <scripts name="ModeTax">
+        <script>scripts\scr_drawTaxScreen.gml</script>
+      </scripts>
+      <scripts name="ModeGraphs">
+        <script>scripts\scr_drawGraphsScreen.gml</script>
+      </scripts>
+      <scripts name="ModeMaps">
+        <script>scripts\scr_drawMapsScreen.gml</script>
+        <script>scripts\scr_getMapIconSprites.gml</script>
+      </scripts>
+      <scripts name="ModeFile">
+        <script>scripts\scr_drawFileScreen.gml</script>
       </scripts>
     </scripts>
     <scripts name="Screen">
@@ -213,7 +230,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="68">
+  <constants number="83">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -274,7 +291,7 @@
     <constant name="BUILDINGINFO_Y1">BUILDMENU_Y1 + BAR_UNIT*2</constant>
     <constant name="CURTAIN_IN">60</constant>
     <constant name="CURTAIN_OUT">60</constant>
-    <constant name="MENU_DATA">0</constant>
+    <constant name="MENU_TAX">0</constant>
     <constant name="MENU_GRAPHS">1</constant>
     <constant name="MENU_MAPS">2</constant>
     <constant name="MENU_FILE">3</constant>
@@ -282,6 +299,21 @@
     <constant name="VIEW_NORMAL_H">320</constant>
     <constant name="VIEW_ZOUT_W">720</constant>
     <constant name="VIEW_ZOUT_H">480</constant>
+    <constant name="MENU_MAP_NUM">3</constant>
+    <constant name="MENU_MAP_ICON">128</constant>
+    <constant name="MENU_MAP_PAD">16</constant>
+    <constant name="MENU_MAP_X1">view_xview + 8</constant>
+    <constant name="MENU_MAP_W">MENU_MAP_NUM*(MENU_MAP_ICON + MENU_MAP_PAD) + MENU_MAP_PAD*2</constant>
+    <constant name="MENU_MAP_Y1">BAR_IN_Y2 + MENU_MAP_PAD</constant>
+    <constant name="MENU_MAP_H">MENU_MAP_ICON + MENU_MAP_PAD</constant>
+    <constant name="MENU_MAP_ICON_X1">MENU_MAP_X1 + MENU_MAP_PAD</constant>
+    <constant name="MENU_MAP_ICON_Y1">MENU_MAP_Y1 + MENU_MAP_PAD/2</constant>
+    <constant name="MENU_MAP_OVERVIEW">0</constant>
+    <constant name="MENU_MAP_POLLUTION">1</constant>
+    <constant name="MENU_MAP_2">2</constant>
+    <constant name="MENU_MAP_D_X1">MENU_MAP_X1</constant>
+    <constant name="MENU_MAP_D_Y1">MENU_MAP_Y1 + MENU_MAP_H + MENU_MAP_PAD</constant>
+    <constant name="MENU_MAP_D_H">MENU_MAP_PAD*2</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

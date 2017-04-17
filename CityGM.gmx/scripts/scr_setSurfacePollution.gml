@@ -55,29 +55,30 @@ if (surface_exists(argument0.surfacePollutionMap)) {
                     stringPos++;
                 }
                 stringPos++;
-                val = real(valString);
                 
-                // debug
-                //if (c == 12 && r == 12)
-                    //show_message("test");
-                //if (val != 0)
-                    //show_message("i = " + string(i) + ", val = " + string(val));
+                if (valString != 'W') {
+                    val = real(valString); // convert to real number
+                 
+                    // set color according to data:
+                    if (val > 80)
+                        color = c_white;
+                    else if (val > 50)
+                        color = make_colour_hsv(0, 255, 225); // red
+                    else if (val > 30)
+                        color = make_colour_hsv(45, 170, 240); // yellow
+                    else if (val > 5)
+                        color = make_colour_hsv(90, 255, 255); // green
+                    else if (val >= 0)
+                       color = make_colour_hsv(90, 230, 180); // green
+                }
+                else
+                    color = c_blue;
         
                 // position to draw:
                 xCoord = mapX1 + ((c)*MINIMAP_PIXEL);
                 yCoord = mapY1 + ((r)*MINIMAP_PIXEL);
                 
-                if (val <= 5)
-                    color = c_gray;
-                else
-                    color = make_colour_hsv(90, 255, 255); // green
-                    
-                if (val > 30)
-                    color = make_colour_hsv(45, 170, 240); // yellow
-                if (val > 50)
-                    color = make_colour_hsv(0, 255, 225); // red
-                if (val > 80)
-                    color = c_white;
+
                 
                 draw_rectangle_colour(xCoord, yCoord, xCoord + MINIMAP_PIXEL, yCoord + MINIMAP_PIXEL, color, color, color, color, false);
             } // end if

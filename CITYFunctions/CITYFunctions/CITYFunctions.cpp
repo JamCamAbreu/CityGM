@@ -274,9 +274,13 @@ int _getTileData(int x, int y, int dataType) {
 void _zeroTileData(int dataType) {
   tile* curTile;
 
-  for (int r = 1; r < MAP_DIMENSION - 1; r++) {
-    for (int c = 1; c < MAP_DIMENSION - 1; c++) {
-      _setTileData(c, r, dataType, 0);
+  for (int r = 0; r < MAP_DIMENSION - 1; r++) {
+    for (int c = 0; c < MAP_DIMENSION - 1; c++) {
+      curTile = map(c, r);
+      if (curTile->tileType == TT_WATER)
+        _setTileData(c, r, dataType, -1); // water code
+      else
+        _setTileData(c, r, dataType, 0);
     }
   }
 
@@ -349,7 +353,7 @@ void _addTileData(int xCoord, int yCoord, int dataType, int amount) {
 
 void _addDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount) {
 
-  int x, y;
+  int x, y, distance;
 
   for (y = -radius; y <= radius; y++) {
     for (x = -radius; x <= radius; x++) {
@@ -358,8 +362,15 @@ void _addDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amou
         // bounds checking:
         if ((xOrigin + x > 0) && (xOrigin + x < MAP_DIMENSION - 1) &&
           (yOrigin + y > 0) && (yOrigin + y < MAP_DIMENSION - 1)) {
+
+          // calculate the distance from radius:
+          distance = (int)std::sqrt((double)((y*y) + (x*x)));
+          if (distance == 0)
+            distance = 1;
+
+
           // set data
-          _addTileData(xOrigin + x, yOrigin + y, dataType, amount);
+          _addTileData(xOrigin + x, yOrigin + y, dataType, (amount/distance));
         }
 
       } // end if
@@ -406,7 +417,10 @@ std::string _tileDataToString(int dataType) {
     for (int c = 0; c < MAP_DIMENSION; c++) {
 
       value = _getTileData(c, r, dataType);
-      dataString += std::to_string(value);
+      if (value > 0)
+        dataString += std::to_string(value);
+      else if (value == -1)
+        dataString += 'W'; // water code
       dataString += ',';
     }
   }

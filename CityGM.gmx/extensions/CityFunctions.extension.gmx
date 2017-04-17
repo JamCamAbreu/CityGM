@@ -677,6 +677,26 @@
           <value>3</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>MD_TAX</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_GRAPHS</name>
+          <value>5</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_MAPS</name>
+          <value>6</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_FILE</name>
+          <value>7</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

@@ -24,10 +24,17 @@ int main() {
       std::cout << i;
   }
 
+
+  seedMap(TT_WATER, 3);
+  growSeeds(TT_WATER, 5);
+
+  seedMap(TT_TREE, 4);
+  growSeeds(TT_TREE, 3);
+
   //addBuilding(BT_POLICE, 2, 4);
   //addBuilding(BT_FIRE, 8, 4);
-  //addBuilding(BT_COAL, 10, 8);
-  //addBuilding(BT_SCHOOL, 50, 40);
+  addBuilding(BT_COAL, 10, 8);
+  addBuilding(BT_SCHOOL, 50, 40);
   addBuilding(BT_AIRPORT, 0, 10);
   _printMapTypes();
 

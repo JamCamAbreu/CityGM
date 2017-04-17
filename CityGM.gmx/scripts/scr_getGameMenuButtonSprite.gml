@@ -2,8 +2,8 @@
 
 switch (argument0) {
 
-    case MENU_DATA:
-        return spr_menuData;
+    case MENU_TAX:
+        return spr_menuTax;
         break;
         
     case MENU_GRAPHS:

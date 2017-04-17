@@ -98,7 +98,11 @@ enum {
   MD_NORMAL = 0, // default
   MD_SELECT,
   MD_PLACE,
-  MD_MENU        // add other modes too, like dataGen mode etc...
+  MD_MENU,        // add other modes too, like dataGen mode etc...
+  MD_TAX,
+  MD_GRAPHS,
+  MD_MAPS,
+  MD_FILE
 }modeTypes;
 
 enum {

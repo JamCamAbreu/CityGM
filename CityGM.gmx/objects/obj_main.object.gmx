@@ -114,7 +114,7 @@ selectedBuildingString = scr_setBuildingMenuString(selectedBuilding);
 
 
 // Game Menu ------------------
-selectedMenu = MENU_DATA;   // default value
+selectedMenu = MENU_TAX;   // default value
 
 
 
@@ -387,17 +387,28 @@ DLL_mapEnd();
     }
         
     // Building PLACEMENT:
-    if (gameMode == MD_PLACE) {
+    else if (gameMode == MD_PLACE) {
         scr_drawPlacement(id);
         scr_drawBuildingInfo(id);
         scr_drawQtoQuit();
     }
     
     // Game Menu:
-    if (gameMode == MD_MENU) {
+    else if (gameMode == MD_MENU) {
         scr_drawMenuSelected(selectedMenu);
         scr_drawQtoQuit();
     }
+    
+    // Tax Menu:
+    
+    // Graphs Menu:
+    
+    // Map Menu:
+    else if (gameMode == MD_MAPS) {
+        scr_drawMapsScreen();
+    }
+    
+    // File Menu:
     
     // season change:
     if (drawCurtain) {
@@ -418,6 +429,7 @@ DLL_mapEnd();
 if (updateSurfaces) {
     scr_setSurfaceMiniMap(tileString, tileStringSize, id);
     scr_setSurfacePollution(id);
+    scr_updateAll(id)
     updateSurfaces = false;
 }
 </string>
@@ -641,9 +653,7 @@ else if (gameMode == MD_PLACE) {
 
 // Enter a menu option when in menu mode:
 else if (gameMode == MD_MENU) {
-    // SCRIPT HERE
-    // debug:
-    audio_play_sound(sfx_error, 5, false);
+    scr_selectMenuOption(id);
 }
 </string>
           </argument>
