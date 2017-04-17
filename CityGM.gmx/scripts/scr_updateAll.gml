@@ -26,3 +26,8 @@ scr_updatePopString(argument0);
 
 // update gameMode
 argument0.gameMode = DLL_getGameMode();
+
+
+// update tile data:
+DLL_zeroTileData(TDT_POLLUTION);
+DLL_addAllBuildingData(TDT_POLLUTION);

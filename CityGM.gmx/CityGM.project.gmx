@@ -156,6 +156,10 @@
       <script>scripts\scr_updateBuildingX.gml</script>
       <script>scripts\scr_updateBuildingY.gml</script>
       <script>scripts\scr_updateBuildings.gml</script>
+      <scripts name="PollutionMap">
+        <script>scripts\scr_setSurfacePollution.gml</script>
+        <script>scripts\scr_drawDataMap.gml</script>
+      </scripts>
     </scripts>
     <scripts name="GameDataOther">
       <script>scripts\scr_getCityTypeString.gml</script>

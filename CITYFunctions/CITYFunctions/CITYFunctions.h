@@ -196,7 +196,10 @@ typedef struct building {
 
   // other attributes:
   bool isPowered;
+
+  // tile data modifiers
   int pollution;
+  int landValueBoost;
 
   // connected power lines or roads
   //std::vector<powerLine*> adjacentPowerLines;
@@ -240,8 +243,6 @@ void _initGameData();
 void _setCityType(int type);
 int _checkNewCityType();
 
-void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount);
-
 
 
 
@@ -254,7 +255,9 @@ void _setDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amou
 
 
 // TILE FUNCTIONS --------------------------
+int _getTileData(int x, int y, int dataType);
 
+void _zeroTileData(int dataType);
 
 void _setTileType(int xCoord, int yCoord, int type);
 
@@ -262,7 +265,11 @@ void _setTileData(int xCoord, int yCoord, int dataType, int amount);
 
 void _addTileData(int xCoord, int yCoord, int dataType, int amount);
 
-void _zeroTileData(int dataType);
+void _addDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amount);
+
+int _getDataRadius(int data);
+
+void _addAllBuildingData(int dataType);
 
 std::string _tileTypeToString();
 
@@ -286,6 +293,10 @@ std::string _tileDataToString(int dataType);
 
 // BUILDING FUNCTIONS ----------------------
 int _getBuildingDimension(int type);
+
+int _getBuildingPollution(int type);
+
+int _getBuildingData(building* buildingID, int dataType);
 
 void _setBuildingTiles(building* buildingID, int x, int y, int dimension);
 
@@ -388,8 +399,14 @@ GMEXPORT double seedMap(double type, double seedAmount);
 GMEXPORT double growSeeds(double type, double amount);
 GMEXPORT double setTileType(double xCoord, double yCoord, double type);
 GMEXPORT char* tileTypeToString();
+
+
+// Tile Data
 GMEXPORT double zeroTileData(double dataType);
 GMEXPORT double addDataCircle(double x, double y, double radius, double dataType, double amount);
+GMEXPORT double addAllBuildingData(double dataType);
+GMEXPORT char* tileDataToString(double dataType);
+
 
 // Building Functions
 GMEXPORT double addBuilding(double type, double x, double y);

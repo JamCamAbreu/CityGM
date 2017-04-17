@@ -343,6 +343,28 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_addAllBuildingData</name>
+          <externalName>addAllBuildingData</externalName>
+          <kind>12</kind>
+          <help>DLL_addAllBuildingData(int dataType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_tileDataToString</name>
+          <externalName>tileDataToString</externalName>
+          <kind>12</kind>
+          <help>DLL_tileDataToString(int dataType)</help>
+          <returnType>1</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>

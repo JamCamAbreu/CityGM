@@ -16,17 +16,26 @@ int main() {
   initDLL();
   initMap();
 
+  // test width of screen
+  for (int i = 0; i < MAP_DIMENSION; i++) {
+    if (i < 10)
+      std::cout << i << " ";
+    else
+      std::cout << i;
+  }
+
+  //addBuilding(BT_POLICE, 2, 4);
+  //addBuilding(BT_FIRE, 8, 4);
+  //addBuilding(BT_COAL, 10, 8);
+  //addBuilding(BT_SCHOOL, 50, 40);
+  addBuilding(BT_AIRPORT, 0, 10);
   _printMapTypes();
 
+  zeroTileData(TDT_POLLUTION);
+  addAllBuildingData(TDT_POLLUTION);
 
-  _testPrintTileData(1);
+  _testPrintTileData(TDT_POLLUTION);
 
-  addDataCircle(10, 10, 4, 1, 3);
-  addDataCircle(30, 35, 9, 1, 9);
-  addDataCircle(17, 10, 6, 1, 4);
-
-
-  _testPrintTileData(1);
 
   mapEnd();
   std::cout << std::endl;

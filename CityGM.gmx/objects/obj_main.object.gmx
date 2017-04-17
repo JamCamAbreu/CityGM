@@ -65,6 +65,10 @@ surfaceMiniMap = noone; // init surface
 updateSurfaces = true; // draw first time
 toggleMiniMap = false;
 
+// Pollution map:
+surfacePollutionMap = noone; // init surface
+//togglePollutionMap = false;
+
 // Menu and Info:
 toggleDrawMenus = true;
 
@@ -334,8 +338,10 @@ DLL_mapEnd();
     scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawScreenBuildings(buildingElements, id); // pass in arrays?
     
-    if (toggleMiniMap) // 'M' key to toggle
+    if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
+        scr_drawDataMap(id);
+    }
     else {
         if (toggleDrawMenus)
             scr_drawMiniMapHelp();
@@ -411,6 +417,7 @@ DLL_mapEnd();
 // update:
 if (updateSurfaces) {
     scr_setSurfaceMiniMap(tileString, tileStringSize, id);
+    scr_setSurfacePollution(id);
     updateSurfaces = false;
 }
 </string>
