@@ -117,6 +117,10 @@ selectedBuildingString = scr_setBuildingMenuString(selectedBuilding);
 selectedMenu = MENU_TAX;   // default value
 
 
+// Selected Map ---------------
+selectedMap = MENU_MAP_OVERVIEW; // highlighted selection in map menu
+
+
 
 // Other: ---------------------
 // camera:
@@ -263,6 +267,10 @@ if (gameMode == MD_SELECT)
 // keys for game menu:
 if (gameMode == MD_MENU)
     scr_gameMenuKeys(id);
+    
+// keys for map menu:
+if (gameMode == MD_MAPS)
+    scr_selectMapKeys(id);
 </string>
           </argument>
         </arguments>
@@ -340,7 +348,9 @@ DLL_mapEnd();
     
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
-        scr_drawDataMap(id);
+        
+        if (selectedMap != MENU_MAP_OVERVIEW)
+            scr_drawDataMap(id);
     }
     else {
         if (toggleDrawMenus)
@@ -406,6 +416,8 @@ DLL_mapEnd();
     // Map Menu:
     else if (gameMode == MD_MAPS) {
         scr_drawMapsScreen();
+        scr_drawMapSelected(selectedMap);
+        scr_drawMapDescription(id);
     }
     
     // File Menu:
@@ -428,7 +440,11 @@ DLL_mapEnd();
 // update:
 if (updateSurfaces) {
     scr_setSurfaceMiniMap(tileString, tileStringSize, id);
-    scr_setSurfacePollution(id);
+    
+    if (selectedMap == MENU_MAP_POLLUTION)
+        scr_setSurfacePollution(id);
+    
+    
     scr_updateAll(id)
     updateSurfaces = false;
 }
@@ -654,6 +670,12 @@ else if (gameMode == MD_PLACE) {
 // Enter a menu option when in menu mode:
 else if (gameMode == MD_MENU) {
     scr_selectMenuOption(id);
+}
+
+else if (gameMode == MD_MAPS) {
+    DLL_setGameMode(MD_NORMAL);
+    camera.camera_toggle = MD_NORMAL;
+    scr_updateAll(id);
 }
 </string>
           </argument>

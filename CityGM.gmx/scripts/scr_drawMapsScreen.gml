@@ -16,4 +16,4 @@ for (i = 0; i < amountOfButtons; i++) {
 }
 
 
-draw_rectangle(MENU_MAP_D_X1, MENU_MAP_D_Y1, MENU_MAP_D_X1 + MENU_MAP_W, MENU_MAP_D_Y1 + MENU_MAP_D_H, false);
+

@@ -98,6 +98,7 @@
       <sprite>sprites\spr_MapsOverview</sprite>
       <sprite>sprites\spr_MapsPollution</sprite>
       <sprite>sprites\spr_MapsError</sprite>
+      <sprite>sprites\spr_MapsSelected</sprite>
     </sprites>
   </sprites>
   <backgrounds name="background"/>
@@ -159,7 +160,7 @@
       <script>scripts\scr_updateBuildingX.gml</script>
       <script>scripts\scr_updateBuildingY.gml</script>
       <script>scripts\scr_updateBuildings.gml</script>
-      <scripts name="PollutionMap">
+      <scripts name="Other Maps">
         <script>scripts\scr_setSurfacePollution.gml</script>
         <script>scripts\scr_drawDataMap.gml</script>
       </scripts>
@@ -203,6 +204,10 @@
       <scripts name="ModeMaps">
         <script>scripts\scr_drawMapsScreen.gml</script>
         <script>scripts\scr_getMapIconSprites.gml</script>
+        <script>scripts\scr_drawMapSelected.gml</script>
+        <script>scripts\scr_selectMapKeys.gml</script>
+        <script>scripts\scr_selectMap.gml</script>
+        <script>scripts\scr_drawMapDescription.gml</script>
       </scripts>
       <scripts name="ModeFile">
         <script>scripts\scr_drawFileScreen.gml</script>
@@ -313,7 +318,7 @@
     <constant name="MENU_MAP_2">2</constant>
     <constant name="MENU_MAP_D_X1">MENU_MAP_X1</constant>
     <constant name="MENU_MAP_D_Y1">MENU_MAP_Y1 + MENU_MAP_H + MENU_MAP_PAD</constant>
-    <constant name="MENU_MAP_D_H">MENU_MAP_PAD*2</constant>
+    <constant name="MENU_MAP_D_H">MENU_MAP_PAD*3</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
