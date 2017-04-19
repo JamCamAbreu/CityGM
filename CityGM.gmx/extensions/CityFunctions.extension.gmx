@@ -365,6 +365,40 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_setAllTileDataValue</name>
+          <externalName>setAllTileDataValue</externalName>
+          <kind>12</kind>
+          <help>DLL_setAllTileDataValue(int dataType, int value)</help>
+          <returnType>2</returnType>
+          <argCount>2</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_addWaterTileValue</name>
+          <externalName>addWaterTileValue</externalName>
+          <kind>12</kind>
+          <help>DLL_addWaterTileValue(int dataType, int radius, int amount)</help>
+          <returnType>2</returnType>
+          <argCount>3</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_subtractLandValuePollution</name>
+          <externalName>subtractLandValuePollution</externalName>
+          <kind>12</kind>
+          <help>DLL_subtractLandValuePollution()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
+          <args/>
+        </function>
       </functions>
       <constants>
         <constant>

@@ -10,7 +10,7 @@ switch (argument0) {
         return spr_MapsPollution;
         break;
         
-    case MENU_MAP_2:
+    case MENU_MAP_LANDVALUE:
         return spr_MapsError;
         break;
 

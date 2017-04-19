@@ -263,6 +263,8 @@ int _getTileData(int x, int y, int dataType);
 
 void _zeroTileData(int dataType);
 
+void _setAllTileDataValue(int dataType, int value);
+
 void _setTileType(int xCoord, int yCoord, int type);
 
 void _setTileData(int xCoord, int yCoord, int dataType, int amount);
@@ -281,6 +283,9 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType);
 
 std::string _tileDataToString(int dataType);
 
+void _addWaterTileValue(int dataType, int radius, int amount);
+
+void _subtractLandValuePollution();
 
 
 
@@ -288,10 +293,7 @@ std::string _tileDataToString(int dataType);
 
 
 
-
-
-
-
+ 
 
 
 
@@ -407,9 +409,12 @@ GMEXPORT char* tileTypeToString();
 
 // Tile Data
 GMEXPORT double zeroTileData(double dataType);
+GMEXPORT double setAllTileDataValue(double dataType, double value);
 GMEXPORT double addDataCircle(double x, double y, double radius, double dataType, double amount);
 GMEXPORT double addAllBuildingData(double dataType);
 GMEXPORT char* tileDataToString(double dataType);
+GMEXPORT double addWaterTileValue(double dataType, double radius, double amount);
+GMEXPORT double subtractLandValuePollution();
 
 
 // Building Functions

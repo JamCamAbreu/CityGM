@@ -15,9 +15,9 @@ var viewBorderY1 = mapY1 + floor((view_yview/room_height)*miniMapDimension);
 var viewBorderY2 = viewBorderY1 + viewBorderHeight;
 
 // draw map and black border:
-if (surface_exists(argument0.surfacePollutionMap)) {
+if (surface_exists(argument0.surfaceSpecialMap)) {
     draw_set_alpha(1);
-    draw_surface(surfacePollutionMap, mapX1, mapY1);
+    draw_surface(surfaceSpecialMap, mapX1, mapY1);
     
     // draw square border:
     draw_rectangle(viewBorderX1 - 1, viewBorderY1 - 1, viewBorderX2, viewBorderY2, true);

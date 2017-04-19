@@ -29,5 +29,5 @@ argument0.gameMode = DLL_getGameMode();
 
 
 // update tile data:
-DLL_zeroTileData(TDT_POLLUTION);
-DLL_addAllBuildingData(TDT_POLLUTION);
+scr_updatePollution();
+scr_updateLandValue();

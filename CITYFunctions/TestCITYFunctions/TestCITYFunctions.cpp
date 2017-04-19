@@ -38,11 +38,11 @@ int main() {
   addBuilding(BT_AIRPORT, 0, 10);
   _printMapTypes();
 
-  zeroTileData(TDT_POLLUTION);
-  addAllBuildingData(TDT_POLLUTION);
+  setAllTileDataValue(TDT_LANDVALUE, 50);
+  _testPrintTileData(TDT_LANDVALUE);
 
-  _testPrintTileData(TDT_POLLUTION);
-
+  addWaterTileValue(TDT_LANDVALUE, 8, 1);
+  _testPrintTileData(TDT_LANDVALUE);
 
   mapEnd();
   std::cout << std::endl;

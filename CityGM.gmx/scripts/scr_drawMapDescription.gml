@@ -16,8 +16,8 @@ switch (argument0.selectedMap) {
         description = "Pollution Map: Contains information about the pollution caused by your buildings and zones.";
         break;
         
-    case MENU_MAP_2:
-        description = "Map3: Coming soon!";
+    case MENU_MAP_LANDVALUE:
+        description = "Land Value: Coming soon!";
         break;
 
     default:

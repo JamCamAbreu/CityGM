@@ -274,8 +274,8 @@ int _getTileData(int x, int y, int dataType) {
 void _zeroTileData(int dataType) {
   tile* curTile;
 
-  for (int r = 0; r < MAP_DIMENSION - 1; r++) {
-    for (int c = 0; c < MAP_DIMENSION - 1; c++) {
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
       curTile = map(c, r);
       if (curTile->tileType == TT_WATER)
         _setTileData(c, r, dataType, -1); // water code
@@ -284,6 +284,20 @@ void _zeroTileData(int dataType) {
     }
   }
 
+}
+
+void _setAllTileDataValue(int dataType, int value) {
+  tile* curTile;
+
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      curTile = map(c, r);
+      if (curTile->tileType == TT_WATER)
+        _setTileData(c, r, dataType, -1); // water code
+      else
+        _setTileData(c, r, dataType, value);
+    }
+  }
 }
 
 void _setTileData(int xCoord, int yCoord, int dataType, int amount) {
@@ -428,8 +442,53 @@ std::string _tileDataToString(int dataType) {
   return dataString;
 }
 
+void _addWaterTileValue(int dataType, int radius, int amount) {
+
+  // iterate through all tiles, adding data in a largish 
+  // radius if the tile type is of water type.
+  tile* curTile;
+
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      curTile = map(c, r);
+      if (curTile->tileType == TT_WATER)
+        _addDataCircle(c, r, radius, dataType, amount);
+    }
+  }
 
 
+  // iterate through tiles again, reseting the water tiles
+  // themselves to having a -1 value for map printing. 
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      curTile = map(c, r);
+      if (curTile->tileType == TT_WATER)
+        _setTileData(c, r, dataType, -1); // water code
+    }
+  }
+
+
+
+}
+
+void _subtractLandValuePollution() {
+  tile* curTile;
+
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+      curTile = map(c, r);
+      if (curTile->tileType != TT_WATER) {
+
+        int pol = ((curTile->pollution)/2); // -50 is worst penalty
+        _addTileData(c, r, TDT_LANDVALUE, (-pol));
+
+      } // end if != TT_WATER
+    
+    } // outer
+  } // inner
+
+
+}
 
 
 
@@ -969,6 +1028,9 @@ double initMap() {
       iter->y = r;
       iter->trueIndex = accumulator;
       iter->tileType = TT_GRASS;
+      iter->pollution = 0;
+      iter->landValue = 50;
+      iter->fireDanger = 0;
 
     accumulator++;
     iter++; // increments sizeof(tile)
@@ -1192,6 +1254,14 @@ double zeroTileData(double dataType) {
   return 0;
 }
 
+double setAllTileDataValue(double dataType, double value) {
+  int typeInt = (int)dataType;
+  int valueInt = (int)value;
+
+  _setAllTileDataValue(typeInt, valueInt);
+  return 0;
+}
+
 double addDataCircle(double x, double y, double radius, double dataType, double amount) {
 
   int xInt = (int)x;
@@ -1223,6 +1293,26 @@ char* tileDataToString(double dataType) {
 
   return dataString;
 }
+
+double addWaterTileValue(double dataType, double radius, double amount) {
+  int typeInt = (int)dataType;
+  int radiusInt = (int)radius;
+  int amountInt = (int)amount;
+
+  _addWaterTileValue(typeInt, radiusInt, amountInt);
+  return 0;
+}
+
+double subtractLandValuePollution() {
+  _subtractLandValuePollution();
+  return 0;
+}
+
+
+
+
+
+
 
 
 
@@ -1613,8 +1703,8 @@ void _testPrintTileData(int dataType) {
     }
   }
 
-  for (r = 0; r < MAP_DIMENSION; r++) {
-    for (c = 0; c < MAP_DIMENSION; c++) { // first already printed
+  for (r = 0; r < MAP_DIMENSION - 1; r++) {
+    for (c = 0; c < MAP_DIMENSION - 1; c++) { // first already printed
 
       if (r != 0 && c != 0) { // skip first
         token = strtok(NULL, ",");

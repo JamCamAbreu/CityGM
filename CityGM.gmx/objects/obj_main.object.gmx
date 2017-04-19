@@ -66,8 +66,7 @@ updateSurfaces = true; // draw first time
 toggleMiniMap = false;
 
 // Pollution map:
-surfacePollutionMap = noone; // init surface
-//togglePollutionMap = false;
+surfaceSpecialMap = noone; // init surface
 
 // Menu and Info:
 toggleDrawMenus = true;
@@ -350,7 +349,7 @@ DLL_mapEnd();
         scr_drawMiniMap(id);
         
         if (selectedMap != MENU_MAP_OVERVIEW)
-            scr_drawDataMap(id);
+            scr_drawSpecialMap(id);
     }
     else {
         if (toggleDrawMenus)
@@ -443,7 +442,8 @@ if (updateSurfaces) {
     
     if (selectedMap == MENU_MAP_POLLUTION)
         scr_setSurfacePollution(id);
-    
+    else if (selectedMap == MENU_MAP_LANDVALUE)
+        scr_setSurfaceLandValue(id);
     
     scr_updateAll(id)
     updateSurfaces = false;
