@@ -688,6 +688,7 @@ void _setBuildingTiles(building* buildingID, int x, int y, int dimension) {
 
 building* _newBuilding(int type, int x, int y) {
 
+
   building* newBuilding = new building;
 
   // attribute defaults:
@@ -985,15 +986,24 @@ int _initZoneBuildings(zone* zoneID) {
 
   return 0;
 }
+int _BtypeToZtype(int bType) {
+  if (bType == BT_RZONE)
+    return Z_RES;
+  else if (bType == BT_CZONE)
+    return Z_COM;
+  else if (bType == BT_IZONE)
+    return Z_IND;
+  else
+    return -1; // error code
+}
 
-int _newZone(int xCoord, int yCoord, int zoneType) {
+zone* _newZone(int xCoord, int yCoord, int zoneType) {
 
-  zone* newZone;
+  zone* newZone = new zone;
 
   switch (zoneType) {
 
   case Z_RES: {
-    newZone = new zone;
     newZone->xOrigin = xCoord;
     newZone->yOrigin = yCoord;
     newZone->zoneType = Z_RES;
@@ -1001,11 +1011,9 @@ int _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    return 0;
     break; }
 
   case Z_COM: {
-    newZone = new zone;
     newZone->xOrigin = xCoord;
     newZone->yOrigin = yCoord;
     newZone->zoneType = Z_COM;
@@ -1013,11 +1021,9 @@ int _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    return 0;
     break; }
 
   case Z_IND: {
-    newZone = new zone;
     newZone->xOrigin = xCoord;
     newZone->yOrigin = yCoord;
     newZone->zoneType = Z_IND;
@@ -1025,15 +1031,21 @@ int _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    return 0;
     break; }
 
   default: {
-    return -1; // error code
+    newZone->xOrigin = xCoord;
+    newZone->yOrigin = yCoord;
+    newZone->zoneType = -1; // error type
+    newZone->totalPopCap = 0;
+    newZone->totalPopCur = 0;
+    newZone->totalPollution = 0;
+    _initZoneBuildings(newZone);
+
     break; }
   } // end switch
 
-  return -1; // error code
+  return newZone;
 }
 
 
@@ -1064,7 +1076,21 @@ void _cleanUpAllZones() {
 
 }
 
+void _clearOneZone(zone* deleteZone) {
 
+  // look up zone in any of the lists:
+  if (deleteZone != NULL)
+    Rzones.remove(deleteZone);
+  if (deleteZone != NULL)
+    Czones.remove(deleteZone);
+  if (deleteZone != NULL)
+    Izones.remove(deleteZone);
+
+  if (deleteZone != NULL) {
+    deleteZone->zoneBuildings.clear();
+    delete deleteZone;
+  }
+}
 
 
 
@@ -1640,11 +1666,38 @@ double addBuilding(double type, double x, double y) {
     canBuild = _checkMoney(price);
 
   if (canBuild) {
-    // create a new building:
-    building* newBuilding = _newBuilding(typeInt, xInt, yInt);
 
-    // add building to vector
-    v_buildings.push_back(newBuilding);
+    // Build Road:
+    if (type == BT_ROAD) {
+      // special code for roads
+    }
+    // Build Power Line:
+    else if (type == BT_PLINE) {
+      // special code for power lines
+    }
+    // Build ZONE:
+    else if (type == BT_RZONE || type == BT_CZONE || type == BT_IZONE) {
+      int zoneType = _BtypeToZtype(type);// START HERE
+      zone* newZone = _newZone(xInt, yInt, zoneType);
+      if (type == BT_RZONE)
+        Rzones.push_front(newZone);
+      else if (type == BT_CZONE)
+        Czones.push_front(newZone);
+      else if (type == BT_IZONE)
+        Izones.push_front(newZone);
+      else {
+        _clearOneZone(newZone); // invalid type
+      }
+
+    }
+    // Build Other (like Power Plant, or Police Station, etc...)
+    else {
+      // create a new building:
+      building* newBuilding = _newBuilding(typeInt, xInt, yInt);
+
+      // add building to vector
+      v_buildings.push_back(newBuilding);
+    }
 
     // subtract money:
     deductFunds(price);

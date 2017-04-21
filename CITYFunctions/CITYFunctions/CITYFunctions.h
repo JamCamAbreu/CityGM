@@ -457,12 +457,13 @@ int _getZoneBuildingPopMin(int zoneType, int level);
 
 int _initZoneBuildings(zone* zoneID);
 
-int _newZone(int xCoord, int yCoord, int zoneType);
+zone* _newZone(int xCoord, int yCoord, int zoneType);
 
 
+void _clearOneZone(zone* deleteZone);
 void _cleanUpAllZones();
 
-
+int _BtypeToZtype(int bType);
 
 
 
