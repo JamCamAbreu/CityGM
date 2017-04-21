@@ -121,7 +121,7 @@ selectedMap = MENU_MAP_OVERVIEW; // highlighted selection in map menu
 curSpecialMap = MENU_MAP_OVERVIEW;
 mapUnlocked[5] = false;
 mapUnlocked[4] = false;
-mapUnlocked[MENU_MAP_LANDVALUE] = false;
+mapUnlocked[MENU_MAP_LANDVALUE] = true;
 mapUnlocked[MENU_MAP_POLLUTION] = true;
 mapUnlocked[MENU_MAP_OVERVIEW] = true;
 

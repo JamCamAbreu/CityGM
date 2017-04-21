@@ -39,10 +39,12 @@ int main() {
   _printMapTypes();
 
   setAllTileDataValue(TDT_LANDVALUE, 50);
-  _testPrintTileData(TDT_LANDVALUE);
-
   addWaterTileValue(TDT_LANDVALUE, 8, 1);
-  _testPrintTileData(TDT_LANDVALUE);
+
+
+
+
+
 
   mapEnd();
   std::cout << std::endl;

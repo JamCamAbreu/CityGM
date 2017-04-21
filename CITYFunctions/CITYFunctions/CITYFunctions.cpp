@@ -9,9 +9,17 @@
 gameData curGameData;
 tile newMap[MAP_DIMENSION][MAP_DIMENSION];
 tile* mapStartAddress = &newMap[0][0];
-std::vector<building*> v_buildings; // cleaned up in mapEnd function
 
 int mode;
+
+// containers:
+std::vector<building*> v_buildings; // cleaned up in mapEnd function
+
+std::list<zone*> Rzones;            // cleaned up in mapEnd function
+std::list<zone*> Czones;
+std::list<zone*> Izones;
+
+
 
 tile* map(int x, int y) {
 
@@ -791,6 +799,298 @@ int _checkMoney(int amount) {
 
 
 
+
+
+
+// Zone functions:
+int _getZoneBuildingX(int squarePos) {
+  if (squarePos == 0 || squarePos == 3 || squarePos == 6)
+    return 0;
+  else if (squarePos == 1 || squarePos == 4 || squarePos == 7)
+    return 1;
+  else
+    return 2;
+}
+int _getZoneBuildingY(int squarePos) {
+  if (squarePos == 0 || squarePos == 1 || squarePos == 2)
+    return 0;
+  else if (squarePos == 3 || squarePos == 4 || squarePos == 5)
+    return 1;
+  else
+    return 2;
+}
+int _getZoneBuildingPopMin(int zoneType, int level) {
+
+  switch (zoneType) {
+
+  case Z_RES: {
+    switch (level) {
+    case 0:  {
+      return RL0;
+      break; }
+
+    case 1:  {
+      return RL1;
+      break; }
+
+    case 2:  {
+      return RL2;
+      break; }
+
+    case 3:  {
+      return RL3;
+      break; }
+
+    case 4:  {
+      return RL4;
+      break; }
+
+    case 5:  {
+      return RL5;
+      break; }
+
+    case 6:  {
+      return RL6;
+      break; }
+
+    case 7:  {
+      return RL7;
+      break; }
+
+    case 8:  {
+      return RL8;
+      break; }
+
+    default: {
+      return -2; // error code
+      break; }
+    } // end inner switch
+    break; }
+
+  case Z_COM: {
+    switch (level) {
+    case 0:  {
+      return CL0;
+      break; }
+
+    case 1:  {
+      return CL1;
+      break; }
+
+    case 2:  {
+      return CL2;
+      break; }
+
+    case 3:  {
+      return CL3;
+      break; }
+
+    case 4:  {
+      return CL4;
+      break; }
+
+    case 5:  {
+      return CL5;
+      break; }
+
+    case 6:  {
+      return CL6;
+      break; }
+
+    case 7:  {
+      return CL7;
+      break; }
+
+    case 8:  {
+      return CL8;
+      break; }
+
+    default: {
+      return -2; // error code
+      break; }
+    } // end inner switch
+    break; }
+
+  case Z_IND: {
+    switch (level) {
+    case 0:  {
+      return IL0;
+      break; }
+
+    case 1:  {
+      return IL1;
+      break; }
+
+    case 2:  {
+      return IL2;
+      break; }
+
+    case 3:  {
+      return IL3;
+      break; }
+
+    case 4:  {
+      return IL4;
+      break; }
+
+    case 5:  {
+      return IL5;
+      break; }
+
+    case 6:  {
+      return IL6;
+      break; }
+
+    case 7:  {
+      return IL7;
+      break; }
+
+    case 8:  {
+      return IL8;
+      break; }
+
+    default: {
+      return -2; // error code
+      break; }
+    } // end inner switch
+    break; }
+
+  default: {
+    return -1; // error code
+    break; }
+
+  } // end outer switch
+
+  return -1; // error code
+}
+int _initZoneBuildings(zone* zoneID) {
+
+  zoneID->zoneBuildings.resize(9); // always 9 zone buildings
+
+  for (int i = 0; i < 9; i++) {
+    zoneID->zoneBuildings[i] = new zoneBuilding;
+    zoneID->zoneBuildings[i]->squarePos = i;
+    zoneID->zoneBuildings[i]->level = 0;
+    zoneID->zoneBuildings[i]->zoneType = zoneID->zoneType;
+    zoneID->zoneBuildings[i]->typeVariation = _getIntRange(TYPE_A, TYPE_C);
+
+    int xPos = zoneID->xOrigin + (_getZoneBuildingX(i));
+    int yPos = zoneID->yOrigin + (_getZoneBuildingY(i));
+    zoneID->zoneBuildings[i]->tileUnder = map(xPos, yPos);
+
+    zoneID->zoneBuildings[i]->popCur = 0;
+    zoneID->zoneBuildings[i]->popCap = _getZoneBuildingPopMin(zoneID->zoneType, 1);
+    zoneID->zoneBuildings[i]->pollution = 0;
+  }
+
+  return 0;
+}
+
+int _newZone(int xCoord, int yCoord, int zoneType) {
+
+  zone* newZone;
+
+  switch (zoneType) {
+
+  case Z_RES: {
+    newZone = new zone;
+    newZone->xOrigin = xCoord;
+    newZone->yOrigin = yCoord;
+    newZone->zoneType = Z_RES;
+    newZone->totalPopCap = RL1;
+    newZone->totalPopCur = 0;
+    newZone->totalPollution = 0;
+    _initZoneBuildings(newZone);
+    return 0;
+    break; }
+
+  case Z_COM: {
+    newZone = new zone;
+    newZone->xOrigin = xCoord;
+    newZone->yOrigin = yCoord;
+    newZone->zoneType = Z_COM;
+    newZone->totalPopCap = CL1;
+    newZone->totalPopCur = 0;
+    newZone->totalPollution = 0;
+    _initZoneBuildings(newZone);
+    return 0;
+    break; }
+
+  case Z_IND: {
+    newZone = new zone;
+    newZone->xOrigin = xCoord;
+    newZone->yOrigin = yCoord;
+    newZone->zoneType = Z_IND;
+    newZone->totalPopCap = IL1;
+    newZone->totalPopCur = 0;
+    newZone->totalPollution = 0;
+    _initZoneBuildings(newZone);
+    return 0;
+    break; }
+
+  default: {
+    return -1; // error code
+    break; }
+  } // end switch
+
+  return -1; // error code
+}
+
+
+
+
+void _cleanUpAllZones() {
+
+  // Residential:
+  // Cleanup all zoneBuildings in linked list:
+  for (std::list<zone*>::iterator it = Rzones.begin(); it != Rzones.end(); it++)
+    (*it)->zoneBuildings.clear();
+  // cleanup zone itself:
+  Rzones.clear();
+
+  // Commercial:
+  // Cleanup all zoneBuildings in linked list:
+  for (std::list<zone*>::iterator itC = Czones.begin(); itC != Czones.end(); itC++)
+    (*itC)->zoneBuildings.clear();
+  // cleanup zone itself:
+  Czones.clear();
+
+  // Industrial:
+  // Cleanup all zoneBuildings in linked list:
+  for (std::list<zone*>::iterator itI = Izones.begin(); itI != Izones.end(); itI++)
+    (*itI)->zoneBuildings.clear();
+  // cleanup zone itself:
+  Izones.clear();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // MODE functions ---------------
 
 
@@ -1054,6 +1354,11 @@ double mapEnd() {
 
   // clear buildings vector:
   v_buildings.clear();
+
+  // clean up all three zones, and their zone buildings:
+  _cleanUpAllZones();
+
+
 
   return 0;
 }

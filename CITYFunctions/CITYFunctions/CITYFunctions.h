@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <ctime>
 #include <vector>
+#include <list>
 
 
 
@@ -47,7 +48,14 @@ enum {
   TT_TREE4,
   TT_WATER2,
   TT_WATER3,
-  TT_WATER4
+  TT_WATER4,
+
+  TT_ZR,
+  TT_ZC,
+  TT_ZI,
+
+  TT_PLINE,
+  TT_ROAD
 }tileTypes;
 
 enum {
@@ -85,7 +93,6 @@ enum {
   BP_ARCADE = 700,
   BP_AIRPORT = 7000
 }BuildingPrices;
-
 
 enum {
   Z_RES = 0,
@@ -172,7 +179,6 @@ typedef struct gameData {
   int cityType;
 }gameData;
 
-
 typedef struct tile {
   int x;
   int y;
@@ -210,14 +216,117 @@ typedef struct building {
   //std::vector<road*> adjacentRoads;
 }building;
 
-// TODO
+
+
+
+
+
+// ZONE DEFINITIONS ----------------
+
+
+enum {
+  TL = 0, // 0 - 2
+  TM,
+  TR,
+  ML, // 3 - 5
+  MM,
+  MR,
+  BL, // 6 - 8
+  BM,
+  BR
+
+} squarePosition;
+
+enum {
+
+  TYPE_A = 0,
+  TYPE_B,
+  TYPE_C
+} typeVariation;
+
+
+enum {
+  RL0 = 0,
+  RL1 = 10,
+  RL2 = 50,
+  RL3 = 150,
+  RL4 = 300,
+  RL5 = 750,
+  RL6 = 1250,
+  RL7 = 3750,
+  RL8 = 8500 
+} RlevelPopMin;
+
+enum {
+
+  CL0 = 0,
+  CL1 = 5,
+  CL2 = 12,
+  CL3 = 24,
+  CL4 = 50,
+  CL5 = 120,
+  CL6 = 250,
+  CL7 = 500,
+  CL8 = 1000
+} ClevelPopMin;
+
+enum {
+
+  IL0 = 0,
+  IL1 = 10,
+  IL2 = 30,
+  IL3 = 60,
+  IL4 = 120,
+  IL5 = 200,
+  IL6 = 250,
+  IL7 = 350,
+  IL8 = 550
+} IlevelPopMin;
+
+typedef struct zoneBuilding {
+  
+  // general info
+  int squarePos; // uses squarePosition enum
+  int level;  // starts at 0
+  int zoneType; // R, C, I
+  int typeVariation; // uses typeVariation enum
+
+  // identity
+  tile* tileUnder;
+
+  // data:
+  int popCur;
+  int popCap;
+  int pollution;
+
+};
+
+
 typedef struct zone {
 
-  int popCur; // current people residing in
-  int popCap; // capacity for people
+  int xOrigin;
+  int yOrigin;
+
+  int zoneType;
+
+  int totalPopCur; // current people residing in
+  int totalPopCap; // capacity for people
+
+  int totalPollution;
+
+  // there are always 9 zone tiles inside:
+  std::vector<zoneBuilding*> zoneBuildings;
 
 }zone;
 
+
+
+
+
+
+
+
+// todo:
 //typedef struct powerLine {
 //};
 
@@ -315,6 +424,51 @@ int _getBuildingVectorSize();
 std::string _buildingInfoToString();
 
 int _checkMoney(int amount);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Zone Functions
+
+int _getZoneBuildingX(int squarePos);
+int _getZoneBuildingY(int squarePos);
+
+int _getZoneBuildingPopMin(int zoneType, int level);
+
+
+int _initZoneBuildings(zone* zoneID);
+
+int _newZone(int xCoord, int yCoord, int zoneType);
+
+
+void _cleanUpAllZones();
+
+
+
+
+
+
+
+
 
 
 
