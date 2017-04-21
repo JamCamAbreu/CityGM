@@ -118,7 +118,12 @@ selectedMenu = MENU_TAX;   // default value
 
 // Selected Map ---------------
 selectedMap = MENU_MAP_OVERVIEW; // highlighted selection in map menu
-
+curSpecialMap = MENU_MAP_OVERVIEW;
+mapUnlocked[5] = false;
+mapUnlocked[4] = false;
+mapUnlocked[MENU_MAP_LANDVALUE] = false;
+mapUnlocked[MENU_MAP_POLLUTION] = true;
+mapUnlocked[MENU_MAP_OVERVIEW] = true;
 
 
 // Other: ---------------------
@@ -348,7 +353,7 @@ DLL_mapEnd();
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
         
-        if (selectedMap != MENU_MAP_OVERVIEW)
+        if (curSpecialMap != MENU_MAP_OVERVIEW)
             scr_drawSpecialMap(id);
     }
     else {
@@ -414,7 +419,7 @@ DLL_mapEnd();
     
     // Map Menu:
     else if (gameMode == MD_MAPS) {
-        scr_drawMapsScreen();
+        scr_drawMapsScreen(id);
         scr_drawMapSelected(selectedMap);
         scr_drawMapDescription(id);
     }
@@ -440,9 +445,9 @@ DLL_mapEnd();
 if (updateSurfaces) {
     scr_setSurfaceMiniMap(tileString, tileStringSize, id);
     
-    if (selectedMap == MENU_MAP_POLLUTION)
+    if (curSpecialMap == MENU_MAP_POLLUTION)
         scr_setSurfacePollution(id);
-    else if (selectedMap == MENU_MAP_LANDVALUE)
+    else if (curSpecialMap == MENU_MAP_LANDVALUE)
         scr_setSurfaceLandValue(id);
     
     scr_updateAll(id)
@@ -672,10 +677,17 @@ else if (gameMode == MD_MENU) {
     scr_selectMenuOption(id);
 }
 
+// select a map type in menu maps:
 else if (gameMode == MD_MAPS) {
-    DLL_setGameMode(MD_NORMAL);
-    camera.camera_toggle = MD_NORMAL;
-    scr_updateAll(id);
+
+    if (mapUnlocked[selectedMap]) {
+        DLL_setGameMode(MD_NORMAL);
+        camera.camera_toggle = MD_NORMAL;
+        curSpecialMap = selectedMap;
+        scr_updateAll(id);
+    }
+    else
+        audio_play_sound(sfx_error, 5, false);
 }
 </string>
           </argument>

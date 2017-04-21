@@ -76,6 +76,7 @@
     </sprites>
     <sprites name="Zones">
       <sprite>sprites\spr_zone</sprite>
+      <sprite>sprites\spr_zoneR</sprite>
       <sprite>sprites\spr_zoneR1x1</sprite>
     </sprites>
     <sprites name="other">
@@ -99,6 +100,7 @@
       <sprite>sprites\spr_MapsPollution</sprite>
       <sprite>sprites\spr_MapsError</sprite>
       <sprite>sprites\spr_MapsSelected</sprite>
+      <sprite>sprites\spr_MapsLocked</sprite>
     </sprites>
   </sprites>
   <backgrounds name="background"/>
@@ -307,8 +309,8 @@
     <constant name="VIEW_NORMAL_H">320</constant>
     <constant name="VIEW_ZOUT_W">720</constant>
     <constant name="VIEW_ZOUT_H">480</constant>
-    <constant name="MENU_MAP_NUM">3</constant>
-    <constant name="MENU_MAP_ICON">128</constant>
+    <constant name="MENU_MAP_NUM">5</constant>
+    <constant name="MENU_MAP_ICON">64</constant>
     <constant name="MENU_MAP_PAD">16</constant>
     <constant name="MENU_MAP_X1">view_xview + 8</constant>
     <constant name="MENU_MAP_W">MENU_MAP_NUM*(MENU_MAP_ICON + MENU_MAP_PAD) + MENU_MAP_PAD*2</constant>

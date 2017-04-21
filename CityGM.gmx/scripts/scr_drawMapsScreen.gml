@@ -3,7 +3,7 @@
 draw_rectangle(MENU_MAP_X1, MENU_MAP_Y1, MENU_MAP_X1 + MENU_MAP_W, MENU_MAP_Y1 + MENU_MAP_H, false);
 
 var i;
-var amountOfButtons = 3;
+var amountOfButtons = 5;
 var x1;
 var y1;
 for (i = 0; i < amountOfButtons; i++) {
@@ -13,6 +13,10 @@ for (i = 0; i < amountOfButtons; i++) {
     
     var sprite = scr_getMapIconSprites(i);
     draw_sprite(sprite, image_index, x1, y1);
+    
+    // locked?
+    if (argument0.mapUnlocked[i] == false)
+        draw_sprite(spr_MapsLocked, image_index, x1, y1);
 }
 
 
