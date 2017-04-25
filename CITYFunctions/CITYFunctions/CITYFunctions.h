@@ -465,10 +465,11 @@ void _cleanUpAllZones();
 
 int _BtypeToZtype(int bType);
 
+std::string _zoneBuildingToString(int zoneType);
 
 
 
-
+GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
 
 
 
@@ -590,6 +591,9 @@ GMEXPORT void _testPrintBuildingList();
 GMEXPORT void _testString();
 GMEXPORT void _testGameData(int months);
 GMEXPORT void _testPrintTileData(int dataType);
+
+GMEXPORT void _testPrintZoneString(int zoneType);
+
 
 #endif
 

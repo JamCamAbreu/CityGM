@@ -1011,6 +1011,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    Rzones.push_front(newZone);
     break; }
 
   case Z_COM: {
@@ -1021,6 +1022,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    Czones.push_front(newZone);
     break; }
 
   case Z_IND: {
@@ -1031,6 +1033,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    Izones.push_front(newZone);
     break; }
 
   default: {
@@ -1093,10 +1096,144 @@ void _clearOneZone(zone* deleteZone) {
 }
 
 
+std::string _zoneBuildingToString(int zoneType) {
+
+
+  // FINISHED STRING WILL HAVE THE FOLLOWING SYNTAX:
+  // xCoord,yCoord,ZoneType,level,typeVar.etc...
+  // note the dot after each building
+
+  std::string zoneBuildingInfo = "";
+  std::string buffer = "";
+  char dataDivider = ',';
+  char elementDivider = ';';
+
+  bool debug = false;
+
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+  // first iterate through all zones in given data type:
+  if (zoneType == Z_RES) {
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+  }
+  else if (zoneType == Z_COM) {
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+  }
+  else if (zoneType == Z_IND) {
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+  }
+  else {
+    zoneBuildingInfo += "zoneType error: default case";
+    return zoneBuildingInfo;
+  }
+
+  if (debug) {
+  // debug:
+  std::cout << std::endl;
+  std::cout << "Zone list for type: " << zoneType;
+  std::cout << std::endl;
+  }
+
+  while (iter != endZoneList) {
+
+    if (debug) {
+      // debug:
+      std::cout << "Zone. X=" << (*iter)->xOrigin << ", Y=" << (*iter)->yOrigin;
+      std::cout << ", Type=" << (*iter)->zoneType << "\nBuilding Info:\n";
+    }
+
+    // access zoneBuildings in zone:
+    std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
+    std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+    for (bIter; bIter != bIterEnd; bIter++) {
+
+      int CURxCordinate = (*bIter)->tileUnder->x;
+      int CURyCordinate = (*bIter)->tileUnder->y;
+      int CURZoneType = (*bIter)->zoneType;
+      int CURlevel = (*bIter)->level;
+      int CURtypeVar = (*bIter)->typeVariation;
+
+      // ADD TO STRING:
+      std::string data = "";
+      char dataDivider = ',';
+      char buildingDivider = '.';
+      // add x to string:
+      data = std::to_string(CURxCordinate);
+      zoneBuildingInfo += data;
+      zoneBuildingInfo += dataDivider;
+
+      // add y to string:
+      data = std::to_string(CURyCordinate);
+      zoneBuildingInfo += data;
+      zoneBuildingInfo += dataDivider;
+
+      // add zoneType to string:
+      data = std::to_string(CURZoneType);
+      zoneBuildingInfo += data;
+      zoneBuildingInfo += dataDivider;
+
+      // add level to string:
+      data = std::to_string(CURlevel);
+      zoneBuildingInfo += data;
+      zoneBuildingInfo += dataDivider;
+
+      // add typeVar to string:
+      data = std::to_string(CURtypeVar);
+      zoneBuildingInfo += data;
+
+      // add divider between buildings:
+      zoneBuildingInfo += buildingDivider;
+      
+      if (debug) {
+        // debug: 
+        std::cout << "ZB. X=" << CURxCordinate << ", Y=" << CURyCordinate;
+        std::cout << ", ZT=" << CURZoneType << ", LVL=" << CURlevel;
+        std::cout << ", Tvar=" << CURtypeVar << "\n";
+      }
+
+    } // end loop through zoneBuildings
+
+    if (debug) {
+      // debug:
+      std::cout << std::endl;
+    }
+
+    iter++;
+    } // end while (iteration through Llist)
+
+  if (debug) {
+    // debug:
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << zoneBuildingInfo;
+    std::cout << std::endl;
+    std::cout << std::endl;
+  }
+
+
+
+  return zoneBuildingInfo;
+}
+
+// START HERE (now that I have the string, convert to char* and
+// write the string parsing function in GML)
 
 
 
 
+double addZone(double xCoord, double yCoord, double zoneType) {
+
+  int xInt = (int)xCoord;
+  int yInt = (int)yCoord;
+  int zTypeInt = (int)zoneType;
+
+  _newZone(xInt, yInt, zTypeInt);
+
+  return 0;
+}
 
 
 
@@ -2081,3 +2218,12 @@ void _testPrintTileData(int dataType) {
   std::cout << std::endl;
 
 }
+
+
+void _testPrintZoneString(int zoneType) {
+
+  _zoneBuildingToString(zoneType);
+
+}
+
+

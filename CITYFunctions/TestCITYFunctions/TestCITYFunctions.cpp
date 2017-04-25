@@ -31,19 +31,47 @@ int main() {
   seedMap(TT_TREE, 4);
   growSeeds(TT_TREE, 3);
 
-  //addBuilding(BT_POLICE, 2, 4);
-  //addBuilding(BT_FIRE, 8, 4);
   addBuilding(BT_COAL, 10, 8);
   addBuilding(BT_SCHOOL, 50, 40);
   addBuilding(BT_AIRPORT, 0, 10);
-  _printMapTypes();
 
   setAllTileDataValue(TDT_LANDVALUE, 50);
   addWaterTileValue(TDT_LANDVALUE, 8, 1);
 
 
+  // test zones:
+
+  std::cout << "[R ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_RES);
+  std::cout << "[C ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_COM);
+  std::cout << "[I ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_IND);
+  std::cout << std::endl << "[END ZONE TEST]" << std::endl;
+  std::cout << std::endl;
+
+  int ranX;
+  int ranY;
+  int zoneType;
+  for (int p = 0; p < 12; p++) {
+    zoneType = getRandomRange(Z_RES, Z_IND);
+    std::cout << "Adding zone type: " << zoneType << std::endl;
+    ranX = getRandomRange(5, (MAP_DIMENSION - 5));
+    ranY = getRandomRange(5, (MAP_DIMENSION - 5));
+    addZone(ranX, ranY, zoneType);
+  }
 
 
+  std::cout << "[R ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_RES);
+  std::cout << "[C ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_COM);
+  std::cout << "[I ZONE TEST]" << std::endl;
+  _testPrintZoneString(Z_IND);
+  std::cout << std::endl << "[END ZONE TEST]" << std::endl;
+  std::cout << std::endl;
+
+  // end test zones ---
 
 
   mapEnd();
