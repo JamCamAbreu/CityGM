@@ -29,6 +29,9 @@ const char CHAR_TREE = 'T';
 const char CHAR_BUILDING = '+';
 const char CHAR_WATER = '~';
 const char CHAR_ERROR = '!';
+const char CHAR_RZONE = 'r';
+const char CHAR_CZONE = 'c';
+const char CHAR_IZONE = 'i';
 
 
 
@@ -454,6 +457,7 @@ int _getZoneBuildingY(int squarePos);
 
 int _getZoneBuildingPopMin(int zoneType, int level);
 
+int _zoneEnumToTileTypeEnum(int zoneType);
 
 int _initZoneBuildings(zone* zoneID);
 
@@ -579,6 +583,12 @@ GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
 GMEXPORT double getBuildingVectorSize();
 GMEXPORT double getBuildingPrice(double buildingType);
 GMEXPORT char* buildingsToString();
+
+
+// Zone Functions
+GMEXPORT char* zoneBuildingsToString(double dataType);
+GMEXPORT double growZone(double zoneType);
+
 
 // Utility functions
 GMEXPORT double getRandomRange(double min, double max);

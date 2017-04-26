@@ -20,13 +20,25 @@ switch (argument0) {
         return spr_water;
         break;
         
+    case CHAR_RZONE:
+        return spr_dirt;
+        break;
+        
+    case CHAR_CZONE:
+        return spr_dirt;
+        break;
+        
+    case CHAR_IZONE:
+        return spr_dirt;
+        break;
+        
     case CHAR_ERROR:
-        return spr_icon;
+        return spr_zoneError;
         break;
         
     default:
-        return spr_icon;
+        return spr_zoneError;
         break;
 }
 
-return spr_icon;
+return spr_zoneError;

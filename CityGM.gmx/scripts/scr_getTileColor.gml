@@ -17,11 +17,23 @@ switch (argument0) {
         break;
         
     case CHAR_WATER:
-        return c_blue;
+        return c_navy;
         break;
         
     case CHAR_ERROR:
         return c_orange;
+        break;
+        
+    case CHAR_RZONE:
+        return c_red;
+        break;
+        
+    case CHAR_CZONE:
+        return c_blue;
+        break;
+        
+    case CHAR_IZONE:
+        return c_yellow;
         break;
         
     default:

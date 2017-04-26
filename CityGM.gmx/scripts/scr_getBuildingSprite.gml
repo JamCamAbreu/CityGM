@@ -16,15 +16,15 @@ switch (argument0) {
         break;
         
     case BT_RZONE:
-        return spr_zone;
+        return spr_zoneRPlacement;
         break;
         
     case BT_CZONE:
-        return spr_zone;
+        return spr_zoneCPlacement;
         break;
 
     case BT_IZONE:
-        return spr_zone;
+        return spr_zoneIPlacement;
         break;
         
     case BT_POLICE:

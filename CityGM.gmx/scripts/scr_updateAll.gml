@@ -31,3 +31,8 @@ argument0.gameMode = DLL_getGameMode();
 // update tile data:
 scr_updatePollution();
 scr_updateLandValue();
+
+
+scr_updateZoneBuildings(id, Z_RES);
+scr_updateZoneBuildings(id, Z_COM);
+scr_updateZoneBuildings(id, Z_IND);

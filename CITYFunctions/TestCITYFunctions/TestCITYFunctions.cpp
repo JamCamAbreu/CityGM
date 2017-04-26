@@ -41,6 +41,7 @@ int main() {
 
   // test zones:
 
+  std::cout << std::endl;
   std::cout << "[R ZONE TEST]" << std::endl;
   _testPrintZoneString(Z_RES);
   std::cout << "[C ZONE TEST]" << std::endl;
@@ -49,19 +50,44 @@ int main() {
   _testPrintZoneString(Z_IND);
   std::cout << std::endl << "[END ZONE TEST]" << std::endl;
   std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  
+
 
   int ranX;
   int ranY;
   int zoneType;
   for (int p = 0; p < 12; p++) {
-    zoneType = getRandomRange(Z_RES, Z_IND);
-    std::cout << "Adding zone type: " << zoneType << std::endl;
+
     ranX = getRandomRange(5, (MAP_DIMENSION - 5));
     ranY = getRandomRange(5, (MAP_DIMENSION - 5));
+    zoneType = getRandomRange(Z_RES, Z_IND);
+
+    std::cout << "Adding zone type: " << zoneType << std::endl;
+
+
     addZone(ranX, ranY, zoneType);
   }
 
 
+  std::cout << std::endl;
+  std::cout << std::endl;
+  char* someString = tileTypeToString();
+  int loc;
+  for (int c = 0; c < MAP_DIMENSION; c++) {
+    for (int r = 0; r < MAP_DIMENSION; r++) {
+      loc = (r*MAP_DIMENSION) + (c);
+      std::cout << someString[loc];
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+
+  std::cout << std::endl;
   std::cout << "[R ZONE TEST]" << std::endl;
   _testPrintZoneString(Z_RES);
   std::cout << "[C ZONE TEST]" << std::endl;

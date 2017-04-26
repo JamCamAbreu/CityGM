@@ -399,6 +399,28 @@
           <argCount>0</argCount>
           <args/>
         </function>
+        <function>
+          <name>DLL_zoneBuildingsToString</name>
+          <externalName>zoneBuildingsToString</externalName>
+          <kind>12</kind>
+          <help>DLL_zoneBuildingsToString(int dataType)</help>
+          <returnType>1</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_growZone</name>
+          <externalName>growZone</externalName>
+          <kind>12</kind>
+          <help>DLL_growZone(int zoneType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -729,6 +751,36 @@
         <constant>
           <name>MD_FILE</name>
           <value>7</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>Z_RES</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>Z_COM</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>Z_IND</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CHAR_RZONE</name>
+          <value>'r'</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CHAR_CZONE</name>
+          <value>'c'</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>CHAR_IZONE</name>
+          <value>'i'</value>
           <hidden>0</hidden>
         </constant>
       </constants>

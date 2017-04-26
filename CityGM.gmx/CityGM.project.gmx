@@ -48,6 +48,7 @@
       <sprite>sprites\spr_treeAlpha</sprite>
       <sprite>sprites\spr_ground</sprite>
       <sprite>sprites\spr_empty</sprite>
+      <sprite>sprites\spr_dirt</sprite>
     </sprites>
     <sprites name="icons">
       <sprite>sprites\spr_PIconRoad</sprite>
@@ -75,9 +76,18 @@
       <sprite>sprites\spr_roadPower</sprite>
     </sprites>
     <sprites name="Zones">
-      <sprite>sprites\spr_zone</sprite>
+      <sprite>sprites\spr_zoneIPlacement</sprite>
+      <sprite>sprites\spr_zoneCPlacement</sprite>
+      <sprite>sprites\spr_zoneRPlacement</sprite>
       <sprite>sprites\spr_zoneR</sprite>
-      <sprite>sprites\spr_zoneR1x1</sprite>
+      <sprite>sprites\spr_zoneC</sprite>
+      <sprite>sprites\spr_zoneI</sprite>
+      <sprite>sprites\spr_zoneError</sprite>
+      <sprites name="unused">
+        <sprite>sprites\spr_zone</sprite>
+        <sprite>sprites\spr_zoneRBackup</sprite>
+        <sprite>sprites\spr_zoneR1x1</sprite>
+      </sprites>
     </sprites>
     <sprites name="other">
       <sprite>sprites\spr_DEBUG</sprite>
@@ -112,6 +122,12 @@
       <script>scripts\scr_drawPlacement.gml</script>
       <script>scripts\scr_placeBuilding.gml</script>
       <script>scripts\scr_removeBuilding.gml</script>
+      <scripts name="DLLgetStringBuildings">
+        <script>scripts\scr_updateBuildings.gml</script>
+        <script>scripts\scr_updateBuildingX.gml</script>
+        <script>scripts\scr_updateBuildingY.gml</script>
+        <script>scripts\scr_updateBuildingType.gml</script>
+      </scripts>
     </scripts>
     <scripts name="Time&amp;Season">
       <script>scripts\scr_drawSeasonText.gml</script>
@@ -155,13 +171,9 @@
       <script>scripts\scr_getTileSprite.gml</script>
       <script>scripts\scr_getBuildingSprite.gml</script>
       <script>scripts\scr_drawMapColor.gml</script>
-      <script>scripts\scr_updateBuildingType.gml</script>
       <script>scripts\scr_drawMiniMap.gml</script>
       <script>scripts\scr_setSurfaceMiniMap.gml</script>
       <script>scripts\scr_drawMiniMapHelp.gml</script>
-      <script>scripts\scr_updateBuildingX.gml</script>
-      <script>scripts\scr_updateBuildingY.gml</script>
-      <script>scripts\scr_updateBuildings.gml</script>
       <scripts name="Other Maps">
         <script>scripts\scr_setSurfacePollution.gml</script>
         <script>scripts\scr_setSurfaceLandValue.gml</script>
@@ -219,12 +231,24 @@
       </scripts>
     </scripts>
     <scripts name="Screen">
+      <script>scripts\scr_drawZones.gml</script>
       <script>scripts\scr_drawScreenBuildings.gml</script>
       <script>scripts\scr_drawScreenTiles.gml</script>
       <script>scripts\scr_getViewX1.gml</script>
       <script>scripts\scr_getViewY1.gml</script>
       <script>scripts\scr_getViewX2.gml</script>
       <script>scripts\scr_getViewY2.gml</script>
+    </scripts>
+    <scripts name="Zones">
+      <scripts name="DLLgetStringZones">
+        <script>scripts\scr_updateZoneBuildings.gml</script>
+        <script>scripts\scr_setZoneArray.gml</script>
+        <script>scripts\scr_getZoneSprite.gml</script>
+        <script>scripts\scr_getZoneImageIndex.gml</script>
+        <script>scripts\scr_getNumZoneBuildings.gml</script>
+        <script>scripts\scr_growAllZones.gml</script>
+        <script>scripts\scr_updateAlarmZoneType.gml</script>
+      </scripts>
     </scripts>
   </scripts>
   <fonts name="fonts">
@@ -240,7 +264,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="84">
+  <constants number="85">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -325,6 +349,7 @@
     <constant name="MENU_MAP_D_Y1">MENU_MAP_Y1 + MENU_MAP_H + MENU_MAP_PAD</constant>
     <constant name="MENU_MAP_D_H">MENU_MAP_PAD*3</constant>
     <constant name="LANDVALUE_DEFAULT">50</constant>
+    <constant name="MAX_ZONES">MAP_DIMENSION*MAP_DIMENSION</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

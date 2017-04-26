@@ -205,6 +205,18 @@ std::string _tileTypeToString() {
           typeData += CHAR_WATER;
           break;
 
+        case TT_ZR:
+          typeData += CHAR_RZONE;
+          break;
+
+        case TT_ZC:
+          typeData += CHAR_CZONE;
+          break;
+
+        case TT_ZI:
+          typeData += CHAR_IZONE;
+          break;
+
         default:
           typeData += CHAR_ERROR;
       } // end switch
@@ -964,6 +976,20 @@ int _getZoneBuildingPopMin(int zoneType, int level) {
 
   return -1; // error code
 }
+
+int _zoneEnumToTileTypeEnum(int zoneType) {
+
+  if (zoneType == Z_RES)
+    return TT_ZR;
+  else if (zoneType == Z_COM)
+    return TT_ZC;
+  else if (zoneType == Z_IND)
+    return TT_ZI;
+
+  else
+    return -1; // error code
+}
+
 int _initZoneBuildings(zone* zoneID) {
 
   zoneID->zoneBuildings.resize(9); // always 9 zone buildings
@@ -982,6 +1008,9 @@ int _initZoneBuildings(zone* zoneID) {
     zoneID->zoneBuildings[i]->popCur = 0;
     zoneID->zoneBuildings[i]->popCap = _getZoneBuildingPopMin(zoneID->zoneType, 1);
     zoneID->zoneBuildings[i]->pollution = 0;
+
+    // set tile underneath to have correct tile type:
+    zoneID->zoneBuildings[i]->tileUnder->tileType = _zoneEnumToTileTypeEnum(zoneID->zoneType);
   }
 
   return 0;
@@ -1011,7 +1040,6 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    Rzones.push_front(newZone);
     break; }
 
   case Z_COM: {
@@ -1022,7 +1050,6 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    Czones.push_front(newZone);
     break; }
 
   case Z_IND: {
@@ -1033,7 +1060,6 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
-    Izones.push_front(newZone);
     break; }
 
   default: {
@@ -1137,6 +1163,7 @@ std::string _zoneBuildingToString(int zoneType) {
   std::cout << std::endl;
   }
 
+
   while (iter != endZoneList) {
 
     if (debug) {
@@ -1155,6 +1182,7 @@ std::string _zoneBuildingToString(int zoneType) {
       int CURZoneType = (*bIter)->zoneType;
       int CURlevel = (*bIter)->level;
       int CURtypeVar = (*bIter)->typeVariation;
+      int CURsquarePos = (*bIter)->squarePos;
 
       // ADD TO STRING:
       std::string data = "";
@@ -1182,6 +1210,11 @@ std::string _zoneBuildingToString(int zoneType) {
 
       // add typeVar to string:
       data = std::to_string(CURtypeVar);
+      zoneBuildingInfo += data;
+      zoneBuildingInfo += dataDivider;
+
+      // add square position to string:
+      data = std::to_string(CURsquarePos);
       zoneBuildingInfo += data;
 
       // add divider between buildings:
@@ -1214,12 +1247,67 @@ std::string _zoneBuildingToString(int zoneType) {
   }
 
 
-
   return zoneBuildingInfo;
 }
 
-// START HERE (now that I have the string, convert to char* and
-// write the string parsing function in GML)
+void _growZones(int zoneType) {
+
+  int ready = false;
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+  // first iterate through all zones in given data type:
+  if (zoneType == Z_RES) {
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_COM) {
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_IND) {
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+    ready = true;
+  }
+
+  if (ready) {
+
+    while (iter != endZoneList) {
+
+
+      // not ALL zones are updated every time!
+      int chance = _getIntRange(1, 10);
+      int highestChance = 4;
+      if (chance <= highestChance) {
+
+        // access zoneBuildings in zone:
+        std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
+        std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+        for (bIter; bIter != bIterEnd; bIter++) {
+
+          // not ALL buildings in zone are updated.
+          int chanceB = _getIntRange(1, 10);
+          int highestChanceB = 3;
+          if (chanceB <= highestChanceB) {
+
+            // DEBUG:
+            (*bIter)->level++;
+
+          } // end if chance (buildings within zone)
+
+        } // end inner for (each building in zone)
+
+      iter++;
+
+      } // end if chance (zones)
+    } // end while
+  } // end if ready
+
+
+}
+
 
 
 
@@ -1779,6 +1867,24 @@ double subtractLandValuePollution() {
 
 
 
+// Zone Functions
+char* zoneBuildingsToString(double dataType) {
+  int dataTypeInt = (int)dataType;
+  std::string getString = _zoneBuildingToString(dataTypeInt);
+
+  char* dataString = new char[getString.length() + 1];
+  std::strcpy(dataString, getString.c_str());
+
+  return dataString;
+}
+
+double growZone(double zoneType) {
+  int typeInt = (int)zoneType;
+
+  _growZones(typeInt);
+
+  return 0;
+}
 
 
 
@@ -1814,8 +1920,10 @@ double addBuilding(double type, double x, double y) {
     }
     // Build ZONE:
     else if (type == BT_RZONE || type == BT_CZONE || type == BT_IZONE) {
-      int zoneType = _BtypeToZtype(type);// START HERE
+
+      int zoneType = _BtypeToZtype(type); // convert enum
       zone* newZone = _newZone(xInt, yInt, zoneType);
+
       if (type == BT_RZONE)
         Rzones.push_front(newZone);
       else if (type == BT_CZONE)

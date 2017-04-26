@@ -7,7 +7,7 @@ var x2 = scr_getViewX2();
 var y1 = scr_getViewY1();
 var y2 = scr_getViewY2();
 
-var padding = TILE_SIZE*2
+var padding = 2
 
 
 var drawBuilding;
@@ -30,5 +30,10 @@ for (i = 0; i < argument0; i++) {
         draw_sprite(sprite, argument1.gameSeason, bX*TILE_SIZE, bY*TILE_SIZE);
     }
 } // end for loop
+
+
+
+
+
 
 
