@@ -12,4 +12,4 @@ if (keyboard_check(vk_down)) || (keyboard_check(ord('S'))) {
 }
 
 // go to alarm 2
-alarm[2] = CAMERA_ALARM_FAST;
+alarm[2] = CAMERA_ALARM_FAST + argument0;

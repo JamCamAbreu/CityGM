@@ -139,6 +139,7 @@ gameMode = DLL_getGameMode();
 // Build Mode:
 selectedBuilding = BT_TREE; // just a default value...
 selectedBuildingString = scr_setBuildingMenuString(selectedBuilding);
+pressHoldMode = false;
 
 
 // Game Menu ------------------
@@ -166,6 +167,34 @@ debugger = instance_create(x,y, obj_debugger);
 image_speed = 0;
 canDraw = true;
 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="3">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+
+scr_placementHold(id);
+
+
+alarm[3] = PRESS_HOLD_ALARM;
 </string>
           </argument>
         </arguments>
@@ -311,7 +340,6 @@ if (gameMode == MD_MENU)
 // keys for map menu:
 if (gameMode == MD_MAPS)
     scr_selectMapKeys(id);
-    
     
 </string>
           </argument>
@@ -476,7 +504,10 @@ DLL_mapEnd();
 }
 
 
-
+// DEBUG:
+if (pressHoldMode) {
+    draw_text(view_xview + view_wview/2, view_yview + view_hview/2, "PLACEMENT MODE");
+}
 
 
 
@@ -492,6 +523,31 @@ if (updateSurfaces) {
     scr_updateAll(id)
     updateSurfaces = false;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="88">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_removeBuilding();
+
+scr_updateAll(id);
 </string>
           </argument>
         </arguments>
@@ -694,68 +750,6 @@ else {
         </arguments>
       </action>
     </event>
-    <event eventtype="9" enumb="69">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>//var randomBuilding = irandom_range(0, BT_GYM);
-//scr_placeBuilding(randomBuilding); // fixme
-//scr_updateAll(id);
-
-// Go to build menu if in normal mode:
-if (gameMode == MD_NORMAL) {
-    DLL_setGameMode(MD_SELECT);
-    camera.camera_toggle = MD_SELECT;
-    scr_updateAll(id);
-}
-    
-// Select a building in building select mode:
-else if (gameMode == MD_SELECT) {
-    DLL_setGameMode(MD_PLACE);
-    camera.camera_toggle = MD_PLACE;
-    scr_updateAll(id);
-}
-
-// Place a building in placement mode:
-else if (gameMode == MD_PLACE) {
-    scr_placeBuilding(id, selectedBuilding);
-}
-
-// Enter a menu option when in menu mode:
-else if (gameMode == MD_MENU) {
-    scr_selectMenuOption(id);
-}
-
-// select a map type in menu maps:
-else if (gameMode == MD_MAPS) {
-
-    if (mapUnlocked[selectedMap]) {
-        DLL_setGameMode(MD_NORMAL);
-        camera.camera_toggle = MD_NORMAL;
-        curSpecialMap = selectedMap;
-        scr_updateAll(id);
-    }
-    else
-        audio_play_sound(sfx_error, 5, false);
-}
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="9" enumb="67">
       <action>
         <libid>1</libid>
@@ -891,9 +885,49 @@ else
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_removeBuilding();
+            <string>//var randomBuilding = irandom_range(0, BT_GYM);
+//scr_placeBuilding(randomBuilding); // fixme
+//scr_updateAll(id);
 
-scr_updateAll(id);
+// Go to build menu if in normal mode:
+if (gameMode == MD_NORMAL) {
+    DLL_setGameMode(MD_SELECT);
+    camera.camera_toggle = MD_SELECT;
+    scr_updateAll(id);
+}
+    
+// Select a building in building select mode:
+else if (gameMode == MD_SELECT) {
+    DLL_setGameMode(MD_PLACE);
+    camera.camera_toggle = MD_PLACE;
+    scr_updateAll(id);
+}
+
+// Place a building in placement mode:
+else if (gameMode == MD_PLACE) {
+    scr_placeBuilding(id, selectedBuilding);
+    alarm[3] = 5;
+    pressHoldMode = true;
+    camera.slowDown = CAMERA_MOVESLOW;
+}
+
+// Enter a menu option when in menu mode:
+else if (gameMode == MD_MENU) {
+    scr_selectMenuOption(id);
+}
+
+// select a map type in menu maps:
+else if (gameMode == MD_MAPS) {
+
+    if (mapUnlocked[selectedMap]) {
+        DLL_setGameMode(MD_NORMAL);
+        camera.camera_toggle = MD_NORMAL;
+        curSpecialMap = selectedMap;
+        scr_updateAll(id);
+    }
+    else
+        audio_play_sound(sfx_error, 5, false);
+}
 </string>
           </argument>
         </arguments>
@@ -954,6 +988,31 @@ else {
     view_wview = VIEW_NORMAL_W;
     view_hview = VIEW_NORMAL_H;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="10" enumb="32">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>pressHoldMode = false;
+alarm[3] = -1;
+camera.slowDown = 0;
 </string>
           </argument>
         </arguments>

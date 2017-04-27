@@ -128,6 +128,8 @@
         <script>scripts\scr_updateBuildingY.gml</script>
         <script>scripts\scr_updateBuildingType.gml</script>
       </scripts>
+      <script>scripts\scr_placementHold.gml</script>
+      <script>scripts\scr_placeBuildingHold.gml</script>
     </scripts>
     <scripts name="Time&amp;Season">
       <script>scripts\scr_drawSeasonText.gml</script>
@@ -264,7 +266,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="85">
+  <constants number="87">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -350,6 +352,8 @@
     <constant name="MENU_MAP_D_H">MENU_MAP_PAD*3</constant>
     <constant name="LANDVALUE_DEFAULT">50</constant>
     <constant name="MAX_ZONES">MAP_DIMENSION*MAP_DIMENSION</constant>
+    <constant name="PRESS_HOLD_ALARM">50</constant>
+    <constant name="CAMERA_MOVESLOW">140</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

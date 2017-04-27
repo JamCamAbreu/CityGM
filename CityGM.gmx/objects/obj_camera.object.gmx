@@ -28,6 +28,8 @@
             <string>SHIFT_SPEED = 0;
 
 camera_toggle = MD_NORMAL;
+
+slowDown = 0;
 </string>
           </argument>
         </arguments>
@@ -50,7 +52,7 @@ camera_toggle = MD_NORMAL;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_moveAlarm2();
+            <string>scr_moveAlarm2(slowDown);
 </string>
           </argument>
         </arguments>
@@ -73,7 +75,7 @@ camera_toggle = MD_NORMAL;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_moveAlarm1();
+            <string>scr_moveAlarm1(slowDown);
 </string>
           </argument>
         </arguments>
@@ -96,7 +98,7 @@ camera_toggle = MD_NORMAL;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_moveAlarm0();
+            <string>scr_moveAlarm0(slowDown);
 </string>
           </argument>
         </arguments>
