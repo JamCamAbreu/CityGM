@@ -150,7 +150,7 @@
     <scripts name="Population&amp;Money">
       <script>scripts\scr_drawPopulation.gml</script>
       <script>scripts\scr_updatePopString.gml</script>
-      <script>scripts\scr_addPopulation.gml</script>
+      <script>scripts\scr_updatePopulation.gml</script>
       <script>scripts\scr_addCommas.gml</script>
       <script>scripts\scr_CommaCount.gml</script>
       <script>scripts\scr_PlaceHolders.gml</script>

@@ -302,6 +302,7 @@ typedef struct zoneBuilding {
   int popCap;
   int pollution;
 
+  ~zoneBuilding();
 };
 
 
@@ -319,6 +320,7 @@ typedef struct zone {
 
   // there are always 9 zone tiles inside:
   std::vector<zoneBuilding*> zoneBuildings;
+
 
 }zone;
 
@@ -358,7 +360,7 @@ void _initGameData();
 // GAME DATA functions:
 void _setCityType(int type);
 int _checkNewCityType();
-
+int _updatePopulation();
 
 
 
@@ -451,35 +453,28 @@ int _checkMoney(int amount);
 
 
 // Zone Functions
+int _zoneEnumToTileTypeEnum(int zoneType);
+int _BtypeToZtype(int bType);
 
 int _getZoneBuildingX(int squarePos);
 int _getZoneBuildingY(int squarePos);
-
 int _getZoneBuildingPopMin(int zoneType, int level);
 
-int _zoneEnumToTileTypeEnum(int zoneType);
 
 int _initZoneBuildings(zone* zoneID);
-
 zone* _newZone(int xCoord, int yCoord, int zoneType);
 
-
-void _clearOneZone(zone* deleteZone);
 void _cleanUpAllZones();
-
-int _BtypeToZtype(int bType);
+void _clearOneZone(zone* deleteZone);
 
 std::string _zoneBuildingToString(int zoneType);
 
+void _growZones(int zoneType);
+int _calcPopGrowth(zoneBuilding* curZ);
 
+int _getPopulation(int zoneType);
 
-GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
-
-
-
-
-
-
+void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
 
 
@@ -559,6 +554,8 @@ GMEXPORT double checkCanSpend(double cost);
 GMEXPORT double deductFunds(double cost);
 GMEXPORT double setPopulation(double pop);
 
+GMEXPORT double updatePopulationZones();
+
 
 // Tile functions
 GMEXPORT double seedMap(double type, double seedAmount);
@@ -586,8 +583,11 @@ GMEXPORT char* buildingsToString();
 
 
 // Zone Functions
+GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
 GMEXPORT char* zoneBuildingsToString(double dataType);
 GMEXPORT double growZone(double zoneType);
+GMEXPORT double getPopulationZone(double zoneType);
+GMEXPORT double cleanUpAllZones();
 
 
 // Utility functions
@@ -604,6 +604,7 @@ GMEXPORT void _testPrintTileData(int dataType);
 
 GMEXPORT void _testPrintZoneString(int zoneType);
 
+GMEXPORT double _testZoneGrowthAlgorithm(double level, double landValue);
 
 #endif
 

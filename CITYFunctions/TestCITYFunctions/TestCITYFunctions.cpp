@@ -41,63 +41,73 @@ int main() {
 
   // test zones:
 
-  std::cout << std::endl;
-  std::cout << "[R ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_RES);
-  std::cout << "[C ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_COM);
-  std::cout << "[I ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_IND);
-  std::cout << std::endl << "[END ZONE TEST]" << std::endl;
+
   std::cout << std::endl;
   std::cout << std::endl;
   std::cout << std::endl;
 
-  
 
+  /*
+  for (int d = 0; d < 1; d++) {
 
-  int ranX;
-  int ranY;
-  int zoneType;
-  for (int p = 0; p < 12; p++) {
+    setPopulation(1);
 
-    ranX = getRandomRange(5, (MAP_DIMENSION - 5));
-    ranY = getRandomRange(5, (MAP_DIMENSION - 5));
-    zoneType = getRandomRange(Z_RES, Z_IND);
+    // Add random R zones:
+    int ranX;
+    int ranY;
+    for (int j = 0; j < 5; j++) {
 
-    std::cout << "Adding zone type: " << zoneType << std::endl;
+      ranX = getRandomRange(5, MAP_DIMENSION - 5);
+      ranY = getRandomRange(5, MAP_DIMENSION - 5);
 
-
-    addZone(ranX, ranY, zoneType);
-  }
-
-
-  std::cout << std::endl;
-  std::cout << std::endl;
-  char* someString = tileTypeToString();
-  int loc;
-  for (int c = 0; c < MAP_DIMENSION; c++) {
-    for (int r = 0; r < MAP_DIMENSION; r++) {
-      loc = (r*MAP_DIMENSION) + (c);
-      std::cout << someString[loc];
+      addBuilding(BT_RZONE, ranX, ranY);
     }
+
+
+
+
+    std::cout << "Population before = " << getPopulation();
+    std::cout << "\t";
+
+    growZone(Z_RES);
+    growZone(Z_RES);
+    growZone(Z_RES);
+
+    updatePopulationZones();
+    std::cout << "Population after = " << getPopulation();
     std::cout << std::endl;
+
+    cleanUpAllZones();
   }
-  std::cout << std::endl;
-  std::cout << std::endl;
+
+  */
 
 
-  std::cout << std::endl;
-  std::cout << "[R ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_RES);
-  std::cout << "[C ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_COM);
-  std::cout << "[I ZONE TEST]" << std::endl;
-  _testPrintZoneString(Z_IND);
-  std::cout << std::endl << "[END ZONE TEST]" << std::endl;
-  std::cout << std::endl;
 
-  // end test zones ---
+
+
+    // TEST growth algorithm:
+    std::cout << "Testing zone Growth:" << std::endl;
+    std::cout << std::endl;
+    int randLevel;
+    int randLV;
+    int popGrowth;
+    for (int i = 0; i < 80; i++) {
+
+      randLevel = (i/5);
+      randLV = ((i%10)*10);
+
+      popGrowth = (int)_testZoneGrowthAlgorithm(randLevel, randLV);
+
+      std::cout << "lvl=" << randLevel;
+      std::cout << ", LandValue=" << randLV << ", \t Growth = ";
+      std::cout << popGrowth << std::endl;
+      if (i % 10 == 9)
+        std::cout << std::endl;
+    }
+
+
+
 
 
   mapEnd();

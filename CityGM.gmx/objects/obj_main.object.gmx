@@ -189,10 +189,8 @@ canDraw = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-
+            <string>/// PRESS AND HOLD building placement
 scr_placementHold(id);
-
 
 alarm[3] = PRESS_HOLD_ALARM;
 </string>
@@ -292,6 +290,9 @@ if (curSeason != lastSeason) {
 else // update season
     gameSeason = DLL_getGameSeason();
 
+// Update Population:
+scr_updatePopulation(id);    
+
 
 // ZONE DEVELOPMENT:
 DLL_growZone(updateZone);
@@ -301,8 +302,6 @@ scr_updateZoneBuildings(id, updateZone);
 updateZone = scr_updateAlarmZoneType(updateZone);
     
 
-// debug:
-//scr_addPopulation(id, 50);
 
 
 
@@ -505,9 +504,9 @@ DLL_mapEnd();
 
 
 // DEBUG:
-if (pressHoldMode) {
-    draw_text(view_xview + view_wview/2, view_yview + view_hview/2, "PLACEMENT MODE");
-}
+//if (pressHoldMode) {
+//    draw_text(view_xview + view_wview/2, view_yview + view_hview/2, "PLACEMENT MODE");
+//}
 
 
 

@@ -54,14 +54,22 @@ if (surface_exists(argument0.surfaceSpecialMap)) {
                     val = real(valString); // convert to real number
                  
                     // set color according to data:
-                    if (val > 80)
+                    if (val > 90)
+                        color = make_colour_hsv(90, 245, 255); // light green
+                    else if (val > 80)
                         color = make_colour_hsv(90, 210, 255); // light green
+                    else if (val > 70)
+                        color = make_colour_hsv(75, 200, 255); // green
+                    else if (val > 60)
+                        color = make_colour_hsv(60, 190, 255); // green
                     else if (val > 50)
-                        color = make_colour_hsv(90, 255, 255); // green
-                    else if (val > 35)
-                        color = make_colour_hsv(45, 170, 240); // yellow
+                        color = make_colour_hsv(46, 180, 255); // green
+                    else if (val > 40)
+                        color = make_colour_hsv(38, 170, 240); // yellow
+                    else if (val > 30)
+                        color = make_colour_hsv(24, 140, 240); // yellow
                     else if (val > 20)
-                        color = make_colour_hsv(25, 255, 225); // orange
+                        color = make_colour_hsv(16, 255, 225); // orange
                     else if (val <= 20)
                         color = make_colour_hsv(0, 255, 225); // red
                  }

@@ -421,6 +421,26 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_getPopulationZone</name>
+          <externalName>getPopulationZone</externalName>
+          <kind>12</kind>
+          <help>DLL_getPopulationZone(int zoneType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_updatePopulationZones</name>
+          <externalName>updatePopulationZones</externalName>
+          <kind>12</kind>
+          <help>DLL_updatePopulationZones()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
+          <args/>
+        </function>
       </functions>
       <constants>
         <constant>

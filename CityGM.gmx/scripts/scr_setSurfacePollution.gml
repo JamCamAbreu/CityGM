@@ -59,19 +59,26 @@ if (surface_exists(argument0.surfaceSpecialMap)) {
                 if (valString != 'W') {
                     val = real(valString); // convert to real number
                  
+                    // INVERT val:
+                    val = (100 - val);
                     // set color according to data:
                     if (val > 80)
-                        color = c_white;
+                        color = make_colour_hsv(75, 200, 255); // green
+                    else if (val > 70)
+                        color = make_colour_hsv(60, 190, 255); // green
+                    else if (val > 60)
+                        color = make_colour_hsv(46, 180, 255); // green
                     else if (val > 50)
-                        color = make_colour_hsv(0, 255, 225); // red
+                        color = make_colour_hsv(38, 170, 240); // yellow
+                    else if (val > 40)
+                        color = make_colour_hsv(24, 140, 240); // yellow
                     else if (val > 30)
-                        color = make_colour_hsv(45, 170, 240); // yellow
-                    else if (val > 5)
-                        color = make_colour_hsv(90, 255, 255); // green
-                    else if (val >= 0)
-                       color = make_colour_hsv(90, 230, 180); // green
+                        color = make_colour_hsv(16, 255, 225); // orange
+                    else if (val <= 30)
+                        color = c_white; // red
                 }
-                else
+                // Water tile:
+                else 
                     color = c_blue;
         
                 // position to draw:

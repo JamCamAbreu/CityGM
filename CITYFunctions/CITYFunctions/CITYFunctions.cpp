@@ -154,8 +154,25 @@ int _checkNewCityType() {
   return 0;
 }
 
+int _updatePopulation() {
 
+  // loop through each zone type and add up all of the population.
+  int population = 0;
 
+  // R Zones:
+  population += _getPopulation(Z_RES);
+
+  // C Zones:
+  population += _getPopulation(Z_COM);
+
+  // I Zones:
+  population += _getPopulation(Z_IND);
+
+  if (population < 1)
+    population = 1;
+
+  return population;
+}
 
 
 
@@ -255,6 +272,8 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
 
 
 // Tile Data Functions -----------
+
+// Get:
 int _getTileData(int x, int y, int dataType) {
   
   tile* curTile = map(x, y);
@@ -291,6 +310,11 @@ int _getTileData(int x, int y, int dataType) {
   return -3; // error code
 }
 
+int _getDataRadius(int data) {
+  return ((data / 5) + 1);
+}
+
+// Set:
 void _zeroTileData(int dataType) {
   tile* curTile;
 
@@ -356,6 +380,7 @@ void _setTileData(int xCoord, int yCoord, int dataType, int amount) {
 
 }
 
+// Add: 
 void _addTileData(int xCoord, int yCoord, int dataType, int amount) {
 
   tile* curTile = map(xCoord, yCoord);
@@ -413,10 +438,6 @@ void _addDataCircle(int xOrigin, int yOrigin, int radius, int dataType, int amou
 
 }
 
-int _getDataRadius(int data) {
-  return ((data / 6) + 1);
-}
-
 void _addAllBuildingData(int dataType) {
   int size = _getBuildingVectorSize();
   building* curBuilding;
@@ -440,26 +461,6 @@ void _addAllBuildingData(int dataType) {
   } // end for
   
 
-}
-
-std::string _tileDataToString(int dataType) {
-  
-  std::string dataString = "";
-  tile* iter;
-  int value;
-  for (int r = 0; r < MAP_DIMENSION; r++) {
-    for (int c = 0; c < MAP_DIMENSION; c++) {
-
-      value = _getTileData(c, r, dataType);
-      if (value > 0)
-        dataString += std::to_string(value);
-      else if (value == -1)
-        dataString += 'W'; // water code
-      dataString += ',';
-    }
-  }
-
-  return dataString;
 }
 
 void _addWaterTileValue(int dataType, int radius, int amount) {
@@ -491,6 +492,7 @@ void _addWaterTileValue(int dataType, int radius, int amount) {
 
 }
 
+// Subtract:
 void _subtractLandValuePollution() {
   tile* curTile;
 
@@ -509,6 +511,30 @@ void _subtractLandValuePollution() {
 
 
 }
+
+// String:
+std::string _tileDataToString(int dataType) {
+  
+  std::string dataString = "";
+  tile* iter;
+  int value;
+  for (int r = 0; r < MAP_DIMENSION; r++) {
+    for (int c = 0; c < MAP_DIMENSION; c++) {
+
+      value = _getTileData(c, r, dataType);
+      if (value > 0)
+        dataString += std::to_string(value);
+      else if (value == -1)
+        dataString += 'W'; // water code
+      dataString += ',';
+    }
+  }
+
+  return dataString;
+}
+
+
+
 
 
 
@@ -608,27 +634,27 @@ int _getBuildingPollution(int type) {
   // use a switch and enum to return width:
   switch (type) {
     case BT_POLICE: {
-      return 10;
+      return 20;
       break;
       }
 
     case BT_FIRE: {
-      return 10;
+      return 25;
       break;
       }
 
     case BT_SCHOOL: {
-      return 8;
+      return 20;
       break;
       }
 
     case BT_HOSPITAL: {
-      return 16;
+      return 25;
       break;
       }
 
     case BT_COAL: {
-      return 40;
+      return 50;
       break;
       }
 
@@ -638,17 +664,17 @@ int _getBuildingPollution(int type) {
       }
 
     case BT_WATERTOWER: {
-      return 15;
+      return 22;
       break;
       }
 
     case BT_ARCADE: {
-      return 10;
+      return 15;
       break;
       }
 
     case BT_AIRPORT: {
-      return 30;
+      return 55;
       break;
       }
 
@@ -816,6 +842,33 @@ int _checkMoney(int amount) {
 
 
 // Zone functions:
+
+// General:
+int _zoneEnumToTileTypeEnum(int zoneType) {
+
+  if (zoneType == Z_RES)
+    return TT_ZR;
+  else if (zoneType == Z_COM)
+    return TT_ZC;
+  else if (zoneType == Z_IND)
+    return TT_ZI;
+
+  else
+    return -1; // error code
+}
+
+int _BtypeToZtype(int bType) {
+  if (bType == BT_RZONE)
+    return Z_RES;
+  else if (bType == BT_CZONE)
+    return Z_COM;
+  else if (bType == BT_IZONE)
+    return Z_IND;
+  else
+    return -1; // error code
+}
+
+// Get:
 int _getZoneBuildingX(int squarePos) {
   if (squarePos == 0 || squarePos == 3 || squarePos == 6)
     return 0;
@@ -977,19 +1030,7 @@ int _getZoneBuildingPopMin(int zoneType, int level) {
   return -1; // error code
 }
 
-int _zoneEnumToTileTypeEnum(int zoneType) {
-
-  if (zoneType == Z_RES)
-    return TT_ZR;
-  else if (zoneType == Z_COM)
-    return TT_ZC;
-  else if (zoneType == Z_IND)
-    return TT_ZI;
-
-  else
-    return -1; // error code
-}
-
+// Init:
 int _initZoneBuildings(zone* zoneID) {
 
   zoneID->zoneBuildings.resize(9); // always 9 zone buildings
@@ -1005,7 +1046,7 @@ int _initZoneBuildings(zone* zoneID) {
     int yPos = zoneID->yOrigin + (_getZoneBuildingY(i));
     zoneID->zoneBuildings[i]->tileUnder = map(xPos, yPos);
 
-    zoneID->zoneBuildings[i]->popCur = 0;
+    zoneID->zoneBuildings[i]->popCur = 1;
     zoneID->zoneBuildings[i]->popCap = _getZoneBuildingPopMin(zoneID->zoneType, 1);
     zoneID->zoneBuildings[i]->pollution = 0;
 
@@ -1014,16 +1055,6 @@ int _initZoneBuildings(zone* zoneID) {
   }
 
   return 0;
-}
-int _BtypeToZtype(int bType) {
-  if (bType == BT_RZONE)
-    return Z_RES;
-  else if (bType == BT_CZONE)
-    return Z_COM;
-  else if (bType == BT_IZONE)
-    return Z_IND;
-  else
-    return -1; // error code
 }
 
 zone* _newZone(int xCoord, int yCoord, int zoneType) {
@@ -1078,9 +1109,11 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
 }
 
 
-
-
+// Destroy (free from memory)
 void _cleanUpAllZones() {
+
+  // NEED TO UPDATE TILES UNDERNEATH! 
+
 
   // Residential:
   // Cleanup all zoneBuildings in linked list:
@@ -1102,7 +1135,6 @@ void _cleanUpAllZones() {
     (*itI)->zoneBuildings.clear();
   // cleanup zone itself:
   Izones.clear();
-
 }
 
 void _clearOneZone(zone* deleteZone) {
@@ -1121,7 +1153,13 @@ void _clearOneZone(zone* deleteZone) {
   }
 }
 
+// destructor (clean up buildings by changing tiles underneath):
+zoneBuilding::~zoneBuilding() {
+  // reset tile underneath:
+  this->tileUnder->tileType = TT_GRASS;
+}
 
+// String:
 std::string _zoneBuildingToString(int zoneType) {
 
 
@@ -1250,6 +1288,8 @@ std::string _zoneBuildingToString(int zoneType) {
   return zoneBuildingInfo;
 }
 
+
+// Grow:
 void _growZones(int zoneType) {
 
   int ready = false;
@@ -1276,10 +1316,9 @@ void _growZones(int zoneType) {
 
     while (iter != endZoneList) {
 
-
       // not ALL zones are updated every time!
       int chance = _getIntRange(1, 10);
-      int highestChance = 4;
+      int highestChance = 7;
       if (chance <= highestChance) {
 
         // access zoneBuildings in zone:
@@ -1289,11 +1328,15 @@ void _growZones(int zoneType) {
 
           // not ALL buildings in zone are updated.
           int chanceB = _getIntRange(1, 10);
-          int highestChanceB = 3;
+          int highestChanceB = 4;
           if (chanceB <= highestChanceB) {
 
-            // DEBUG:
-            (*bIter)->level++;
+            int growth = _calcPopGrowth((*bIter));
+            (*bIter)->popCur += growth;
+            if ((*bIter)->popCur < 0)
+              (*bIter)->popCur = 0;
+            // update level:
+            _updateZoneBuildingLevel((*bIter));
 
           } // end if chance (buildings within zone)
 
@@ -1308,19 +1351,102 @@ void _growZones(int zoneType) {
 
 }
 
+int _calcPopGrowth(zoneBuilding* curZ) {
+
+  int level = curZ->level;
+  int landValue = curZ->tileUnder->landValue;
+
+  // pop growth based on level, some randomness
+  double popGrowth = 10*(level + 1) + ((level + 1)*(_getIntRange(-(level + 4), level + 4)));
+
+  // Some land value impact:
+  int lv = 100 - landValue;
+  double lvImpact = (double)lv / 50.0;
+  if (lvImpact <= 0)
+    lvImpact = 1;
+  popGrowth = popGrowth / lvImpact;
 
 
+  // punish for low land value, reward for high:
+  double lvLuck = (landValue - 50) / 20;
+  double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
+  if (luck == 0)
+    luck = 1;
+  popGrowth = popGrowth*luck;
+
+  // Population can get crazy with high land values, so cap it:
+  //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
+  double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/5);
+  if (popGrowth > popGrowthMax)
+    popGrowth = popGrowthMax;
+
+  return (int)popGrowth;
+}
+
+int _getPopulation(int zoneType) {
+
+  // Adds up the population of ALL zoneBuildings for a zone type. 
+  int count = 0;
+
+  int ready = false;
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+  // first iterate through all zones in given data type:
+  if (zoneType == Z_RES) {
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_COM) {
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_IND) {
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+    ready = true;
+  }
+
+  if (ready) {
+
+    while (iter != endZoneList) {
+
+      // access zoneBuildings in zone:
+      std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
+      std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+      for (bIter; bIter != bIterEnd; bIter++) {
+        count += (*bIter)->popCur;
+      } // end inner for (each building in zone)
+
+    iter++;
+
+    } // end while
+  } // end if ready
+
+  return count;
+}
 
 
-double addZone(double xCoord, double yCoord, double zoneType) {
+void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
-  int xInt = (int)xCoord;
-  int yInt = (int)yCoord;
-  int zTypeInt = (int)zoneType;
+  // make sure popCap is correct first:
+  curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
 
-  _newZone(xInt, yInt, zTypeInt);
+  // Goes up any levels?
+  while (curZB->popCur > curZB->popCap) {
+      curZB->level++;
+      curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
+  }
 
-  return 0;
+  // Goes down any levels?
+  int levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
+  while (curZB->popCur < levelBelow) {
+    curZB->level--;
+    if (curZB->level > 0)
+      levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
+  }
+
 }
 
 
@@ -1337,12 +1463,6 @@ double addZone(double xCoord, double yCoord, double zoneType) {
 
 
 
-
-
-
-
-
-// MODE functions ---------------
 
 
 
@@ -1718,6 +1838,17 @@ double setPopulation(double pop) {
   return newCityType;
 }
 
+double updatePopulationZones() {
+  int newCityType = 0;
+
+  curGameData.population = _updatePopulation();
+
+  // sets new type, and returns 1 if new type achieved
+  newCityType = _checkNewCityType();
+
+  return newCityType;
+}
+
 
 
 
@@ -1868,6 +1999,18 @@ double subtractLandValuePollution() {
 
 
 // Zone Functions
+
+double addZone(double xCoord, double yCoord, double zoneType) {
+
+  int xInt = (int)xCoord;
+  int yInt = (int)yCoord;
+  int zTypeInt = (int)zoneType;
+
+  _newZone(xInt, yInt, zTypeInt);
+
+  return 0;
+}
+
 char* zoneBuildingsToString(double dataType) {
   int dataTypeInt = (int)dataType;
   std::string getString = _zoneBuildingToString(dataTypeInt);
@@ -1883,6 +2026,19 @@ double growZone(double zoneType) {
 
   _growZones(typeInt);
 
+  return 0;
+}
+
+double getPopulationZone(double zoneType) {
+
+  int zoneTypeInt = (int)zoneType;
+  double count = (double)_getPopulation(zoneTypeInt);
+
+  return count;
+}
+
+double cleanUpAllZones() {
+  _cleanUpAllZones();
   return 0;
 }
 
@@ -2167,6 +2323,18 @@ void _printMapTypes() {
           std::cout << CHAR_WATER;
           break;
 
+        case TT_ZR:
+          std::cout << CHAR_RZONE;
+          break;
+
+        case TT_ZC:
+          std::cout << CHAR_CZONE;
+          break;
+
+        case TT_ZI:
+          std::cout << CHAR_IZONE;
+          break;
+
         default:
           std::cout << CHAR_ERROR;
       } // end switch
@@ -2333,5 +2501,37 @@ void _testPrintZoneString(int zoneType) {
   _zoneBuildingToString(zoneType);
 
 }
+
+
+
+double _testZoneGrowthAlgorithm(double level, double landValue) {
+
+  // pop growth based on level, some randomness
+  double popGrowth = 10*(level + 1) + ((level + 1)*(_getIntRange(-(level + 4), level + 4)));
+
+  // Some land value impact:
+  int lv = 100 - landValue;
+  double lvImpact = (double)lv / 50.0;
+  if (lvImpact <= 0)
+    lvImpact = 1;
+  popGrowth = popGrowth / lvImpact;
+
+
+  // punish for low land value, reward for high:
+  double lvLuck = (landValue - 50) / 20;
+  double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
+  if (luck == 0)
+    luck = 1;
+  popGrowth = popGrowth*luck;
+
+  // Population can get crazy with high land values, so cap it:
+  double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
+  if (popGrowth > popGrowthMax)
+    popGrowth = popGrowthMax;
+
+  return (int)popGrowth;
+
+}
+
 
 
