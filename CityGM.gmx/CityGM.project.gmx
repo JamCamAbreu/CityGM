@@ -116,7 +116,9 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
-    <script>scripts\scr_updateAll.gml</script>
+    <scripts name="UPDATE">
+      <script>scripts\scr_updateAll.gml</script>
+    </scripts>
     <script>scripts\scr_ease.gml</script>
     <scripts name="Buildings">
       <script>scripts\scr_drawPlacement.gml</script>
@@ -266,7 +268,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="87">
+  <constants number="86">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -274,7 +276,7 @@
     <constant name="VIEW_BOARDER">16</constant>
     <constant name="MAX_BUILDINGS">999</constant>
     <constant name="MINIMAP_PIXEL">2</constant>
-    <constant name="TIME_MONTH">60*10</constant>
+    <constant name="TIME_MONTH">60*5</constant>
     <constant name="TIME_MUL_PAUSE">0</constant>
     <constant name="TIME_MUL_SLOW">4</constant>
     <constant name="TIME_MUL_NORMAL">1</constant>
@@ -352,7 +354,6 @@
     <constant name="MENU_MAP_D_H">MENU_MAP_PAD*3</constant>
     <constant name="LANDVALUE_DEFAULT">50</constant>
     <constant name="MAX_ZONES">MAP_DIMENSION*MAP_DIMENSION</constant>
-    <constant name="PRESS_HOLD_ALARM">50</constant>
     <constant name="CAMERA_MOVESLOW">140</constant>
   </constants>
   <help>

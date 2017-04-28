@@ -172,32 +172,6 @@ canDraw = true;
         </arguments>
       </action>
     </event>
-    <event eventtype="2" enumb="3">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// PRESS AND HOLD building placement
-scr_placementHold(id);
-
-alarm[3] = PRESS_HOLD_ALARM;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="2" enumb="2">
       <action>
         <libid>1</libid>
@@ -276,7 +250,7 @@ alarm[2] = CURTAIN_OUT;
 scr_updateAll(id);
 
 
-// update time (increment month)
+// increment month
 var lastSeason = DLL_getGameSeason();
 scr_incrementMonth(id);
 
@@ -290,15 +264,14 @@ if (curSeason != lastSeason) {
 else // update season
     gameSeason = DLL_getGameSeason();
 
+    
 // Update Population:
 scr_updatePopulation(id);    
 
 
-// ZONE DEVELOPMENT:
+// ZONE DEVELOPMENT (rotates types):
 DLL_growZone(updateZone);
 scr_updateZoneBuildings(id, updateZone);
-
-
 updateZone = scr_updateAlarmZoneType(updateZone);
     
 
@@ -340,6 +313,8 @@ if (gameMode == MD_MENU)
 if (gameMode == MD_MAPS)
     scr_selectMapKeys(id);
     
+/// PRESS AND HOLD building placement
+scr_placementHold(id);
 </string>
           </argument>
         </arguments>
@@ -905,7 +880,6 @@ else if (gameMode == MD_SELECT) {
 // Place a building in placement mode:
 else if (gameMode == MD_PLACE) {
     scr_placeBuilding(id, selectedBuilding);
-    alarm[3] = 5;
     pressHoldMode = true;
     camera.slowDown = CAMERA_MOVESLOW;
 }
