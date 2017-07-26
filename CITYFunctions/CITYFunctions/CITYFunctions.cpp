@@ -12,12 +12,16 @@ tile* mapStartAddress = &newMap[0][0];
 
 int mode;
 
-// containers:
+// containers (that stay persistant throughout the life of the DLL)
 std::vector<building*> v_buildings; // cleaned up in mapEnd function
 
 std::list<zone*> Rzones;            // cleaned up in mapEnd function
 std::list<zone*> Czones;
 std::list<zone*> Izones;
+
+// A new one is added with each power plant. 
+// Currents can be 'combine' when powerlines connect currents
+std::list<ElectricCurrent> powerCurrents;
 
 
 
@@ -1036,22 +1040,29 @@ int _initZoneBuildings(zone* zoneID) {
   zoneID->zoneBuildings.resize(9); // always 9 zone buildings
 
   for (int i = 0; i < 9; i++) {
-    zoneID->zoneBuildings[i] = new zoneBuilding;
-    zoneID->zoneBuildings[i]->squarePos = i;
-    zoneID->zoneBuildings[i]->level = 0;
-    zoneID->zoneBuildings[i]->zoneType = zoneID->zoneType;
-    zoneID->zoneBuildings[i]->typeVariation = _getIntRange(TYPE_A, TYPE_C);
+
+    zoneBuilding* curZB = new zoneBuilding;
+    curZB->squarePos = i;
+    curZB->level = 0;
+    curZB->zoneType = zoneID->zoneType;
+    curZB->typeVariation = _getIntRange(TYPE_A, TYPE_C);
 
     int xPos = zoneID->xOrigin + (_getZoneBuildingX(i));
     int yPos = zoneID->yOrigin + (_getZoneBuildingY(i));
-    zoneID->zoneBuildings[i]->tileUnder = map(xPos, yPos);
+    curZB->tileUnder = map(xPos, yPos);
 
-    zoneID->zoneBuildings[i]->popCur = 1;
-    zoneID->zoneBuildings[i]->popCap = _getZoneBuildingPopMin(zoneID->zoneType, 1);
-    zoneID->zoneBuildings[i]->pollution = 0;
+    curZB->popCur = 1;
+    curZB->popCap = _getZoneBuildingPopMin(zoneID->zoneType, 1);
+    curZB->pollution = 0;
 
     // set tile underneath to have correct tile type:
-    zoneID->zoneBuildings[i]->tileUnder->tileType = _zoneEnumToTileTypeEnum(zoneID->zoneType);
+    curZB->tileUnder->tileType = _zoneEnumToTileTypeEnum(zoneID->zoneType);
+
+    // set correct parent zone pointer:
+    curZB->parentZone = zoneID;
+
+    // LAST: update zoneBuildings[i]
+    zoneID->zoneBuildings[i] = curZB;
   }
 
   return 0;
@@ -1449,7 +1460,62 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
 }
 
+int _calculateZonePowerConsumption(zoneBuilding* curZB) {
 
+  zone* parentZone = curZB->parentZone;
+
+  int sumPowerConsumption = 0;
+  for (int i = 0; i < 9; i++) {
+
+    int level = parentZone->zoneBuildings[i]->level;
+
+    sumPowerConsumption = level * 10; // REDO
+
+  }
+
+
+  return sumPowerConsumption;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ElectricCurrent / Powerline Functions
+
+// Constructor for powerline:
+powerLine::powerLine() {
+
+  // Starts off being null
+  powerCurrent = NULL;
+
+}
 
 
 
@@ -1653,11 +1719,20 @@ int _getIntRange(int min, int max) {
   return roll;
 }
 
+double getClock() {
 
+  clock_t t = clock();
+  int convert = (int)t;
 
+  return convert;
 
+}
 
+double getTime(double clockBegin, double clockFinish) {
 
+  double time = clockFinish - clockBegin;
+  return (time / CLOCKS_PER_SEC);
+}
 
 
 

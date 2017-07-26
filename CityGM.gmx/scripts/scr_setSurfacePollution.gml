@@ -75,7 +75,7 @@ if (surface_exists(argument0.surfaceSpecialMap)) {
                     else if (val > 30)
                         color = make_colour_hsv(16, 255, 225); // orange
                     else if (val <= 30)
-                        color = c_white; // red
+                        color = c_red; // red
                 }
                 // Water tile:
                 else 

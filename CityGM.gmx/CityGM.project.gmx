@@ -116,6 +116,7 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
+    <script>scripts\scr_testFunctionSpeed.gml</script>
     <scripts name="UPDATE">
       <script>scripts\scr_updateAll.gml</script>
     </scripts>

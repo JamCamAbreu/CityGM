@@ -166,6 +166,18 @@ enum {
 }tileDataType;
 
 
+enum {
+  DIR_N = 0,
+  DIR_E, 
+  DIR_S,
+  DIR_W 
+}direction;
+
+
+
+
+
+
 // STRUCT DEFINITIONS ----------------------
 
 typedef struct gameData {
@@ -241,7 +253,6 @@ enum {
 } squarePosition;
 
 enum {
-
   TYPE_A = 0,
   TYPE_B,
   TYPE_C
@@ -286,6 +297,10 @@ enum {
   IL8 = 550
 } IlevelPopMin;
 
+// forward definition (or whatever it's called)
+// (real definition below)
+struct zone;
+
 typedef struct zoneBuilding {
   
   // general info
@@ -302,9 +317,10 @@ typedef struct zoneBuilding {
   int popCap;
   int pollution;
 
+  zone* parentZone;
+
   ~zoneBuilding();
 };
-
 
 typedef struct zone {
 
@@ -329,12 +345,56 @@ typedef struct zone {
 
 
 
+typedef struct ElectricCurrent {
+
+  // DETAILS:
+  // A new one is added with each power plant. 
+  // Currents can be 'combine' when powerlines connect currents
+
+
+  // Power Plants associated with this 'current'
+  std::vector<building*> powerPlants;
+
+  // These are the lists of items attached to the 'current'
+  std::vector<building*> poweredBuildings;
+  std::vector<zone> poweredZones;
+
+  int totalCurrentCapacity;
+
+
+};
+
+
+ElectricCurrent* combineTwoElectricCurrents(ElectricCurrent* curOne, ElectricCurrent* curTwo);
+
+
+
+
+
+
+
+
+
+typedef struct powerLine {
+
+  // N, E, S, W
+  powerLine* neighbor[4];
+
+  ElectricCurrent* powerCurrent;
+  
+
+
+  // Constructor:
+  powerLine();
+
+};
+
+
+
+
 
 
 // todo:
-//typedef struct powerLine {
-//};
-
 //typedef struct road {
 //};
 
@@ -476,6 +536,11 @@ int _getPopulation(int zoneType);
 
 void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
+int _getZonePowerConsumption(zoneBuilding* curZB);
+
+
+
+
 
 
 
@@ -592,6 +657,8 @@ GMEXPORT double cleanUpAllZones();
 
 // Utility functions
 GMEXPORT double getRandomRange(double min, double max);
+GMEXPORT double getClock();
+GMEXPORT double getTime(double clockBegin, double clockFinish);
 
 
 // TESTING/DEBUGGING FUNCTIONS-----------------------------
