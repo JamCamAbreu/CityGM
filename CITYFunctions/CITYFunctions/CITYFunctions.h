@@ -40,6 +40,14 @@ const char CHAR_IZONE = 'i';
 
 // ENUMS -----------------------------------
 enum {
+  DIR_N = 0,
+  DIR_E, 
+  DIR_S,
+  DIR_W
+}cardinalDirection;
+
+
+enum {
   TT_GRASS = 0, // default
   TT_TREE,
   TT_BUILDING, 
@@ -359,7 +367,7 @@ typedef struct ElectricCurrent {
   std::vector<building*> poweredBuildings;
   std::vector<zone> poweredZones;
 
-  int totalCurrentCapacity;
+  int totalCurrent;
 
 
 };
@@ -377,6 +385,9 @@ ElectricCurrent* combineTwoElectricCurrents(ElectricCurrent* curOne, ElectricCur
 
 typedef struct powerLine {
 
+  int xOrigin;
+  int yOrigin;
+
   // N, E, S, W
   powerLine* neighbor[4];
 
@@ -388,6 +399,25 @@ typedef struct powerLine {
   powerLine();
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -537,6 +567,29 @@ int _getPopulation(int zoneType);
 void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
 int _getZonePowerConsumption(zoneBuilding* curZB);
+
+
+
+
+
+
+
+
+
+
+
+// powerLine Functions
+powerLine* _getPowerLineAt(int x, int y);
+
+void _setPowerLineTile(int x, int y);
+
+powerLine* _newPowerLine(int x, int y);
+
+
+
+
+
+
 
 
 

@@ -22,7 +22,7 @@ std::list<zone*> Izones;
 // A new one is added with each power plant. 
 // Currents can be 'combine' when powerlines connect currents
 std::list<ElectricCurrent> powerCurrents;
-
+std::list<powerLine> powerLines;
 
 
 tile* map(int x, int y) {
@@ -1518,9 +1518,44 @@ powerLine::powerLine() {
 }
 
 
+// TODO: MAKE FUNCTION PROTOTYPES FOR THESE!!!!
+
+// Returns a powerline at the given x,y coordinate, or returns null
+// if it doesn't exist.
+powerLine* _getPowerLineAt(int x, int y) {
+
+}
 
 
+void _setPowerLineTile(int x, int y) {
 
+
+  // set tile to type TT_PLINE
+}
+
+
+powerLine* _newPowerLine(int x, int y) {
+
+
+  powerLine* newPowerLine = new powerLine;
+
+  // attribute defaults:
+  newPowerLine->xOrigin = x;
+  newPowerLine->yOrigin = y;
+
+  // TODO
+  // This only currently works with power lines around it, not 
+  // buildings that are powered...
+  newPowerLine->neighbor[DIR_N] = _getPowerLineAt(x, y - 1);
+  newPowerLine->neighbor[DIR_E] = _getPowerLineAt(x + 1, y);
+  newPowerLine->neighbor[DIR_S] = _getPowerLineAt(x, y + 1);
+  newPowerLine->neighbor[DIR_W] = _getPowerLineAt(x - 1, y);
+  
+  // set tiles associated with powerLine:
+  _setPowerLineTile(x, y);
+
+  return newPowerLine;
+}
 
 
 
