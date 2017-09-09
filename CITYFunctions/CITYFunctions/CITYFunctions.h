@@ -16,7 +16,11 @@
 #include <stdlib.h>
 #include <ctime>
 #include <vector>
+#include <algorithm> // used for vector 'find' function
 #include <list>
+
+// DEBUG:
+#include <iostream>
 
 
 
@@ -41,7 +45,7 @@ const char CHAR_IZONE = 'i';
 // ENUMS -----------------------------------
 enum {
   DIR_N = 0,
-  DIR_E, 
+  DIR_E,
   DIR_S,
   DIR_W
 }cardinalDirection;
@@ -50,7 +54,7 @@ enum {
 enum {
   TT_GRASS = 0, // default
   TT_TREE,
-  TT_BUILDING, 
+  TT_BUILDING,
   TT_WATER,
 
   // extra tree and water types:
@@ -174,16 +178,8 @@ enum {
 }tileDataType;
 
 
-enum {
-  DIR_N = 0,
-  DIR_E, 
-  DIR_S,
-  DIR_W 
-}direction;
 
-
-
-
+struct building;
 
 
 // STRUCT DEFINITIONS ----------------------
@@ -210,13 +206,21 @@ typedef struct tile {
   int pollution;
   int landValue;
   int fireDanger;
+  building* buildingOnTop;
 }tile;
+
+
+
+
 
 typedef struct building {
 
   // tiles covered by this building
   std::vector<tile*> tiles;
-  
+
+  // Get all neighbors around the building
+  std::vector<building*> neighbors;
+
   // type uses an enum:
   int type;
 
@@ -228,16 +232,16 @@ typedef struct building {
   int buildingDimension;
 
   // other attributes:
-  bool isPowered;
+  int currentPower;
+  int requiredPower;
 
   // tile data modifiers
   int pollution;
   int landValueBoost;
 
-  // connected power lines or roads
-  //std::vector<powerLine*> adjacentPowerLines;
-  //std::vector<road*> adjacentRoads;
 }building;
+
+
 
 
 
@@ -373,39 +377,6 @@ typedef struct ElectricCurrent {
 };
 
 
-ElectricCurrent* combineTwoElectricCurrents(ElectricCurrent* curOne, ElectricCurrent* curTwo);
-
-
-
-
-
-
-
-
-
-typedef struct powerLine {
-
-  int xOrigin;
-  int yOrigin;
-
-  // N, E, S, W
-  powerLine* neighbor[4];
-
-  ElectricCurrent* powerCurrent;
-  
-
-
-  // Constructor:
-  powerLine();
-
-};
-
-
-
-
-
-
-
 
 
 
@@ -497,7 +468,7 @@ void _subtractLandValuePollution();
 
 
 
- 
+
 
 
 
@@ -520,8 +491,9 @@ std::string _buildingInfoToString();
 
 int _checkMoney(int amount);
 
+void _setBuildingNeighbors(building* buildingID);
 
-
+int _getBuildingPowerRequirements(int buildingType);
 
 
 
@@ -571,19 +543,6 @@ int _getZonePowerConsumption(zoneBuilding* curZB);
 
 
 
-
-
-
-
-
-
-
-// powerLine Functions
-powerLine* _getPowerLineAt(int x, int y);
-
-void _setPowerLineTile(int x, int y);
-
-powerLine* _newPowerLine(int x, int y);
 
 
 
@@ -725,6 +684,9 @@ GMEXPORT void _testPrintTileData(int dataType);
 GMEXPORT void _testPrintZoneString(int zoneType);
 
 GMEXPORT double _testZoneGrowthAlgorithm(double level, double landValue);
+
+GMEXPORT double _testBuildingNeighbors();
+
 
 #endif
 

@@ -22,10 +22,16 @@ std::list<zone*> Izones;
 // A new one is added with each power plant. 
 // Currents can be 'combine' when powerlines connect currents
 std::list<ElectricCurrent> powerCurrents;
-std::list<powerLine> powerLines;
 
 
 tile* map(int x, int y) {
+
+  // TODO: Make sure this doesn't break anything
+  // Bounds Checking:
+  if (x < 0 || x > MAP_DIMENSION)
+    return NULL;
+  if (y < 0 || y > MAP_DIMENSION)
+    return NULL;
 
   tile* iter = mapStartAddress;
   iter += (y*MAP_DIMENSION) + (x);
@@ -384,7 +390,7 @@ void _setTileData(int xCoord, int yCoord, int dataType, int amount) {
 
 }
 
-// Add: 
+// Add:
 void _addTileData(int xCoord, int yCoord, int dataType, int amount) {
 
   tile* curTile = map(xCoord, yCoord);
@@ -723,13 +729,104 @@ void _setBuildingTiles(building* buildingID, int x, int y, int dimension) {
     for (int j = 0; j < dimension; j++) {
       containedTile = map(x + i, y + j);
       containedTile->tileType = TT_BUILDING;
+      containedTile->buildingOnTop = buildingID;
       buildingID->tiles.push_back(containedTile);
     }
   }
 }
 
-building* _newBuilding(int type, int x, int y) {
+int _getBuildingPowerRequirements(int buildingType) {
 
+  // use a switch and enum to return width:
+  switch (buildingType) {
+    case BT_TREE: {
+      return 0;
+      break;
+      }
+
+    case BT_ROAD: {
+      return 0;
+      break;
+      }
+
+    case BT_PLINE: {
+      return 2;
+      break;
+      }
+
+    case BT_RZONE: {
+      return -2;
+      break;
+      }
+
+    case BT_CZONE: {
+      return -2;
+      break;
+      }
+
+    case BT_IZONE: {
+      return -2;
+      break;
+      }
+
+    case BT_POLICE: {
+      return 14;
+      break;
+      }
+
+    case BT_FIRE: {
+      return 10;
+      break;
+      }
+
+    case BT_SCHOOL: {
+      return 20;
+      break;
+      }
+
+    case BT_HOSPITAL: {
+      return 25;
+      break;
+      }
+
+    case BT_COAL: {
+      return 0;
+      break;
+      }
+
+    case BT_NUCLEAR: {
+      return 0;
+      break;
+      }
+
+    case BT_WATERTOWER: {
+      return 25;
+      break;
+      }
+
+    case BT_ARCADE: {
+      return 18;
+      break;
+      }
+
+    case BT_AIRPORT: {
+      return 50;
+      break;
+      }
+
+    default: {
+      return -1;
+      break;
+    }
+  } // end switch
+  return -1; // error code
+
+  // -2 is the code for zones
+
+}
+
+
+building* _newBuilding(int type, int x, int y) {
 
   building* newBuilding = new building;
 
@@ -738,14 +835,18 @@ building* _newBuilding(int type, int x, int y) {
   newBuilding->xOrigin = x;
   newBuilding->yOrigin = y;
   newBuilding->buildingDimension = _getBuildingDimension(type);
-  newBuilding->isPowered = false;
+  newBuilding->currentPower = 0;
+  newBuilding->requiredPower = _getBuildingPowerRequirements(type);
   newBuilding->pollution = _getBuildingPollution(type);
-  
+
   // get size in tiles:
   int dim = _getBuildingDimension(type);
 
   // set tiles associated with building
   _setBuildingTiles(newBuilding, x, y, dim);
+
+  // Get all of the pointers to buildings around this building:
+  _setBuildingNeighbors(newBuilding);
 
   return newBuilding;
 }
@@ -830,10 +931,57 @@ int _checkMoney(int amount) {
     return 0;
 }
 
+void _setBuildingNeighbors(building* buildingID) {
+  int tilesPerEdge = buildingID->buildingDimension;
+  int i;
+  tile* curTile;
+
+  // North:
+  for (i = 0; i < tilesPerEdge; i++) {
+    curTile = map(buildingID->xOrigin + i, buildingID->yOrigin - 1);
+    if (curTile != NULL && curTile->buildingOnTop != NULL) {
+      if (std::find(buildingID->neighbors.begin(), buildingID->neighbors.end(), curTile->buildingOnTop) == buildingID->neighbors.end())
+        buildingID->neighbors.push_back(curTile->buildingOnTop);
+    }
+  }
+
+  // East:
+  for (i = 0; i < tilesPerEdge; i++) {
+    curTile = map(buildingID->xOrigin + buildingID->buildingDimension + 1, buildingID->yOrigin + i);
+    if (curTile != NULL && curTile->buildingOnTop != NULL) {
+      if (std::find(buildingID->neighbors.begin(), buildingID->neighbors.end(), curTile->buildingOnTop) == buildingID->neighbors.end())
+        buildingID->neighbors.push_back(curTile->buildingOnTop);
+    }
+  }
+
+  // South:
+  for (i = 0; i < tilesPerEdge; i++) {
+    curTile = map(buildingID->xOrigin + i, buildingID->yOrigin + buildingID->buildingDimension + 1);
+    if (curTile != NULL && curTile->buildingOnTop != NULL) {
+      if (std::find(buildingID->neighbors.begin(), buildingID->neighbors.end(), curTile->buildingOnTop) == buildingID->neighbors.end())
+        buildingID->neighbors.push_back(curTile->buildingOnTop);
+    }
+  }
+
+  // West:
+  for (i = 0; i < tilesPerEdge; i++) {
+    curTile = map(buildingID->xOrigin - 1, buildingID->yOrigin + i);
+    if (curTile != NULL && curTile->buildingOnTop != NULL) {
+      if (std::find(buildingID->neighbors.begin(), buildingID->neighbors.end(), curTile->buildingOnTop) == buildingID->neighbors.end())
+        buildingID->neighbors.push_back(curTile->buildingOnTop);
+    }
+  }
 
 
+  // now change THOSE neighbors to having ME as a neighbor:
+  for (auto it : buildingID->neighbors) {
+      if (std::find(it->neighbors.begin(), it->neighbors.end(), buildingID) == it->neighbors.end())
+        it->neighbors.push_back(buildingID);
+  }
 
+}
 
+// TODO: Make a destructor for the building type (and zone)
 
 
 
@@ -846,6 +994,11 @@ int _checkMoney(int amount) {
 
 
 // Zone functions:
+
+// TODO: Make a building (which is the size of the zone) that acts like 
+// a large building to other objects that want to interact with the zone
+// note: is this the best solution?
+
 
 // General:
 int _zoneEnumToTileTypeEnum(int zoneType) {
@@ -1507,56 +1660,6 @@ int _calculateZonePowerConsumption(zoneBuilding* curZB) {
 
 
 
-// ElectricCurrent / Powerline Functions
-
-// Constructor for powerline:
-powerLine::powerLine() {
-
-  // Starts off being null
-  powerCurrent = NULL;
-
-}
-
-
-// TODO: MAKE FUNCTION PROTOTYPES FOR THESE!!!!
-
-// Returns a powerline at the given x,y coordinate, or returns null
-// if it doesn't exist.
-powerLine* _getPowerLineAt(int x, int y) {
-
-}
-
-
-void _setPowerLineTile(int x, int y) {
-
-
-  // set tile to type TT_PLINE
-}
-
-
-powerLine* _newPowerLine(int x, int y) {
-
-
-  powerLine* newPowerLine = new powerLine;
-
-  // attribute defaults:
-  newPowerLine->xOrigin = x;
-  newPowerLine->yOrigin = y;
-
-  // TODO
-  // This only currently works with power lines around it, not 
-  // buildings that are powered...
-  newPowerLine->neighbor[DIR_N] = _getPowerLineAt(x, y - 1);
-  newPowerLine->neighbor[DIR_E] = _getPowerLineAt(x + 1, y);
-  newPowerLine->neighbor[DIR_S] = _getPowerLineAt(x, y + 1);
-  newPowerLine->neighbor[DIR_W] = _getPowerLineAt(x - 1, y);
-  
-  // set tiles associated with powerLine:
-  _setPowerLineTile(x, y);
-
-  return newPowerLine;
-}
-
 
 
 
@@ -1812,6 +1915,7 @@ double initMap() {
       iter->pollution = 0;
       iter->landValue = 50;
       iter->fireDanger = 0;
+      iter->buildingOnTop = NULL;
 
     accumulator++;
     iter++; // increments sizeof(tile)
@@ -2485,7 +2589,6 @@ void _testStringOutput() {
 
 
 void _testPrintBuildingList() {
-  
   std::cout << std::endl;
   std::cout << "BUILDING LIST --------------------------" << std::endl;
 
@@ -2499,12 +2602,6 @@ void _testPrintBuildingList() {
 
     std::cout << "\t" << "Dimensions: " << (*iter)->buildingDimension;
     std::cout << " by " << (*iter)->buildingDimension << std::endl;
-
-    std::cout << "\t" << "Has power: ";
-    if ((*iter)->isPowered == false)
-      std::cout << "false" << std::endl;
-    else
-      std::cout << "true" << std::endl;
 
     std::cout << "\t" << "Total pollution: " << (*iter)->pollution;
 
@@ -2642,6 +2739,55 @@ double _testZoneGrowthAlgorithm(double level, double landValue) {
   return (int)popGrowth;
 
 }
+
+
+double _testBuildingNeighbors() {
+
+  //std::vector<building*> v_buildings; // cleaned up in mapEnd function
+
+  // iterate through all buildings and display their neighbors, if any:
+
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "-------startTest--------";
+  std::cout << std::endl;
+
+  for (auto it : v_buildings) {
+    std::cout << "-building- x=" << it->xOrigin << ", y=" << it->yOrigin;
+    std::cout << std::endl;
+
+    std::cout << "How many neighbors?: " << it->neighbors.size();
+    std::cout << std::endl;
+
+
+    int counter = 0;
+    for (auto it2 : it->neighbors) {
+      if (it2 == NULL)
+        std::cout << "\t" << "null" << std::endl;
+      else
+        std::cout << "\tx=" << it2->xOrigin << ", y=" << it2->yOrigin << std::endl;
+
+      counter++;
+    }
+    if (counter < 1)
+      std::cout << "\t" << "neighbors vector was empty :(" << std::endl;
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+  }
+
+
+
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "-------endTest--------";
+  std::cout << std::endl;
+
+  return 0;
+}
+
 
 
 
