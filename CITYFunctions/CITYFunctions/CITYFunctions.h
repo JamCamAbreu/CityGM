@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <ctime>
 #include <vector>
-#include <algorithm> // used for vector 'find' function
+#include <algorithm> // used for vector 'find' & 'remove' functions
 #include <list>
 
 // DEBUG:
@@ -353,29 +353,7 @@ typedef struct zone {
 }zone;
 
 
-
-
-
-
-typedef struct ElectricCurrent {
-
-  // DETAILS:
-  // A new one is added with each power plant. 
-  // Currents can be 'combine' when powerlines connect currents
-
-
-  // Power Plants associated with this 'current'
-  std::vector<building*> powerPlants;
-
-  // These are the lists of items attached to the 'current'
-  std::vector<building*> poweredBuildings;
-  std::vector<zone> poweredZones;
-
-  int totalCurrent;
-
-
-};
-
+// TODO zones need to have neighbors too
 
 
 
@@ -494,6 +472,8 @@ int _checkMoney(int amount);
 void _setBuildingNeighbors(building* buildingID);
 
 int _getBuildingPowerRequirements(int buildingType);
+
+void removeMyselfFromNeighbors(building* buildingID);
 
 
 

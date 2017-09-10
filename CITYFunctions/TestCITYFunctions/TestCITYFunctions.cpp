@@ -50,16 +50,31 @@ int main() {
   addBuilding(BT_POLICE, 33, 27);
   addBuilding(BT_POLICE, 33, 30);
   addBuilding(BT_POLICE, 33, 33);
-  //setAllTileDataValue(TDT_LANDVALUE, 50);
-  //addWaterTileValue(TDT_LANDVALUE, 8, 1);
 
   _printMapTypes();
   std::cout << std::endl;
   std::cout << std::endl;
 
-
-
   _testBuildingNeighbors();
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "DELETING MIDDLE BUILDING NOW" << std::endl;
+
+  removeBuilding(30, 30);
+  _printMapTypes();
+  std::cout << std::endl;
+  std::cout << std::endl;
+  _testBuildingNeighbors();
+
+
+  //setAllTileDataValue(TDT_LANDVALUE, 50);
+  //addWaterTileValue(TDT_LANDVALUE, 8, 1);
+
+
+
+
 
 
 

@@ -19,10 +19,6 @@ std::list<zone*> Rzones;            // cleaned up in mapEnd function
 std::list<zone*> Czones;
 std::list<zone*> Izones;
 
-// A new one is added with each power plant. 
-// Currents can be 'combine' when powerlines connect currents
-std::list<ElectricCurrent> powerCurrents;
-
 
 tile* map(int x, int y) {
 
@@ -825,7 +821,6 @@ int _getBuildingPowerRequirements(int buildingType) {
 
 }
 
-
 building* _newBuilding(int type, int x, int y) {
 
   building* newBuilding = new building;
@@ -981,9 +976,15 @@ void _setBuildingNeighbors(building* buildingID) {
 
 }
 
-// TODO: Make a destructor for the building type (and zone)
 
+void removeMyselfFromNeighbors(building* buildingID) {
 
+  // Update all neighbors to remove me from their neighbor list:
+  for (auto it : buildingID->neighbors) {
+    it->neighbors.erase(std::remove(
+      it->neighbors.begin(), it->neighbors.end(), buildingID), it->neighbors.end());
+  }
+}
 
 
 
@@ -2328,60 +2329,28 @@ double addBuilding(double type, double x, double y) {
 double removeBuilding(double xOrigin, double yOrigin) {
   // DESCRIPTION: searches for and removes a building from the 
   // building vector, but also resets tiles underneath as appropriate
-  
   int found = 0;
   int location;
 
   // does the tile at x, y point to a building?
   tile* deleteTile = map(xOrigin, yOrigin);
-  int buildingExistsAtTile = 0;
-  if (deleteTile->tileType == TT_BUILDING)
-    buildingExistsAtTile = 1;
+  building* buildingToDelete = deleteTile->buildingOnTop;
 
-  // if so, which building?
-  if (buildingExistsAtTile) {
-
-    // loop through vector list, looking for coordinate:
-    std::vector<building*>::iterator iter = v_buildings.begin();
-    int vectorSize = v_buildings.size();
-
-    // loop through each building
-    for (location = 0; ((location < vectorSize) && !found); location++) {
-      int numberOfTilesUnderBuilding = (*iter)->tiles.size();
-      int curTile;
-
-      // loop through each tile UNDER building:
-      std::vector<tile*>::iterator tileIter = (*iter)->tiles.begin();
-      for (tileIter; tileIter != (*iter)->tiles.end(); tileIter++) {
-        // search each tile underneath for a match:
-        if ((*tileIter)->x == xOrigin && (*tileIter)->y == yOrigin)
-          found = 1;
-      } // end tile iterator for loop
-      
-
-      if (!found)
-        iter++;
-      } // end BUILDING iterator for loop
-
-    } // end if building even exists at given tile
-
-
-
-  // find building if exists:
-  // if found, remove building:
-  if (found) {
-   location--; // last iteration went 1 too far
-
-   // update each tile underneath to having type "grass"
-      // loop through each tile UNDER building:
-   std::vector<building*>::iterator iter = v_buildings.begin()+location;
-   std::vector<tile*>::iterator tileIter = (*iter)->tiles.begin();
-   for (tileIter; tileIter != (*iter)->tiles.end(); tileIter++) {
-     (*tileIter)->tileType = TT_GRASS;
-   } // end tile iterator for loop
-
-   v_buildings.erase(iter);
+  // update tiles underneath:
+  for (auto it : buildingToDelete->tiles) {
+    it->tileType = TT_GRASS;
+    it->buildingOnTop = NULL;
+    //it->fireDanger *= 1.5; // increase fire danger from destruction?
+    //it->pollution = 0;
   }
+
+  // update neighbors:
+  removeMyselfFromNeighbors(buildingToDelete);
+
+  // remove building from buildings list:
+  v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
+
+  // delete buildingToDelete; // FOR SOME REASON THIS BREAKS EVERYTHING :'(
 
   return 0;
 }
