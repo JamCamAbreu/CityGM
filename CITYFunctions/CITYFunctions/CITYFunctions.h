@@ -92,9 +92,9 @@ enum {
 }buildingTypes;
 
 enum {
-  BP_TREE = 20, 
+  BP_TREE = 20,
   BP_ROAD = 50,
-  BP_PLINE = 50, 
+  BP_PLINE = 50,
   BP_RZONE = 250,
   BP_CZONE = 350,
   BP_IZONE = 300,

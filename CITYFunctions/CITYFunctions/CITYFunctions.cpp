@@ -855,9 +855,17 @@ int _checkPlacement(int type, int x, int y) {
   tile* containedTile;
   for (int i = 0; i < dimension; i++) {
     for (int j = 0; j < dimension; j++) {
+
       containedTile = map(x + i, y + j);
+
       if (containedTile->tileType == TT_BUILDING)
         return false;
+
+      else if (containedTile->tileType == TT_ZC ||
+        containedTile->tileType == TT_ZI ||
+        containedTile->tileType == TT_ZR)
+        return false;
+
       if (containedTile->tileType == TT_WATER)
         return false;
     } // inner for loop
@@ -976,7 +984,6 @@ void _setBuildingNeighbors(building* buildingID) {
 
 }
 
-
 void removeMyselfFromNeighbors(building* buildingID) {
 
   // Update all neighbors to remove me from their neighbor list:
@@ -985,6 +992,10 @@ void removeMyselfFromNeighbors(building* buildingID) {
       it->neighbors.begin(), it->neighbors.end(), buildingID), it->neighbors.end());
   }
 }
+
+
+
+
 
 
 
@@ -2271,6 +2282,7 @@ double addBuilding(double type, double x, double y) {
   int xInt = (int)x;
   int yInt = (int)y;
   int price = (int)getBuildingPrice(typeInt);
+  int putInBuildingVector = true; // true till proven false
 
   // check if position is okay to build:
   int canBuild = _checkPlacement(typeInt, xInt, yInt);
@@ -2281,12 +2293,22 @@ double addBuilding(double type, double x, double y) {
 
   if (canBuild) {
 
+    // NO MATTER WHAT TYPE, make a building in it's location:
+    // create a new building:
+    building* newBuilding = _newBuilding(typeInt, xInt, yInt);
+
     // Build Road:
     if (type == BT_ROAD) {
+      putInBuildingVector = false;
+
+      // TODO: put in a road vector
       // special code for roads
     }
     // Build Power Line:
     else if (type == BT_PLINE) {
+      putInBuildingVector = false;
+
+      // TODO: put in a power line vector
       // special code for power lines
     }
     // Build ZONE:
@@ -2295,31 +2317,35 @@ double addBuilding(double type, double x, double y) {
       int zoneType = _BtypeToZtype(type); // convert enum
       zone* newZone = _newZone(xInt, yInt, zoneType);
 
-      if (type == BT_RZONE)
+      if (type == BT_RZONE) {
         Rzones.push_front(newZone);
-      else if (type == BT_CZONE)
+      }
+
+      else if (type == BT_CZONE) {
         Czones.push_front(newZone);
-      else if (type == BT_IZONE)
+      }
+
+      else if (type == BT_IZONE) {
         Izones.push_front(newZone);
+      }
+
       else {
         _clearOneZone(newZone); // invalid type
       }
+    } // end if zone type
 
-    }
-    // Build Other (like Power Plant, or Police Station, etc...)
-    else {
-      // create a new building:
-      building* newBuilding = _newBuilding(typeInt, xInt, yInt);
 
-      // add building to vector
+    // add building to vector
+      // (if not, we already put it in something else
+    if (putInBuildingVector)
       v_buildings.push_back(newBuilding);
-    }
 
     // subtract money:
     deductFunds(price);
 
     return 1;
-  }
+  } // end (if canBuild)
+
   else
     return 0;
 
@@ -2478,7 +2504,17 @@ double getRandomRange(double min, double max) {
 
 
 
+
+
+
+
+
+
+
 // TESTING/DEBUGGING FUNCTIONS ------------------------------------
+
+/* Prints the TYPES OF TILES of the map, including trees, 
+   buildings, zones, etc... */
 void _printMapTypes() {
 
   tile* iter = map(0,0);
@@ -2534,6 +2570,7 @@ void _printMapTypes() {
 
 }
 
+/* Test the output of tile type strings to the DLL importer */
 void _testStringOutput() {
 
   char* printString = tileTypeToString();
@@ -2556,7 +2593,7 @@ void _testStringOutput() {
 
 }
 
-
+/* Test the details of buildings in the v_buildings global vector */
 void _testPrintBuildingList() {
   std::cout << std::endl;
   std::cout << "BUILDING LIST --------------------------" << std::endl;
@@ -2581,17 +2618,7 @@ void _testPrintBuildingList() {
 
 }
 
-
-void _testString() {
-  std::string testString;
-
-  testString = _buildingInfoToString();
-  std::cout << std::endl;
-  std::cout << "testString = " << testString << std::endl;
-
-}
-
-
+/* Tests the global game data, such as seasons, money, etc..*/
 void _testGameData(int months) {
 
   std::cout << std::endl;
@@ -2605,7 +2632,7 @@ void _testGameData(int months) {
       std::cout << "Spring, \t";
     else if (curGameData.season == S_FALL)
       std::cout << "Fall,   \t";
-    else 
+    else
       std::cout << "Summer, \t";
 
     std::cout << curGameData.month << ", \t";
@@ -2617,7 +2644,7 @@ void _testGameData(int months) {
   std::cout << std::endl << std::endl;
 }
 
-
+/* Tests printing out the game data to a string */
 void _testPrintTileData(int dataType) {
 
   // NOTE: this does nOT work very good...
@@ -2671,15 +2698,14 @@ void _testPrintTileData(int dataType) {
 
 }
 
-
+/* Test printing the zone string information */
 void _testPrintZoneString(int zoneType) {
 
   _zoneBuildingToString(zoneType);
 
 }
 
-
-
+/* See the impact of the zone growth over time */
 double _testZoneGrowthAlgorithm(double level, double landValue) {
 
   // pop growth based on level, some randomness
@@ -2709,15 +2735,9 @@ double _testZoneGrowthAlgorithm(double level, double landValue) {
 
 }
 
-
+/* Test to see if the neighbors are attached/detached correctly */
 double _testBuildingNeighbors() {
 
-  //std::vector<building*> v_buildings; // cleaned up in mapEnd function
-
-  // iterate through all buildings and display their neighbors, if any:
-
-
-  std::cout << std::endl;
   std::cout << std::endl;
   std::cout << "-------startTest--------";
   std::cout << std::endl;
@@ -2756,7 +2776,4 @@ double _testBuildingNeighbors() {
 
   return 0;
 }
-
-
-
 
