@@ -1,0 +1,4 @@
+
+
+DLL_consumeElectricityAll();
+

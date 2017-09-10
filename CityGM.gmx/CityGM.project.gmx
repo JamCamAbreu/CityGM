@@ -255,6 +255,10 @@
         <script>scripts\scr_updateAlarmZoneType.gml</script>
       </scripts>
     </scripts>
+    <scripts name="Electricity">
+      <script>scripts\scr_consumeElectricity.gml</script>
+      <script>scripts\scr_sendOutElectricity.gml</script>
+    </scripts>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_normal</font>

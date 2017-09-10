@@ -41,49 +41,11 @@ int main() {
   //addBuilding(BT_SCHOOL, 50, 40);
   //addBuilding(BT_AIRPORT, 0, 10);
 
-  addBuilding(BT_POLICE, 27, 27);
-  addBuilding(BT_POLICE, 27, 30);
-  addBuilding(BT_POLICE, 27, 33);
-  addBuilding(BT_POLICE, 30, 27);
-  addBuilding(BT_POLICE, 30, 30);
-  addBuilding(BT_POLICE, 30, 33);
-  addBuilding(BT_POLICE, 33, 27);
-  addBuilding(BT_POLICE, 33, 30);
-  addBuilding(BT_POLICE, 33, 33);
-
-  _printMapTypes();
-  std::cout << std::endl;
-  std::cout << std::endl;
-
-  _testBuildingNeighbors();
-  std::cout << std::endl;
-  std::cout << std::endl;
-  std::cout << std::endl;
-  std::cout << std::endl;
-  std::cout << "DELETING MIDDLE BUILDING NOW" << std::endl;
-
-  removeBuilding(30, 30);
-  _printMapTypes();
-  std::cout << std::endl;
-  std::cout << std::endl;
-  _testBuildingNeighbors();
-
 
   //setAllTileDataValue(TDT_LANDVALUE, 50);
   //addWaterTileValue(TDT_LANDVALUE, 8, 1);
 
-
-
-
-
-
-
-
-
-
-
-
-
+  _testPowerSurge();
 
 
 

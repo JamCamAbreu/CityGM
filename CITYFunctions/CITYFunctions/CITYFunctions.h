@@ -18,6 +18,7 @@
 #include <vector>
 #include <algorithm> // used for vector 'find' & 'remove' functions
 #include <list>
+#include <queue>
 
 // DEBUG:
 #include <iostream>
@@ -373,6 +374,15 @@ typedef struct zone {
 
 
 
+
+
+
+
+
+
+
+
+
 // todo:
 //typedef struct road {
 //};
@@ -527,6 +537,16 @@ int _getZonePowerConsumption(zoneBuilding* curZB);
 
 
 
+// POWER / ELECTRICITY Functions:
+
+int _getPowerPlantPower(int type);
+
+void _sendElectricity();
+
+void _consumeElectricity();
+
+
+
 
 
 
@@ -647,6 +667,11 @@ GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();
 
 
+// POWER & ELECTRICITY FUNCTIONS ----------------
+GMEXPORT double sendElectricity();
+GMEXPORT double consumeElectricityAll();
+
+
 // Utility functions
 GMEXPORT double getRandomRange(double min, double max);
 GMEXPORT double getClock();
@@ -657,15 +682,12 @@ GMEXPORT double getTime(double clockBegin, double clockFinish);
 GMEXPORT void _printMapTypes();
 GMEXPORT void _testStringOutput();
 GMEXPORT void _testPrintBuildingList();
-GMEXPORT void _testString();
 GMEXPORT void _testGameData(int months);
 GMEXPORT void _testPrintTileData(int dataType);
-
 GMEXPORT void _testPrintZoneString(int zoneType);
-
 GMEXPORT double _testZoneGrowthAlgorithm(double level, double landValue);
-
 GMEXPORT double _testBuildingNeighbors();
+GMEXPORT double _testPowerSurge();
 
 
 #endif

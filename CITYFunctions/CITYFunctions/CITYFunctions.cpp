@@ -1659,6 +1659,140 @@ int _calculateZonePowerConsumption(zoneBuilding* curZB) {
 
 
 
+// POWER / ELECTRICITY Functions:
+
+int _getPowerPlantPower(int type) {
+
+  switch (type) {
+    case BT_NUCLEAR: {
+      return 645;
+      break; }
+
+    case BT_COAL: {
+      return 270;
+      break; }
+
+    default: {
+      return -1; // error code
+      break; }
+    } // end switch
+
+  return -1; // error code
+}
+
+void _sendElectricity() {
+
+  // Build an array of power plants:
+  std::vector<building*> powerPlants;
+  for (auto it : v_buildings) {
+    if (it->type == BT_NUCLEAR ||
+        it->type == BT_COAL) {
+      powerPlants.push_back(it);
+    }
+  } // end for iteration
+
+
+  /* Iterate through the power plants, surging power to
+     all of the connected buildings using their 'neighbors'
+     and building a fifo queue */
+  std::queue<building*> processList;
+  // For each power plant:
+  for (auto iter : powerPlants) {
+
+    int electricSurge = _getPowerPlantPower(iter->type);
+
+    // STARTING CASE: Start with the neighbors of the power plant:
+    // For each neighbor in each power plant:
+    for (auto it : iter->neighbors) {
+      // Only pass electricity on to certain types of buildings:
+      if (it->type != BT_NUCLEAR ||
+        it->type != BT_COAL ||
+        it->type != BT_ROAD ||
+        it->type != BT_TREE) {
+
+        // Only add neighbors that NEED power:
+        if (it->currentPower < it->requiredPower) {
+          processList.push(it);
+        }
+      } // end if certain building type
+    } // end for each neighbor
+
+
+    /* NEIGHBORS CASE: Process each of the items in the queue, adding 
+       new items if more neighbors also need power */
+    building* curItem;
+    int powerNeeded;
+    while (!processList.empty() && electricSurge > 0) {
+      curItem = processList.front();
+      // remove item from list:
+      processList.pop();
+
+      // Process the current item:
+      powerNeeded = (curItem->requiredPower - curItem->currentPower);
+
+      // only use what's needed:
+      if (electricSurge >= powerNeeded) {
+        curItem->currentPower += powerNeeded;
+        electricSurge -= powerNeeded;
+      } else { // OR use up the rest of the juice:
+        curItem->currentPower += electricSurge;
+        electricSurge = 0;
+      }
+
+
+      // Get the current item's neighbors:
+      for (auto neighbor : curItem->neighbors) {
+        // Only pass electricity on to certain types of buildings:
+        if (neighbor->type != BT_NUCLEAR ||
+          neighbor->type != BT_COAL ||
+          neighbor->type != BT_ROAD ||
+          neighbor->type != BT_TREE) {
+
+          // Only add neighbors that NEED power:
+          if (neighbor->currentPower < neighbor->requiredPower) {
+            processList.push(neighbor);
+          }
+        } // end if certain building type
+      } // end for each neighbor
+
+    } // END PROCESS LIST
+
+  } // end for each power plant
+}
+
+void _consumeElectricity() {
+
+  const double USAGE_RATE = 0.1;
+
+  for (auto it : v_buildings) {
+
+    int consumptionAmount;
+    // update zone requirements:
+    if (_getBuildingPowerRequirements(it->type) == -2) {
+      // TODO:
+      // Update the BUILDING representing the zone to accurately 
+      // reflect NOW the needed requirements:
+
+      // DEBUG
+      consumptionAmount = 2;
+    }
+
+    else {
+      consumptionAmount = it->requiredPower*USAGE_RATE;
+    }
+
+    // Consume the power here, with floor of zero:
+    it->currentPower -= consumptionAmount;
+    if (it->currentPower < 0)
+      it->currentPower = 0;
+
+    } // END FOR ITERATION for all buildings
+}
+
+
+
+
+
 
 
 
@@ -2493,6 +2627,9 @@ double getBuildingPrice(double buildingType) {
 
 
 
+
+
+
 // UTILITY FUNCTIONS -------------------
 double getRandomRange(double min, double max) {
   int minInt = (int)min;
@@ -2504,7 +2641,16 @@ double getRandomRange(double min, double max) {
 
 
 
+// POWER & ELECTRICITY FUNCTIONS ----------------
+double sendElectricity() {
+  _sendElectricity();
+  return 0;
+}
 
+double consumeElectricityAll() {
+  _consumeElectricity();
+  return 0;
+}
 
 
 
@@ -2766,14 +2912,88 @@ double _testBuildingNeighbors() {
     std::cout << std::endl;
   }
 
-
-
-
   std::cout << std::endl;
-  std::cout << std::endl;
-  std::cout << "-------endTest--------";
   std::cout << std::endl;
 
   return 0;
 }
+
+
+/* Test to see if sending power from power plants to connected 
+neighbors works */
+double _testPowerSurge() {
+
+  // Big square:
+  addBuilding(BT_POLICE, 27, 27);
+  addBuilding(BT_POLICE, 27, 30);
+  addBuilding(BT_POLICE, 27, 33);
+  addBuilding(BT_POLICE, 30, 27);
+  addBuilding(BT_POLICE, 30, 30);
+  addBuilding(BT_POLICE, 30, 33);
+  addBuilding(BT_POLICE, 33, 27);
+  addBuilding(BT_POLICE, 33, 30);
+  addBuilding(BT_POLICE, 33, 33);
+
+  addBuilding(BT_POLICE, 36, 33);
+  addBuilding(BT_POLICE, 39, 33);
+  addBuilding(BT_NUCLEAR, 42, 33);
+
+  _printMapTypes();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  _testBuildingNeighbors();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  // show power of all buildings:
+  std::cout << "Buildings and their power:" << std::endl;
+  for (auto it : v_buildings) {
+    std::cout << "\t" << "x=" << it->xOrigin << ", y=" << it->yOrigin;
+    std::cout << ", required: " << it->requiredPower;
+    std::cout << ", current: " << it->currentPower;
+    std::cout << std::endl;
+  }
+
+  // surge:
+  std::cout << "-----------------------------";
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "Sending surge from all power plants now...";
+  _sendElectricity();
+  std::cout << "done" << std::endl;
+  std::cout << std::endl;
+
+std::cout << "Buildings and their power:" << std::endl;
+  for (auto it : v_buildings) {
+    std::cout << "\t" << "x=" << it->xOrigin << ", y=" << it->yOrigin;
+    std::cout << ", required: " << it->requiredPower;
+    std::cout << ", current: " << it->currentPower;
+    std::cout << std::endl;
+  }
+
+  // CONSUME power:
+  std::cout << std::endl;
+  std::cout << "consuming power...";
+  _consumeElectricity();
+  std::cout << "done" << std::endl;
+  std::cout << std::endl;
+
+std::cout << "Buildings and their power:" << std::endl;
+  for (auto it : v_buildings) {
+    std::cout << "\t" << "x=" << it->xOrigin << ", y=" << it->yOrigin;
+    std::cout << ", required: " << it->requiredPower;
+    std::cout << ", current: " << it->currentPower;
+    std::cout << std::endl;
+  }
+
+
+
+
+  return 0;
+}
+
+
+
+
 
