@@ -9,20 +9,30 @@ var type;
 
   /*  EXAMPLE STRING:
   Psuedo:
-    myBuildingString = "x,y,type;x,y,type; ... etc"
+    myBuildingString = "x,y,power,type;x,y,power,type; ... etc"
 
   Actual:
-    myBuildingString = "3,15,2;22,9,3; ... etc"
+    myBuildingString = "3,15,*,2;22,9,-,3; ... etc"
   */
 
+  // DEBUG
+  //show_message("about to start processing building text");
+  
 // process x:
 scr_updateBuildingX(argument0, argument1, argument2);
+//show_message("done process x");
 
 // process y:
 scr_updateBuildingY(argument0, argument1, argument2);
+//show_message("done process y");
+
+// process power:
+scr_updateBuildingPower(argument0, argument1, argument2);
+//show_message("done process power");
 
 // process type:
 scr_updateBuildingType(argument0, argument1, argument2);
+//show_message("done process type and all");
 
 
 

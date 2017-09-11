@@ -59,6 +59,7 @@ buildingElements = DLL_getBuildingVectorSize();
 xArray[MAX_BUILDINGS] = 0;
 yArray[MAX_BUILDINGS] = 0;
 typeArray[MAX_BUILDINGS] = 0;
+powerArray[MAX_BUILDINGS] = 0;
 
 
 // ZONES:
@@ -167,6 +168,66 @@ debugger = instance_create(x,y, obj_debugger);
 image_speed = 0;
 canDraw = true;
 
+// electricity:
+displayPowerSign = 0;
+alarm[4] = TIME_ELECTRICSIGN;
+alarm[5] = TIME_SENDELECTRICITY;
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="5">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+DLL_sendElectricity();
+
+
+alarm[5] = TIME_SENDELECTRICITY;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="4">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// display electricity graphic animation
+
+scr_flipElectricitySignImageIndex(id);
+
+alarm[4] = TIME_ELECTRICSIGN;
 </string>
           </argument>
         </arguments>
@@ -275,6 +336,8 @@ scr_updateZoneBuildings(id, updateZone);
 updateZone = scr_updateAlarmZoneType(updateZone);
     
 
+// Consume Electricity
+DLL_consumeElectricityAll();
 
 
 
@@ -632,6 +695,45 @@ else
     
 // always update surface:
 updateSurfaces = true;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="74">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// DEBUG
+
+
+var message = "";
+
+for (i = 0; i &lt; DLL_getBuildingVectorSize(); i++) {
+    message += string(powerArray[i]);
+    message += " ";
+}
+
+if (message == "")
+    message = "no buildings yet!";
+
+show_message(message);
+
+
+
 </string>
           </argument>
         </arguments>
@@ -1008,7 +1110,7 @@ else {
           <argument>
             <kind>1</kind>
             <string>pressHoldMode = false;
-alarm[3] = -1;
+//alarm[3] = -1;
 camera.slowDown = 0;
 </string>
           </argument>

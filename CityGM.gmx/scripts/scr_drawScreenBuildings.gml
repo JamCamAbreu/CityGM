@@ -15,6 +15,7 @@ for (i = 0; i < argument0; i++) {
     drawBuilding = true;
     var bX = argument1.xArray[i];
     var bY = argument1.yArray[i];
+    var bE = argument1.powerArray[i];
     var bT = argument1.typeArray[i];
 
     // check x: 
@@ -28,6 +29,14 @@ for (i = 0; i < argument0; i++) {
     if (drawBuilding) {
         var sprite = scr_getBuildingSprite(bT);
         draw_sprite(sprite, argument1.gameSeason, bX*TILE_SIZE, bY*TILE_SIZE);
+        
+        // ELECTRICITY SYMBOL:
+        if(scr_checkDrawElectricitySign(bE)) {
+            draw_sprite(spr_needPower, argument1.displayPowerSign, bX*TILE_SIZE, bY*TILE_SIZE);
+        }
+        
+        
+        
     }
 } // end for loop
 

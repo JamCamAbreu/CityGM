@@ -895,12 +895,14 @@ std::string _buildingInfoToString() {
   char dataDivider = ',';
   char elementDivider = ';';
 
+  std::string data = "";
+
+  /*  OLD WAY OF DOING IT
   int size = _getBuildingVectorSize();
   std::vector<building*>::iterator iter = v_buildings.begin();
-  std::string data = "";
   // iterate through each building in the list:
   for (int i = 0; i < size; i++) {
-    
+
     // add x to string:
     data = std::to_string((*iter)->xOrigin);
     buildingInfo += data;
@@ -919,6 +921,33 @@ std::string _buildingInfoToString() {
     // iterate:
     if (i < size - 1)
       iter++;
+  }
+
+  */
+
+  for (auto it : v_buildings) {
+
+    // add x to string:
+    data = std::to_string(it->xOrigin);
+    buildingInfo += data;
+    buildingInfo += dataDivider;
+
+    // add y to string:
+    data = std::to_string(it->yOrigin);
+    buildingInfo += data;
+    buildingInfo += dataDivider;
+
+    // add electricity info to string:
+    if (it->currentPower >= (it->requiredPower / 2))
+      buildingInfo += '*'; // char representing power
+    else
+      buildingInfo += '-'; // char representing needs power
+    buildingInfo += dataDivider;
+
+    // add type to string:
+    data = std::to_string(it->type);
+    buildingInfo += data;
+    buildingInfo += elementDivider;
   }
 
   return buildingInfo;

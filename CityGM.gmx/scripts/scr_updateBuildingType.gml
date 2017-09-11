@@ -13,9 +13,9 @@ while (elementsLeft) {
     var char = string_char_at(buildingString, charPos);
     
     // find the first comma:
-    for (j = 1; j <= 3; j++) {
+    for (j = 1; j <= 4; j++) {
         while (char != ',' && char != ';') {
-            if (j == 3) // second position
+            if (j == 4) // third position
                 parseString += char;
             charPos++;
             char = string_char_at(buildingString, charPos);
@@ -31,6 +31,7 @@ while (elementsLeft) {
     // store actual decimal value in array:
     argument2.typeArray[buildingElements - elementsLeft] = real(parseString);
 
+    
     // NEXT ELEMENT ---------------------------
     // get position of next element:
     while (char != ';') {

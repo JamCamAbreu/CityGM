@@ -4,8 +4,10 @@ var myX = scr_getX(argument0.camera);
 var myY = scr_getY(argument0.camera);
 var placed = DLL_addBuilding(argument1, myX, myY);
 
-// SOUND:
+// Check if placement was possible:
 if (placed) {
+
+    // SOUND:
     audio_play_sound(sfx_placement, 5, false);
     
     // update zone if zone was placed:
@@ -16,9 +18,9 @@ if (placed) {
     else if (argument1 == BT_IZONE)
         scr_updateZoneBuildings(argument0, Z_IND);
 }
-else
+else { // could not play sound:
     audio_play_sound(sfx_error, 5, false);
-
+}
 
 
 // Finally, update all:
