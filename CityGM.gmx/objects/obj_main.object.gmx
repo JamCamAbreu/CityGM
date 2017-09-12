@@ -1110,7 +1110,7 @@ else {
           <argument>
             <kind>1</kind>
             <string>pressHoldMode = false;
-//alarm[3] = -1;
+alarm[3] = -1;
 camera.slowDown = 0;
 </string>
           </argument>

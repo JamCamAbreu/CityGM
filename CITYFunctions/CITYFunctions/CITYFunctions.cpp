@@ -1022,7 +1022,20 @@ void removeMyselfFromNeighbors(building* buildingID) {
   }
 }
 
+int getRequiredPowerAllTypes(building* buildingID) {
+  int powerNeeded;
+  // Check for zone type (-2 code), find the required power needed:
+  if (buildingID->requiredPower == -2 ) {
+    // get required power from the related zone:
+    if (buildingID->relatedZone != NULL)
+      powerNeeded = zoneGetTotalRequiredPower(buildingID->relatedZone) - buildingID->currentPower;
+  }
+  else { // NON ZONE TYPE:
+    powerNeeded = (buildingID->requiredPower - buildingID->currentPower);
+  }
 
+  return powerNeeded;
+}
 
 
 
@@ -1654,26 +1667,17 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
 }
 
-int _calculateZonePowerConsumption(zoneBuilding* curZB) {
 
-  zone* parentZone = curZB->parentZone;
+int zoneGetTotalRequiredPower(zone* zoneID) {
 
-  int sumPowerConsumption = 0;
+  int sumPowerConsumption = 2;
   for (int i = 0; i < 9; i++) {
-
-    int level = parentZone->zoneBuildings[i]->level;
-
-    sumPowerConsumption = level * 10; // REDO
-
+    int level = zoneID->zoneBuildings[i]->level;
+    sumPowerConsumption += (level + 1) * 1; // TODO: change if needed
   }
-
 
   return sumPowerConsumption;
 }
-
-
-
-
 
 
 
@@ -1739,15 +1743,15 @@ void _sendElectricity() {
         it->type != BT_ROAD ||
         it->type != BT_TREE) {
 
-        // Only add neighbors that NEED power:
-        if (it->currentPower < it->requiredPower) {
+        // the POWER PLANTS neighbors:
+        // Push neighbors to the list if they require power:
+        if (getRequiredPowerAllTypes(it) > 0)
           processList.push(it);
-        }
       } // end if certain building type
     } // end for each neighbor
 
 
-    /* NEIGHBORS CASE: Process each of the items in the queue, adding 
+    /* NEIGHBORS CASE: Process each of the items in the queue, adding
        new items if more neighbors also need power */
     building* curItem;
     int powerNeeded;
@@ -1756,8 +1760,8 @@ void _sendElectricity() {
       // remove item from list:
       processList.pop();
 
-      // Process the current item:
-      powerNeeded = (curItem->requiredPower - curItem->currentPower);
+      // How much power will we need?
+      powerNeeded = getRequiredPowerAllTypes(curItem);
 
       // only use what's needed:
       if (electricSurge >= powerNeeded) {
@@ -1768,7 +1772,6 @@ void _sendElectricity() {
         electricSurge = 0;
       }
 
-
       // Get the current item's neighbors:
       for (auto neighbor : curItem->neighbors) {
         // Only pass electricity on to certain types of buildings:
@@ -1777,15 +1780,12 @@ void _sendElectricity() {
           neighbor->type != BT_ROAD ||
           neighbor->type != BT_TREE) {
 
-          // Only add neighbors that NEED power:
-          if (neighbor->currentPower < neighbor->requiredPower) {
+          // Push neighbors to the list if they require power:
+          if (getRequiredPowerAllTypes(neighbor) > 0)
             processList.push(neighbor);
-          }
         } // end if certain building type
       } // end for each neighbor
-
     } // END PROCESS LIST
-
   } // end for each power plant
 }
 
@@ -2474,11 +2474,15 @@ double addBuilding(double type, double x, double y) {
       // TODO: put in a power line vector
       // special code for power lines
     }
+
     // Build ZONE:
-    else if (type == BT_RZONE || type == BT_CZONE || type == BT_IZONE) {
+    if (type == BT_RZONE || type == BT_CZONE || type == BT_IZONE) {
 
       int zoneType = _BtypeToZtype(type); // convert enum
       zone* newZone = _newZone(xInt, yInt, zoneType);
+
+      // ADD ZONE TO BUILDING THAT WAS ALSO CREATED:
+      newBuilding->relatedZone = newZone;
 
       if (type == BT_RZONE) {
         Rzones.push_front(newZone);
@@ -2496,6 +2500,11 @@ double addBuilding(double type, double x, double y) {
         _clearOneZone(newZone); // invalid type
       }
     } // end if zone type
+
+    // WAS NOT ZONE TYPE:
+    else {
+      newBuilding->relatedZone = NULL;
+    }
 
 
     // add building to vector
@@ -2952,6 +2961,7 @@ double _testBuildingNeighbors() {
 neighbors works */
 double _testPowerSurge() {
 
+  /*
   // Big square:
   addBuilding(BT_POLICE, 27, 27);
   addBuilding(BT_POLICE, 27, 30);
@@ -2966,6 +2976,17 @@ double _testPowerSurge() {
   addBuilding(BT_POLICE, 36, 33);
   addBuilding(BT_POLICE, 39, 33);
   addBuilding(BT_NUCLEAR, 42, 33);
+  */
+
+
+  // test zone transfer of electricity:
+  addBuilding(BT_NUCLEAR, 1, 1);
+  addBuilding(BT_POLICE, 5, 2);
+  addBuilding(BT_POLICE, 8, 2);
+  addBuilding(BT_RZONE, 11, 2);
+  addBuilding(BT_RZONE, 14, 2);
+  addBuilding(BT_POLICE, 17, 2);
+  addBuilding(BT_POLICE, 20, 2);
 
   _printMapTypes();
   std::cout << std::endl;
@@ -3015,6 +3036,25 @@ std::cout << "Buildings and their power:" << std::endl;
     std::cout << ", current: " << it->currentPower;
     std::cout << std::endl;
   }
+
+
+  // grow zones:
+  std::cout << "growing residential zones!" << std::endl;
+  std::cout << std::endl;
+  for (int j = 0; j < 10; j++) {
+    _growZones(Z_RES);
+  }
+  std::cout << "sending electricity again." << std::endl;
+  _sendElectricity();
+
+std::cout << "Buildings and their power:" << std::endl;
+  for (auto it : v_buildings) {
+    std::cout << "\t" << "x=" << it->xOrigin << ", y=" << it->yOrigin;
+    std::cout << ", required: " << it->requiredPower;
+    std::cout << ", current: " << it->currentPower;
+    std::cout << std::endl;
+  }
+
 
 
 

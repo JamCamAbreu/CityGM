@@ -180,10 +180,15 @@ enum {
 
 
 
-struct building;
 
 
 // STRUCT DEFINITIONS ----------------------
+
+// forward definitions
+// (real definitions below)
+struct zone;
+struct building;
+
 
 typedef struct gameData {
   int year;
@@ -198,6 +203,8 @@ typedef struct gameData {
   int population;
   int cityType;
 }gameData;
+
+
 
 typedef struct tile {
   int x;
@@ -239,6 +246,9 @@ typedef struct building {
   // tile data modifiers
   int pollution;
   int landValueBoost;
+
+  // if zone type, pointer to the zone
+  zone* relatedZone;
 
 }building;
 
@@ -310,9 +320,7 @@ enum {
   IL8 = 550
 } IlevelPopMin;
 
-// forward definition (or whatever it's called)
-// (real definition below)
-struct zone;
+
 
 typedef struct zoneBuilding {
   
@@ -350,13 +358,12 @@ typedef struct zone {
   // there are always 9 zone tiles inside:
   std::vector<zoneBuilding*> zoneBuildings;
 
-
 }zone;
 
 
 // TODO zones need to have neighbors too
 
-
+int zoneGetTotalRequiredPower(zone* zoneID);
 
 
 
@@ -485,7 +492,7 @@ int _getBuildingPowerRequirements(int buildingType);
 
 void removeMyselfFromNeighbors(building* buildingID);
 
-
+int getRequiredPowerAllTypes(building* buildingID);
 
 
 
@@ -528,7 +535,6 @@ int _getPopulation(int zoneType);
 
 void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
-int _getZonePowerConsumption(zoneBuilding* curZB);
 
 
 
