@@ -483,6 +483,15 @@
           <argCount>-1</argCount>
           <args/>
         </function>
+        <function>
+          <name>DLL_getPowerUsageRatio</name>
+          <externalName>getPowerUsageRatio</externalName>
+          <kind>12</kind>
+          <help>DLL_getPowerUsageRatio()</help>
+          <returnType>2</returnType>
+          <argCount>-1</argCount>
+          <args/>
+        </function>
       </functions>
       <constants>
         <constant>

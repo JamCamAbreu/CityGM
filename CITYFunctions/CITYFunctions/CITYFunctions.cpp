@@ -55,15 +55,29 @@ void _initGameData() {
 
   curGameData.mode = MD_NORMAL;
 
-  curGameData.money = 16000;
+  // need to make this a value passed in by game maker:
+  curGameData.money = 99999;
 
   curGameData.population = 1;
   curGameData.cityType = CT_RURAL;
+
+  curGameData.totalPowerUsed = 0;
+  curGameData.totalPowerAvailable = 0;
 }
 
 
 
 
+double _getPowerUsageRatio(int capacity, int used) {
+
+  // at least a 1 in denominator:
+  if (capacity <= 0)
+    capacity = 1;
+
+  // Don't know why, but I need to store it first:
+  double returnVal = (double)used / capacity;
+  return returnVal;
+}
 
 
 
@@ -180,6 +194,13 @@ int _updatePopulation() {
   return population;
 }
 
+void _setTotalPowerUsed(int amount) {
+  curGameData.totalPowerUsed = amount;
+}
+
+void _setTotalPowerAvailable(int amount) {
+  curGameData.totalPowerAvailable = amount;
+}
 
 
 
@@ -746,22 +767,22 @@ int _getBuildingPowerRequirements(int buildingType) {
       }
 
     case BT_PLINE: {
-      return 2;
+      return 1;
       break;
       }
 
     case BT_RZONE: {
-      return -2;
+      return -2; // special code
       break;
       }
 
     case BT_CZONE: {
-      return -2;
+      return -2; // special code
       break;
       }
 
     case BT_IZONE: {
-      return -2;
+      return -2; // special code
       break;
       }
 
@@ -1715,6 +1736,14 @@ int _getPowerPlantPower(int type) {
 
 void _sendElectricity() {
 
+  int totalPowerAvailable = 0;
+  int totalPowerUsed = 0;
+
+  // START WITH ALL BUILDINGS LOSING THEIR CURRENT POWER:
+  for (auto it : v_buildings) {
+    it->currentPower = 0;
+  }
+
   // Build an array of power plants:
   std::vector<building*> powerPlants;
   for (auto it : v_buildings) {
@@ -1733,6 +1762,7 @@ void _sendElectricity() {
   for (auto iter : powerPlants) {
 
     int electricSurge = _getPowerPlantPower(iter->type);
+    totalPowerAvailable += electricSurge; // used for power ratio
 
     // STARTING CASE: Start with the neighbors of the power plant:
     // For each neighbor in each power plant:
@@ -1771,6 +1801,7 @@ void _sendElectricity() {
         curItem->currentPower += electricSurge;
         electricSurge = 0;
       }
+      totalPowerUsed += curItem->currentPower;
 
       // Get the current item's neighbors:
       for (auto neighbor : curItem->neighbors) {
@@ -1787,6 +1818,12 @@ void _sendElectricity() {
       } // end for each neighbor
     } // END PROCESS LIST
   } // end for each power plant
+
+
+  // Update the game data for data used/capacity:
+
+  curGameData.totalPowerAvailable = totalPowerAvailable;
+  curGameData.totalPowerUsed = totalPowerUsed;
 }
 
 void _consumeElectricity() {
@@ -1794,21 +1831,11 @@ void _consumeElectricity() {
   const double USAGE_RATE = 0.1;
 
   for (auto it : v_buildings) {
+    int consumptionAmount = getRequiredPowerAllTypes(it)*USAGE_RATE;
 
-    int consumptionAmount;
-    // update zone requirements:
-    if (_getBuildingPowerRequirements(it->type) == -2) {
-      // TODO:
-      // Update the BUILDING representing the zone to accurately 
-      // reflect NOW the needed requirements:
-
-      // DEBUG
-      consumptionAmount = 2;
-    }
-
-    else {
-      consumptionAmount = it->requiredPower*USAGE_RATE;
-    }
+    // at least take 1:
+    if (consumptionAmount < 1)
+      consumptionAmount = 1;
 
     // Consume the power here, with floor of zero:
     it->currentPower -= consumptionAmount;
@@ -2469,7 +2496,7 @@ double addBuilding(double type, double x, double y) {
     }
     // Build Power Line:
     else if (type == BT_PLINE) {
-      putInBuildingVector = false;
+      //putInBuildingVector = false;
 
       // TODO: put in a power line vector
       // special code for power lines
@@ -2690,6 +2717,10 @@ double consumeElectricityAll() {
   return 0;
 }
 
+double getPowerUsageRatio() {
+  double returnVal = _getPowerUsageRatio(curGameData.totalPowerAvailable, curGameData.totalPowerUsed);
+  return returnVal;
+}
 
 
 
@@ -2980,21 +3011,29 @@ double _testPowerSurge() {
 
 
   // test zone transfer of electricity:
-  addBuilding(BT_NUCLEAR, 1, 1);
+  addBuilding(BT_COAL, 1, 1);
   addBuilding(BT_POLICE, 5, 2);
   addBuilding(BT_POLICE, 8, 2);
   addBuilding(BT_RZONE, 11, 2);
   addBuilding(BT_RZONE, 14, 2);
   addBuilding(BT_POLICE, 17, 2);
   addBuilding(BT_POLICE, 20, 2);
+  for (int j = 0; j < 10; j++) {
+    addBuilding(BT_PLINE, 20 + j, 3);
+  }
+  addBuilding(BT_POLICE, 30, 2);
+
+  for (int g = 0; g < 10; g++) {
+    addBuilding(BT_HOSPITAL, 30, 5 + (4 * g));
+  }
 
   _printMapTypes();
   std::cout << std::endl;
   std::cout << std::endl;
 
-  _testBuildingNeighbors();
-  std::cout << std::endl;
-  std::cout << std::endl;
+  //_testBuildingNeighbors();
+  //std::cout << std::endl;
+  //std::cout << std::endl;
 
   // show power of all buildings:
   std::cout << "Buildings and their power:" << std::endl;
@@ -3024,8 +3063,11 @@ std::cout << "Buildings and their power:" << std::endl;
 
   // CONSUME power:
   std::cout << std::endl;
-  std::cout << "consuming power...";
-  _consumeElectricity();
+  int times = 3;
+  std::cout << "consuming power " << times << " times...";
+  for (int p = 0; p < times; p++)
+    _consumeElectricity();
+
   std::cout << "done" << std::endl;
   std::cout << std::endl;
 

@@ -452,7 +452,7 @@ DLL_mapEnd();
             <string>draw_set_colour(c_black);
 if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
-    scr_drawScreenBuildings(buildingElements, id); // pass in arrays?
+    scr_drawScreenBuildings(buildingElements, id);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
     
     if (toggleMiniMap){ // 'M' key to toggle
@@ -484,6 +484,9 @@ if (canDraw) {
         
         // population:
         scr_drawPopulation(id);
+        
+        // Draw electricity bar:
+        scr_drawPowerBar();
         
         // speed icons:
         scr_drawSpeedIcons();
@@ -719,21 +722,9 @@ updateSurfaces = true;
             <kind>1</kind>
             <string>// DEBUG
 
+var ratio = DLL_getPowerUsageRatio();
 
-var message = "";
-
-for (i = 0; i &lt; DLL_getBuildingVectorSize(); i++) {
-    message += string(powerArray[i]);
-    message += " ";
-}
-
-if (message == "")
-    message = "no buildings yet!";
-
-show_message(message);
-
-
-
+show_message("ratio = " + string(ratio));
 </string>
           </argument>
         </arguments>

@@ -121,7 +121,6 @@
     <scripts name="UPDATE">
       <script>scripts\scr_updateAll.gml</script>
     </scripts>
-    <script>scripts\scr_ease.gml</script>
     <scripts name="Buildings">
       <script>scripts\scr_drawPlacement.gml</script>
       <script>scripts\scr_placeBuilding.gml</script>
@@ -135,32 +134,6 @@
       </scripts>
       <script>scripts\scr_placementHold.gml</script>
       <script>scripts\scr_placeBuildingHold.gml</script>
-    </scripts>
-    <scripts name="Time&amp;Season">
-      <script>scripts\scr_drawSeasonText.gml</script>
-      <script>scripts\scr_drawMonthText.gml</script>
-      <script>scripts\scr_drawYearText.gml</script>
-      <script>scripts\scr_incrementMonth.gml</script>
-      <script>scripts\scr_getSeasonString.gml</script>
-      <script>scripts\scr_getMonthString.gml</script>
-      <script>scripts\scr_drawTime.gml</script>
-      <script>scripts\scr_setTimeString.gml</script>
-      <script>scripts\scr_setSpeed.gml</script>
-      <script>scripts\scr_getSpeedMultiplier.gml</script>
-      <script>scripts\scr_drawPause.gml</script>
-      <script>scripts\scr_drawCurtain.gml</script>
-      <script>scripts\scr_updateCurtainAlpha.gml</script>
-      <script>scripts\scr_seasonChange.gml</script>
-    </scripts>
-    <scripts name="Population&amp;Money">
-      <script>scripts\scr_drawPopulation.gml</script>
-      <script>scripts\scr_updatePopString.gml</script>
-      <script>scripts\scr_updatePopulation.gml</script>
-      <script>scripts\scr_addCommas.gml</script>
-      <script>scripts\scr_CommaCount.gml</script>
-      <script>scripts\scr_PlaceHolders.gml</script>
-      <script>scripts\scr_drawMoney.gml</script>
-      <script>scripts\scr_updateMoneyString.gml</script>
     </scripts>
     <scripts name="Camera">
       <script>scripts\scr_moveKeepInRoom.gml</script>
@@ -236,6 +209,33 @@
       <scripts name="ModeFile">
         <script>scripts\scr_drawFileScreen.gml</script>
       </scripts>
+      <scripts name="Population&amp;Money">
+        <script>scripts\scr_drawPopulation.gml</script>
+        <script>scripts\scr_updatePopString.gml</script>
+        <script>scripts\scr_updatePopulation.gml</script>
+        <script>scripts\scr_addCommas.gml</script>
+        <script>scripts\scr_CommaCount.gml</script>
+        <script>scripts\scr_PlaceHolders.gml</script>
+        <script>scripts\scr_drawMoney.gml</script>
+        <script>scripts\scr_updateMoneyString.gml</script>
+      </scripts>
+      <scripts name="Time&amp;Season">
+        <script>scripts\scr_drawSeasonText.gml</script>
+        <script>scripts\scr_drawMonthText.gml</script>
+        <script>scripts\scr_drawYearText.gml</script>
+        <script>scripts\scr_incrementMonth.gml</script>
+        <script>scripts\scr_getSeasonString.gml</script>
+        <script>scripts\scr_getMonthString.gml</script>
+        <script>scripts\scr_drawTime.gml</script>
+        <script>scripts\scr_setTimeString.gml</script>
+        <script>scripts\scr_setSpeed.gml</script>
+        <script>scripts\scr_getSpeedMultiplier.gml</script>
+        <script>scripts\scr_drawPause.gml</script>
+        <script>scripts\scr_drawCurtain.gml</script>
+        <script>scripts\scr_updateCurtainAlpha.gml</script>
+        <script>scripts\scr_seasonChange.gml</script>
+      </scripts>
+      <script>scripts\scr_drawPowerBar.gml</script>
     </scripts>
     <scripts name="Screen">
       <script>scripts\scr_drawZones.gml</script>
@@ -263,6 +263,9 @@
       <script>scripts\scr_checkDrawElectricitySign.gml</script>
       <script>scripts\scr_flipElectricitySignImageIndex.gml</script>
     </scripts>
+    <scripts name="UTILITY">
+      <script>scripts\scr_ease.gml</script>
+    </scripts>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_normal</font>
@@ -277,7 +280,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="88">
+  <constants number="93">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -317,9 +320,14 @@
     <constant name="MENU_BUTTONS_WIDTH">BAR_UNIT*4</constant>
     <constant name="MENU_BUTTONS_HEIGHT">BAR_UNIT*4</constant>
     <constant name="MONEY_X1">BAR_IN_X1 + BAR_UNIT*40</constant>
-    <constant name="MONEY_Y1">BAR_IN_Y1 + BAR_UNIT + FONT_ADJUST2</constant>
+    <constant name="MONEY_Y1">BAR_IN_Y1 + BAR_UNIT/2 + FONT_ADJUST2</constant>
     <constant name="POP_X1">MONEY_X1</constant>
-    <constant name="POP_Y1">BAR_IN_Y1 + BAR_UNIT*3 + FONT_ADJUST2</constant>
+    <constant name="POP_Y1">BAR_IN_Y1 + BAR_UNIT*3  - BAR_UNIT/2 + FONT_ADJUST2</constant>
+    <constant name="POP_MONEY_BAR_LENGTH">BAR_UNIT*13</constant>
+    <constant name="POWER_BAR_X1">POP_X1 + BAR_UNIT*2</constant>
+    <constant name="POWER_BAR_Y1">POP_Y1 + BAR_UNIT*2.5</constant>
+    <constant name="POWER_BAR_X2">POWER_BAR_X1 + BAR_UNIT*11</constant>
+    <constant name="POWER_BAR_Y2">POWER_BAR_Y1 + BAR_UNIT/4</constant>
     <constant name="SPEEDICON_X1">view_xview + BAR_UNIT</constant>
     <constant name="SPEEDICON_Y1">view_yview + view_hview - 32</constant>
     <constant name="BUILDMENU_W">BAR_UNIT*15</constant>

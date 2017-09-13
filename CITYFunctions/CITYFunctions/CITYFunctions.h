@@ -4,7 +4,7 @@
   * Date: 03/07/2017
   * Description: Contains the prototypes for all the functions related 
   *  to the CITYFunctions.dll file. Individual function descriptions 
-  *  will be provided inline. 
+  *  will be provided inline.
   ********************************************************************/
 #ifndef CITYFUNCTIONS_H
 #define CITYFUNCTIONS_H
@@ -51,7 +51,6 @@ enum {
   DIR_W
 }cardinalDirection;
 
-
 enum {
   TT_GRASS = 0, // default
   TT_TREE,
@@ -82,11 +81,11 @@ enum {
   BT_CZONE,
   BT_IZONE,
   BT_POLICE , // 6
-  BT_FIRE, 
+  BT_FIRE,
   BT_SCHOOL,
   BT_HOSPITAL, // 9
   BT_COAL,
-  BT_NUCLEAR, 
+  BT_NUCLEAR,
   BT_WATERTOWER, // 12
   BT_ARCADE,
   BT_AIRPORT
@@ -170,7 +169,6 @@ enum {
 
 }cityType;
 
-
 enum {
   TDT_ALL,
   TDT_POLLUTION,
@@ -202,6 +200,9 @@ typedef struct gameData {
 
   int population;
   int cityType;
+
+  int totalPowerAvailable;
+  int totalPowerUsed;
 }gameData;
 
 
@@ -216,8 +217,6 @@ typedef struct tile {
   int fireDanger;
   building* buildingOnTop;
 }tile;
-
-
 
 
 
@@ -258,7 +257,6 @@ typedef struct building {
 
 
 
-
 // ZONE DEFINITIONS ----------------
 
 
@@ -280,7 +278,6 @@ enum {
   TYPE_B,
   TYPE_C
 } typeVariation;
-
 
 enum {
   RL0 = 0,
@@ -319,7 +316,6 @@ enum {
   IL7 = 350,
   IL8 = 550
 } IlevelPopMin;
-
 
 
 typedef struct zoneBuilding {
@@ -361,9 +357,6 @@ typedef struct zone {
 }zone;
 
 
-// TODO zones need to have neighbors too
-
-int zoneGetTotalRequiredPower(zone* zoneID);
 
 
 
@@ -389,10 +382,6 @@ int zoneGetTotalRequiredPower(zone* zoneID);
 
 
 
-
-// todo:
-//typedef struct road {
-//};
 
 
 
@@ -418,9 +407,10 @@ void _setCityType(int type);
 int _checkNewCityType();
 int _updatePopulation();
 
+double _getPowerUsageRatio(int capacity, int used);
 
-
-
+void _setTotalPowerUsed(int amount);
+void _setTotalPowerAvailable(int amount);
 
 
 
@@ -519,7 +509,6 @@ int _getZoneBuildingX(int squarePos);
 int _getZoneBuildingY(int squarePos);
 int _getZoneBuildingPopMin(int zoneType, int level);
 
-
 int _initZoneBuildings(zone* zoneID);
 zone* _newZone(int xCoord, int yCoord, int zoneType);
 
@@ -535,7 +524,7 @@ int _getPopulation(int zoneType);
 
 void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
-
+int zoneGetTotalRequiredPower(zone* zoneID);
 
 
 
@@ -676,6 +665,7 @@ GMEXPORT double cleanUpAllZones();
 // POWER & ELECTRICITY FUNCTIONS ----------------
 GMEXPORT double sendElectricity();
 GMEXPORT double consumeElectricityAll();
+GMEXPORT double getPowerUsageRatio();
 
 
 // Utility functions
