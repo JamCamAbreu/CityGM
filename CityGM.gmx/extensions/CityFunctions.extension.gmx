@@ -149,7 +149,7 @@
           <kind>12</kind>
           <help>DLL_buildingsToString()</help>
           <returnType>1</returnType>
-          <argCount>-1</argCount>
+          <argCount>0</argCount>
           <args/>
         </function>
         <function>
@@ -490,6 +490,36 @@
           <help>DLL_getPowerUsageRatio()</help>
           <returnType>2</returnType>
           <argCount>-1</argCount>
+          <args/>
+        </function>
+        <function>
+          <name>DLL_getTileSectionType</name>
+          <externalName>getTileSectionType</externalName>
+          <kind>12</kind>
+          <help>DLL_getTileSectionType(int x, int y, int tileSectionType)</help>
+          <returnType>2</returnType>
+          <argCount>2</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_roadsToString</name>
+          <externalName>roadsToString</externalName>
+          <kind>12</kind>
+          <help>DLL_roadsToString()</help>
+          <returnType>1</returnType>
+          <argCount>-1</argCount>
+          <args/>
+        </function>
+        <function>
+          <name>DLL_getRoadsVectorSize</name>
+          <externalName>getRoadsVectorSize</externalName>
+          <kind>12</kind>
+          <help>DLL_getRoadsVectorSize()</help>
+          <returnType>2</returnType>
+          <argCount>0</argCount>
           <args/>
         </function>
       </functions>
@@ -852,6 +882,66 @@
         <constant>
           <name>CHAR_IZONE</name>
           <value>'i'</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_ERR</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_HOR</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_VER</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_ULCOR</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_URCOR</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_DLCOR</name>
+          <value>5</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_DRCOR</name>
+          <value>6</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_RT</name>
+          <value>7</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_DT</name>
+          <value>8</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_LT</name>
+          <value>9</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_UT</name>
+          <value>10</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TS_INT</name>
+          <value>11</value>
           <hidden>0</hidden>
         </constant>
       </constants>

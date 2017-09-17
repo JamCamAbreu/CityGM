@@ -19,6 +19,10 @@ int main() {
 
 
 
+
+
+
+
   // init
   initDLL();
   initMap();
@@ -45,18 +49,40 @@ int main() {
 
 
   // RUN TEST HERE:
-  //_testPowerSurge();
+  std::cout << std::endl;
+
 
   std::cout << std::endl;
   std::cout << std::endl;
-  std::cout << "ratio = " << getPowerUsageRatio() << std::endl;
+  std::cout << "empty, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
 
-  _testPowerSurge();
+  addBuilding(BT_ROAD, 4, 5);
+  std::cout << "one road, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  addBuilding(BT_ROAD, 5, 5);
+  addBuilding(BT_ROAD, 5, 6);
+  std::cout << "three roads, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+
+
+
+
+
 
   std::cout << std::endl;
   std::cout << std::endl;
-  std::cout << "ratio = " << getPowerUsageRatio() << std::endl;
-
 
 
   // TEST COMPLETE:

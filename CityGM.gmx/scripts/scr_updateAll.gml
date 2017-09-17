@@ -9,12 +9,19 @@ argument0.buildingString = DLL_buildingsToString();
 argument0.buildingElements = DLL_getBuildingVectorSize();
 scr_updateBuildings(argument0.buildingString, argument0.buildingElements, argument0);
 
+// update Road String:
+argument0.roadString = DLL_roadsToString();
+argument0.roadElements = DLL_getRoadsVectorSize();
+scr_updateRoadsArrays(argument0);
+
 // update miniMap:
 argument0.updateSurfaces = true;
 
 // updateMoney:
 argument0.money = DLL_getGameMoney();
 scr_updateMoneyString(argument0);
+
+
 
 // update time:
 argument0.gameYear = DLL_getGameYear();
@@ -31,3 +38,8 @@ argument0.gameMode = DLL_getGameMode();
 // update tile data:
 scr_updatePollution();
 scr_updateLandValue();
+
+
+
+
+

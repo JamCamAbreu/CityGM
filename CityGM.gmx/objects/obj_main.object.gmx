@@ -61,6 +61,13 @@ yArray[MAX_BUILDINGS] = 0;
 typeArray[MAX_BUILDINGS] = 0;
 powerArray[MAX_BUILDINGS] = 0;
 
+// ROADS:
+roadString = DLL_roadsToString();
+roadElements = DLL_getRoadsVectorSize();
+roadXArray[MAX_BUILDINGS] = 0;
+roadYArray[MAX_BUILDINGS] = 0;
+roadTypeArray[MAX_BUILDINGS] = 0;
+
 
 // ZONES:
 updateZone = Z_RES; // changes every tick of alarm0
@@ -310,7 +317,6 @@ alarm[2] = CURTAIN_OUT;
 // UPDATE EVERYTHING
 scr_updateAll(id);
 
-
 // increment month
 var lastSeason = DLL_getGameSeason();
 scr_incrementMonth(id);
@@ -453,6 +459,7 @@ DLL_mapEnd();
 if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawScreenBuildings(buildingElements, id);
+    scr_drawRoads(roadElements, id);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
     
     if (toggleMiniMap){ // 'M' key to toggle
@@ -747,7 +754,25 @@ show_message("ratio = " + string(ratio));
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_growAllZones(id);
+            <string>//scr_growAllZones(id);
+
+
+var numElements = DLL_getRoadsVectorSize();
+
+var message;
+for (i = 0; i &lt; numElements; i++) {
+    message = "";
+    message += "Num: " + string(i);
+    message += ", x=" + string(roadXArray[i]);
+    message += ", y=" + string(roadYArray[i]);
+    message += ", Type=" + string(roadTypeArray[i]);
+    show_message(message);
+}
+
+
+
+
+
 </string>
           </argument>
         </arguments>
@@ -770,39 +795,12 @@ show_message("ratio = " + string(ratio));
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/*
-var buildingVectorSize = DLL_getBuildingVectorSize();
-show_message("size = " + string(buildingVectorSize));
-
-var buildingsString = DLL_buildingsToString();
-show_message("String = " + buildingsString);
-
-*/
+            <string>/// DEBUG STUFF
 
 
-//var tileString = DLL_tileTypeToString();
-//show_message(tileString);
+var message = DLL_roadsToString();
 
-/*
-var number;
-var numString = "";
-for (i = 0; i &lt; 40; i++) {
-    number = DLL_getRandomRange(0,100);
-    numString += string(number);
-    numString += "  ";
-}
-show_message("random numbers using DLL function: " + numString);
-*/
-
-//DLL_growSeeds(TT_TREE, 1);
-
-
-//audio_play_sound(sfx_error, 5, false);
-
-var row = scr_buildMenuGetRow(selectedBuilding);
-var column = scr_buildMenuGetColumn(selectedBuilding);
-show_message("Row: " + string(row) + ", column: " + string(column));
-
+show_message("message: " + message);
 </string>
           </argument>
         </arguments>
@@ -997,8 +995,8 @@ else if (gameMode == MD_SELECT) {
 // Place a building in placement mode:
 else if (gameMode == MD_PLACE) {
     scr_placeBuilding(id, selectedBuilding);
-    pressHoldMode = true;
-    camera.slowDown = CAMERA_MOVESLOW;
+    //pressHoldMode = true;
+    //camera.slowDown = CAMERA_MOVESLOW;
 }
 
 // Enter a menu option when in menu mode:

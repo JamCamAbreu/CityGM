@@ -14,9 +14,6 @@ var type;
   Actual:
     myBuildingString = "3,15,*,2;22,9,-,3; ... etc"
   */
-
-  // DEBUG
-  //show_message("about to start processing building text");
   
 // process x:
 scr_updateBuildingX(argument0, argument1, argument2);

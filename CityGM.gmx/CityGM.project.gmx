@@ -70,7 +70,7 @@
       <sprite>sprites\spr_PIconSelect</sprite>
       <sprite>sprites\spr_purchaseIcon</sprite>
     </sprites>
-    <sprites name="connectors">
+    <sprites name="sectionBasedSprites">
       <sprite>sprites\spr_powerLine</sprite>
       <sprite>sprites\spr_road</sprite>
       <sprite>sprites\spr_roadPower</sprite>
@@ -134,6 +134,9 @@
       </scripts>
       <script>scripts\scr_placementHold.gml</script>
       <script>scripts\scr_placeBuildingHold.gml</script>
+      <scripts name="Roads">
+        <script>scripts\scr_updateRoadsArrays.gml</script>
+      </scripts>
     </scripts>
     <scripts name="Camera">
       <script>scripts\scr_moveKeepInRoom.gml</script>
@@ -240,6 +243,7 @@
     <scripts name="Screen">
       <script>scripts\scr_drawZones.gml</script>
       <script>scripts\scr_drawScreenBuildings.gml</script>
+      <script>scripts\scr_drawRoads.gml</script>
       <script>scripts\scr_drawScreenTiles.gml</script>
       <script>scripts\scr_getViewX1.gml</script>
       <script>scripts\scr_getViewY1.gml</script>

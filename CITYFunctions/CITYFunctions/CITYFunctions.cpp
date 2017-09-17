@@ -14,6 +14,7 @@ int mode;
 
 // containers (that stay persistant throughout the life of the DLL)
 std::vector<building*> v_buildings; // cleaned up in mapEnd function
+std::vector<building*> v_roads;
 
 std::list<zone*> Rzones;            // cleaned up in mapEnd function
 std::list<zone*> Czones;
@@ -302,17 +303,15 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
 
 // Get:
 int _getTileData(int x, int y, int dataType) {
-  
   tile* curTile = map(x, y);
-  
+
   switch (dataType) {
-    
-    case TDT_ALL: { 
+    case TDT_ALL: {
       return -1; // error code
       break;
     }
 
-    case TDT_POLLUTION: { 
+    case TDT_POLLUTION: {
       return curTile->pollution;
       break;
     }
@@ -327,13 +326,22 @@ int _getTileData(int x, int y, int dataType) {
       break;
     }
 
+    case TDT_PLINETYPE: {
+      return curTile->pLineType;
+      break;
+    }
+
+    case TDT_ROADTYPE: {
+      return curTile->roadType;
+      break;
+    }
+
     default: {
       return -2; // error code
       break;
     }
 
   }
-  
   return -3; // error code
 }
 
@@ -352,6 +360,10 @@ void _zeroTileData(int dataType) {
         _setTileData(c, r, dataType, -1); // water code
       else
         _setTileData(c, r, dataType, 0);
+
+      // DON'T SET DEFAULTS FOR TILE SECTION TYPE! 
+      // (because this is used by pollution and land value
+      //  reseting, which is done often. );
     }
   }
 
@@ -559,6 +571,132 @@ std::string _tileDataToString(int dataType) {
 
   return dataString;
 }
+
+// set road/powerline tile data:
+void _setTilesSectionData(int xCoord, int yCoord, int tileDataType) {
+/*       |3|
+      |4| X |1|
+         |2|
+*/
+  int emptyCode = TILE_SECTION_DEFAULT;
+  // Start with 0:
+  int type = 0;
+
+  // USE BIT MASKING FOR ASSIGNING NEIGHBORS
+  // above:
+  if ( (yCoord > 0) &&
+    (_getTileData(xCoord, yCoord - 1, tileDataType) != emptyCode)) { // if anything but 0:
+    type |= 0b0100;
+  }
+
+  // right:
+  if ( (xCoord < MAP_DIMENSION) &&
+    (_getTileData(xCoord + 1, yCoord, tileDataType) != emptyCode)) { // if anything but 0:
+    type |= 0b0001;
+  }
+
+  // below:
+  if ( (yCoord < MAP_DIMENSION) &&
+    (_getTileData(xCoord, yCoord + 1, tileDataType) != emptyCode)) { // if anything but 0:
+    type |= 0b0010;
+  }
+
+  // left:
+  if ( (xCoord > 0) &&
+    (_getTileData(xCoord - 1, yCoord, tileDataType) != emptyCode)) { // if anything but 0:
+    type |= 0b1000;
+  }
+
+  // store information in tile:
+  tile* curTile = map(xCoord, yCoord);
+  if (tileDataType == TDT_ROADTYPE)
+    curTile->roadType = type;
+  else if (tileDataType == TDT_PLINETYPE)
+    curTile->pLineType = type;
+}
+
+int _getTileSectionType(tile* tileToGet, int type) {
+
+  int data;
+  if (type == TDT_ROADTYPE)
+    data = tileToGet->roadType;
+  else data = tileToGet->pLineType;
+
+  switch (data) {
+    case 0: { return TS_HOR; break; }
+    case 1: { return TS_HOR; break; }
+    case 2: { return TS_VER; break; }
+    case 3: { return TS_DRCOR; break; }
+    case 4: { return TS_VER; break; }
+    case 5: { return TS_URCOR; break; }
+    case 6: { return TS_VER; break; }
+    case 7: { return TS_RT; break; }
+    case 8: { return TS_HOR; break; }
+    case 9: { return TS_HOR; break; }
+    case 10: { return TS_DLCOR; break; }
+    case 11: { return TS_DT; break; }
+    case 12: { return TS_ULCOR; break; }
+    case 13: { return TS_UT; break; }
+    case 14: { return TS_LT; break; }
+    case 15: { return TS_INT; break; }
+    default: { return TS_ERR; }
+  } // end switch
+
+  return TS_ERR;
+}
+
+
+int _getTileSectionData(tile* tileToGet, int type) {
+  if (type == TDT_ROADTYPE)
+    return tileToGet->roadType;
+
+  else if (type == TDT_PLINETYPE)
+    return tileToGet->roadType;
+
+  else return -5; // error code
+}
+
+
+void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType) {
+
+  tile* curTile;
+  int emptyCode = TILE_SECTION_DEFAULT;
+
+  // set tile above:
+  if (yCoord > 0) {
+    curTile = map(xCoord, yCoord - 1);
+    if (_getTileSectionData(curTile, tileDataType) != emptyCode)
+      _setTilesSectionData(xCoord, yCoord - 1, tileDataType);
+  }
+
+  // set right:
+  if (xCoord < (MAP_DIMENSION - 1)) {
+    curTile = map(xCoord + 1, yCoord);
+    if (_getTileSectionData(curTile, tileDataType) != emptyCode)
+      _setTilesSectionData(xCoord + 1, yCoord, tileDataType);
+  }
+
+  // set below:
+  if (yCoord < (MAP_DIMENSION + 1)) {
+    curTile = map(xCoord, yCoord + 1);
+    if (_getTileSectionData(curTile, tileDataType) != emptyCode)
+      _setTilesSectionData(xCoord, yCoord + 1, tileDataType);
+  }
+
+  // set left:
+  if (xCoord > 0) {
+    curTile = map(xCoord - 1, yCoord);
+    if (_getTileSectionData(curTile, tileDataType) != emptyCode)
+      _setTilesSectionData(xCoord - 1, yCoord, tileDataType);
+  }
+
+}
+
+
+
+
+
+
 
 
 
@@ -864,6 +1002,16 @@ building* _newBuilding(int type, int x, int y) {
   // Get all of the pointers to buildings around this building:
   _setBuildingNeighbors(newBuilding);
 
+  // set correct type for road or power line:
+  if (type == BT_ROAD) {
+    _setTilesSectionData(x, y, TDT_ROADTYPE);
+    _updateNeighborSectionTypes(x, y, TDT_ROADTYPE);
+  }
+  else if (type == BT_PLINE) {
+    _setTilesSectionData(x, y, TDT_PLINETYPE);
+    _updateNeighborSectionTypes(x, y, TDT_PLINETYPE);
+  }
+
   return newBuilding;
 }
 
@@ -1061,6 +1209,37 @@ int getRequiredPowerAllTypes(building* buildingID) {
 
 
 
+
+// Roads:
+std::string _roadsToString() {
+
+  char dataSeperator = ',';
+  char elementSeperator = ';';
+  std::string returnString = "";
+  tile* curTile;
+
+  for (auto it : v_roads) {
+
+    // X coord:
+    returnString += 'X';
+    returnString += std::to_string(it->xOrigin);
+
+    // y coord:
+    returnString += 'Y';
+    returnString += std::to_string(it->yOrigin);
+
+    // road section type:
+    returnString += 'T';
+    curTile = map(it->xOrigin, it->yOrigin);
+    int type = _getTileSectionType(curTile, TDT_ROADTYPE);
+    returnString += std::to_string(type);
+    returnString += elementSeperator;
+  }
+
+  return returnString;
+}
+
+int _getRoadsVectorSize() { return v_roads.size(); }
 
 
 
@@ -2118,6 +2297,8 @@ double initMap() {
       iter->landValue = 50;
       iter->fireDanger = 0;
       iter->buildingOnTop = NULL;
+      iter->roadType = TILE_SECTION_DEFAULT;
+      iter->pLineType = TILE_SECTION_DEFAULT;
 
     accumulator++;
     iter++; // increments sizeof(tile)
@@ -2411,6 +2592,21 @@ double subtractLandValuePollution() {
   return 0;
 }
 
+double getTileSectionType(double x, double y, int tileDataType) {
+  // convert to int first
+  int xCoord = (int)x;
+  int yCoord = (int)y;
+
+  tile* tileToGet = map(xCoord, yCoord);
+
+  return (_getTileSectionType(tileToGet, tileDataType));
+}
+
+
+
+
+
+
 
 
 
@@ -2490,9 +2686,7 @@ double addBuilding(double type, double x, double y) {
     // Build Road:
     if (type == BT_ROAD) {
       putInBuildingVector = false;
-
-      // TODO: put in a road vector
-      // special code for roads
+      v_roads.push_back(newBuilding);
     }
     // Build Power Line:
     else if (type == BT_PLINE) {
@@ -2689,8 +2883,19 @@ double getBuildingPrice(double buildingType) {
 
 
 
+// ROADS:
+char* roadsToString() {
+  std::string getString = _roadsToString();
 
+  char* cstr = new char[getString.length() + 1];
+  std::strcpy(cstr, getString.c_str());
 
+  return cstr;
+}
+
+double getRoadsVectorSize() {
+  return _getRoadsVectorSize();
+}
 
 
 
@@ -3105,6 +3310,170 @@ std::cout << "Buildings and their power:" << std::endl;
 }
 
 
+std::string _testDisplayRoadType(int type) {
+
+  switch (type) {
+
+  case TS_ERR: { return "error"; break; }
+
+  case TS_HOR: { return "horizontal"; break; }
+  case TS_VER: { return "vertical"; break; }
+
+  case TS_ULCOR: { return "Up-Left Corner"; break; }
+  case TS_URCOR: { return "Up-Right Corner"; break; }
+  case TS_DLCOR: { return "Down-Left Corner"; break; }
+  case TS_DRCOR: { return "Down-Right Corner"; break; }
+
+  case TS_RT: { return "Right T"; break; }
+  case TS_DT: { return "Down T"; break; }
+  case TS_LT: { return "Left T"; break; }
+  case TS_UT: { return "Up T"; break; }
+
+  case TS_INT: { return "Intersection"; break; }
+
+  default: {
+    return "default";
+    break;
+  }
+
+  }
+
+  return "error";
+}
 
 
 
+double _testRoadTypes() {
+
+  std::cout << std::endl;
+
+  // add roads:
+  addBuilding(BT_ROAD, 5, 5);
+  addBuilding(BT_ROAD, 6, 5);
+  addBuilding(BT_ROAD, 6, 4);
+
+  tile* curTile;
+  for (int j = 2; j < 7; j++) {
+    for (int p = 2; p < 7; p++) {
+      curTile = map(j, p);
+      std::cout << "x=" << curTile->x;
+      std::cout << ", y=" << curTile->y;
+      std::cout << "\tCode: ";
+      std::cout << curTile->roadType;
+      std::cout << ",\t" << _testDisplayRoadType(_getTileSectionType(curTile, TDT_ROADTYPE));
+      std::cout << std::endl;
+    }
+  }
+
+  /*
+  // Check it's code:
+  tile* curTile;
+  for (auto it : v_roads) {
+    std::cout << "x=" << it->xOrigin;
+    std::cout << ", y=" << it->yOrigin;
+    std::cout << "\tCode: ";
+
+    curTile = map(it->xOrigin, it->yOrigin);
+    std::cout << curTile->roadType;
+
+    std::cout << std::endl;
+  }
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+    */
+
+  return 0;
+}
+
+double _testRoadPrintString() {
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "empty, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  addBuilding(BT_ROAD, 4, 5);
+  std::cout << "one road, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  addBuilding(BT_ROAD, 5, 5);
+  addBuilding(BT_ROAD, 5, 6);
+  std::cout << "three roads, " << std::endl;
+  std::cout << "string: ";
+  std::cout << roadsToString();
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+
+
+  return 0;
+}
+
+
+
+
+// TODO TODO TODO
+/*
+  PLAN FOR IMPLEMENTING ROAD AND ELECTRICITY SPRITES
+
+  * tiles will have a unique piece of data for the special sprite
+  needed in drawing one of two things:
+    * a power line
+    * a road
+
+    * Something like: int pLineSprite and int roadSprite with default values
+    of enum 'noPLineSprite' and 'noRoadSprite'
+
+  * Each of those data types will be separate, and an error code will
+  be used by default for a tile NOT containing those buildings.
+
+  * The types will be calculated whenever a road/powerline is created and
+  whenever a road/powerline is destroyed. This is done within a function simply
+  by checking the tiles around it and setting bits for adjacent neighbors.
+
+
+
+  * bit setting pattern:
+                                     |3|
+                                  |4| X |1|
+                                     |2|
+  * tile codes:
+          ** ZERO PIECES ADJACENT **
+      0000            0       Horizontal Lane (default)
+
+          ** ONE PIECE ADJACENT **
+      0001            1       Horizontal Lane
+      0010            2       Vertical Lane
+      0100            4       Vertical Lane
+      1000            8       Horizontal Lane
+
+          ** TWO PIECES ADJACENT **
+      0110            6       Vertical Lane
+      1001            9       Horizontal Lane
+
+      1100            12      upLeft Corner
+      0101            5       upRight Corner
+      0011            3       downRight Corner
+      1010            10      downLeft Corner
+
+          ** THREE PIECES ADJACENT **
+      0111            7       rightT
+      1011            11      downT
+      1110            14      leftT
+      1101            13      upT
+
+          ** FOUR PIECES ADJACENT **
+      1111            15      Intersection
+
+  * THEN in game maker, whenever it comes time to draw these sprites, game maker
+  will calculate (during the draw event) for each of the road/powerline tiles on
+  the screen which sprite to draw based on that integer (using an enum, and a game
+  maker function to return the correct sprite)
+*/

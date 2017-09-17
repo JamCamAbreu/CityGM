@@ -38,7 +38,7 @@ const char CHAR_RZONE = 'r';
 const char CHAR_CZONE = 'c';
 const char CHAR_IZONE = 'i';
 
-
+const int TILE_SECTION_DEFAULT = -1;
 
 
 
@@ -173,10 +173,26 @@ enum {
   TDT_ALL,
   TDT_POLLUTION,
   TDT_LANDVALUE,
-  TDT_FIREDANGER
+  TDT_FIREDANGER,
+
+  TDT_PLINETYPE,
+  TDT_ROADTYPE
 }tileDataType;
 
-
+enum {
+  TS_ERR = 0,
+  TS_HOR,
+  TS_VER,
+  TS_ULCOR,
+  TS_URCOR,
+  TS_DLCOR,
+  TS_DRCOR,
+  TS_RT,
+  TS_DT,
+  TS_LT,
+  TS_UT,
+  TS_INT
+}tileSectionType;
 
 
 
@@ -215,6 +231,9 @@ typedef struct tile {
   int pollution;
   int landValue;
   int fireDanger;
+
+  int pLineType;  // -1 for none (default)
+  int roadType;   // -1 for none (default)
   building* buildingOnTop;
 }tile;
 
@@ -447,11 +466,11 @@ void _addWaterTileValue(int dataType, int radius, int amount);
 
 void _subtractLandValuePollution();
 
+void _setTilesSectionData(int xCoord, int yCoord, int tileDataType);
 
+int _getTileSectionType(tile* tileToGet, int type);
 
-
-
-
+void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType);
 
 
 
@@ -490,6 +509,12 @@ int getRequiredPowerAllTypes(building* buildingID);
 
 
 
+
+
+// Roads:
+std::string _roadsToString();
+
+int _getRoadsVectorSize();
 
 
 
@@ -644,6 +669,7 @@ GMEXPORT double addAllBuildingData(double dataType);
 GMEXPORT char* tileDataToString(double dataType);
 GMEXPORT double addWaterTileValue(double dataType, double radius, double amount);
 GMEXPORT double subtractLandValuePollution();
+GMEXPORT double getTileSectionType(double x, double y, int tileDataType);
 
 
 // Building Functions
@@ -652,6 +678,11 @@ GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
 GMEXPORT double getBuildingVectorSize();
 GMEXPORT double getBuildingPrice(double buildingType);
 GMEXPORT char* buildingsToString();
+
+
+// Roads Functions:
+GMEXPORT char* roadsToString();
+GMEXPORT double getRoadsVectorSize();
 
 
 // Zone Functions
@@ -684,7 +715,8 @@ GMEXPORT void _testPrintZoneString(int zoneType);
 GMEXPORT double _testZoneGrowthAlgorithm(double level, double landValue);
 GMEXPORT double _testBuildingNeighbors();
 GMEXPORT double _testPowerSurge();
-
+GMEXPORT double _testRoadTypes();
+GMEXPORT double _testRoadPrintString();
 
 #endif
 
