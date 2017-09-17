@@ -7,7 +7,7 @@ argument0.tileStringSize = string_length(tileString);
 // update Building string:
 argument0.buildingString = DLL_buildingsToString();
 argument0.buildingElements = DLL_getBuildingVectorSize();
-scr_updateBuildings(argument0.buildingString, argument0.buildingElements, argument0);
+scr_updateBuildings(argument0);
 
 // update Road String:
 argument0.roadString = DLL_roadsToString();

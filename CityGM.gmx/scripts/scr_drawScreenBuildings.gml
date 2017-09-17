@@ -32,12 +32,15 @@ for (i = 0; i < argument0; i++) {
         
         // SPECIAL DRAWING - POWER LINES
         if (bT == BT_PLINE) {
-            // function for getting pLine sprite index here
-        }
-        
-        // SPECIAL DRAWING - ROADS
-        else if (bT == BT_ROAD) {
-            // function for getting road sprite index here
+            var typeIndex = argument1.pLineValueArray[i];
+            
+            if (typeIndex != 0) {
+                var seasonIndex = argument1.gameSeason;
+                sprIndex = (typeIndex - 1)*4 + seasonIndex + 1;
+            }
+            else {
+                sprIndex = 0;
+            }
         }
         
         // SPECIAL DRAWING - TREES
@@ -50,7 +53,7 @@ for (i = 0; i < argument0; i++) {
             sprIndex = argument1.gameSeason;
         }
         
-        draw_sprite(sprite, argument1.gameSeason, bX*TILE_SIZE, bY*TILE_SIZE);
+        draw_sprite(sprite, sprIndex, bX*TILE_SIZE, bY*TILE_SIZE);
         
         // ELECTRICITY SYMBOL ('needs power' symbol):
         if(scr_checkDrawElectricitySign(bE)) {

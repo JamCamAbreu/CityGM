@@ -717,6 +717,7 @@ GMEXPORT double _testBuildingNeighbors();
 GMEXPORT double _testPowerSurge();
 GMEXPORT double _testRoadTypes();
 GMEXPORT double _testRoadPrintString();
+GMEXPORT double _testPLINETypes();
 
 #endif
 

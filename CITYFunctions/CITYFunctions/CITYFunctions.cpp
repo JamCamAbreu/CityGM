@@ -645,17 +645,15 @@ int _getTileSectionType(tile* tileToGet, int type) {
   return TS_ERR;
 }
 
-
 int _getTileSectionData(tile* tileToGet, int type) {
   if (type == TDT_ROADTYPE)
     return tileToGet->roadType;
 
   else if (type == TDT_PLINETYPE)
-    return tileToGet->roadType;
+    return tileToGet->pLineType;
 
   else return -5; // error code
 }
-
 
 void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType) {
 
@@ -1094,28 +1092,44 @@ std::string _buildingInfoToString() {
 
   */
 
+  tile* curTile;
   for (auto it : v_buildings) {
 
+    // TODO: Rework the game maker parsing input to being more
+    // like the new road one. Use a special character just before
+    // the data needed:
+
     // add x to string:
-    data = std::to_string(it->xOrigin);
-    buildingInfo += data;
-    buildingInfo += dataDivider;
+    buildingInfo += 'X';
+    buildingInfo += std::to_string(it->xOrigin);
 
     // add y to string:
-    data = std::to_string(it->yOrigin);
-    buildingInfo += data;
-    buildingInfo += dataDivider;
+    buildingInfo += 'Y';
+    buildingInfo += std::to_string(it->yOrigin);
 
     // add electricity info to string:
+    buildingInfo += 'E';
     if (it->currentPower >= (it->requiredPower / 2))
       buildingInfo += '*'; // char representing power
     else
       buildingInfo += '-'; // char representing needs power
-    buildingInfo += dataDivider;
+
+    // add pLine info:
+    buildingInfo += 'P';
+    if (it->type == BT_PLINE) {
+      curTile = map(it->xOrigin, it->yOrigin);
+      int type = _getTileSectionType(curTile, TDT_PLINETYPE);
+      buildingInfo += std::to_string(type);
+    }
+    else {
+      buildingInfo += std::to_string(-1); // not PL code
+    }
 
     // add type to string:
-    data = std::to_string(it->type);
-    buildingInfo += data;
+    buildingInfo += 'T';
+    buildingInfo += std::to_string(it->type);
+
+    // end of data:
     buildingInfo += elementDivider;
   }
 
@@ -2688,13 +2702,6 @@ double addBuilding(double type, double x, double y) {
       putInBuildingVector = false;
       v_roads.push_back(newBuilding);
     }
-    // Build Power Line:
-    else if (type == BT_PLINE) {
-      //putInBuildingVector = false;
-
-      // TODO: put in a power line vector
-      // special code for power lines
-    }
 
     // Build ZONE:
     if (type == BT_RZONE || type == BT_CZONE || type == BT_IZONE) {
@@ -3192,7 +3199,6 @@ double _testBuildingNeighbors() {
   return 0;
 }
 
-
 /* Test to see if sending power from power plants to connected 
 neighbors works */
 double _testPowerSurge() {
@@ -3309,7 +3315,6 @@ std::cout << "Buildings and their power:" << std::endl;
   return 0;
 }
 
-
 std::string _testDisplayRoadType(int type) {
 
   switch (type) {
@@ -3340,8 +3345,6 @@ std::string _testDisplayRoadType(int type) {
 
   return "error";
 }
-
-
 
 double _testRoadTypes() {
 
@@ -3416,7 +3419,32 @@ double _testRoadPrintString() {
   return 0;
 }
 
+double _testPLINETypes() {
 
+  std::cout << std::endl;
+
+  // add power lines:
+  addBuilding(BT_PLINE, 4, 5);
+  addBuilding(BT_PLINE, 5, 5);
+  addBuilding(BT_PLINE, 6, 5);
+
+  addBuilding(BT_PLINE, 5, 4);
+  addBuilding(BT_PLINE, 5, 6);
+
+  tile* curTile;
+  for (int j = 2; j < 7; j++) {
+    for (int p = 2; p < 7; p++) {
+      curTile = map(j, p);
+      std::cout << "x=" << curTile->x;
+      std::cout << ", y=" << curTile->y;
+      std::cout << "\tCode: ";
+      std::cout << curTile->pLineType;
+      std::cout << std::endl;
+    }
+  }
+
+  return 0;
+}
 
 
 // TODO TODO TODO

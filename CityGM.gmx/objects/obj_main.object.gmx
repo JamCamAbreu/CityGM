@@ -60,6 +60,7 @@ xArray[MAX_BUILDINGS] = 0;
 yArray[MAX_BUILDINGS] = 0;
 typeArray[MAX_BUILDINGS] = 0;
 powerArray[MAX_BUILDINGS] = 0;
+pLineValueArray[MAX_BUILDINGS] = 0;
 
 // ROADS:
 roadString = DLL_roadsToString();

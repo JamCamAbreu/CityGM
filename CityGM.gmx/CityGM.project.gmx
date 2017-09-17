@@ -290,7 +290,7 @@
     <constant name="CAMERA_ALARM_FAST">5</constant>
     <constant name="CAMERA_ALARM_SHIFT">3</constant>
     <constant name="VIEW_BOARDER">16</constant>
-    <constant name="MAX_BUILDINGS">999</constant>
+    <constant name="MAX_BUILDINGS">1600</constant>
     <constant name="MINIMAP_PIXEL">2</constant>
     <constant name="TIME_MONTH">60*5</constant>
     <constant name="TIME_MUL_PAUSE">0</constant>
