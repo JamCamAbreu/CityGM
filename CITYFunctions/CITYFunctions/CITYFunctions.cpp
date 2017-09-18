@@ -573,6 +573,41 @@ std::string _tileDataToString(int dataType) {
 }
 
 // set road/powerline tile data:
+/*
+  * bit setting pattern:
+                                     |3|
+                                  |4| X |1|
+                                     |2|
+  * tile codes:
+          ** ZERO PIECES ADJACENT **
+      0000            0       Horizontal Lane (default)
+
+          ** ONE PIECE ADJACENT **
+      0001            1       Horizontal Lane
+      0010            2       Vertical Lane
+      0100            4       Vertical Lane
+      1000            8       Horizontal Lane
+
+          ** TWO PIECES ADJACENT **
+      0110            6       Vertical Lane
+      1001            9       Horizontal Lane
+
+      1100            12      upLeft Corner
+      0101            5       upRight Corner
+      0011            3       downRight Corner
+      1010            10      downLeft Corner
+
+          ** THREE PIECES ADJACENT **
+      0111            7       rightT
+      1011            11      downT
+      1110            14      leftT
+      1101            13      upT
+
+          ** FOUR PIECES ADJACENT **
+      1111            15      Intersection
+
+*/
+
 void _setTilesSectionData(int xCoord, int yCoord, int tileDataType) {
 /*       |3|
       |4| X |1|
@@ -784,6 +819,11 @@ int _getBuildingDimension(int type) {
       break;
       }
 
+    case BT_POWERROAD: {
+      return 1;
+      break;
+    }
+
     default: {
       return -1;
       break;
@@ -796,6 +836,17 @@ int _getBuildingPollution(int type) {
 
   // use a switch and enum to return width:
   switch (type) {
+
+  case BT_ROAD: {
+    return 3;
+    break;
+  }
+
+  case BT_PLINE: {
+    return 1;
+    break;
+  }
+
     case BT_POLICE: {
       return 20;
       break;
@@ -840,6 +891,11 @@ int _getBuildingPollution(int type) {
       return 55;
       break;
       }
+
+    case BT_POWERROAD: {
+      return 3;
+      break;
+    }
 
     default: {
       return -1; // error code
@@ -967,6 +1023,11 @@ int _getBuildingPowerRequirements(int buildingType) {
       break;
       }
 
+    case BT_POWERROAD: {
+      return 1;
+      break;
+    }
+
     default: {
       return -1;
       break;
@@ -1001,11 +1062,12 @@ building* _newBuilding(int type, int x, int y) {
   _setBuildingNeighbors(newBuilding);
 
   // set correct type for road or power line:
-  if (type == BT_ROAD) {
+  if (type == BT_ROAD || type == BT_POWERROAD) {
     _setTilesSectionData(x, y, TDT_ROADTYPE);
     _updateNeighborSectionTypes(x, y, TDT_ROADTYPE);
   }
-  else if (type == BT_PLINE) {
+
+  if (type == BT_PLINE || type == BT_POWERROAD) {
     _setTilesSectionData(x, y, TDT_PLINETYPE);
     _updateNeighborSectionTypes(x, y, TDT_PLINETYPE);
   }
@@ -1049,13 +1111,6 @@ int _getBuildingVectorSize() {
 
 std::string _buildingInfoToString() {
 
-  /*  EXAMPLE STRING AFTER COMPLETION:
-  Psuedo:
-    myBuildingString = "x,y,type;x,y,type; ... etc"
-
-  Actual:
-    myBuildingString = "3,15,2;22,9,3; ... etc"
-  */
 
   std::string buildingInfo = "";
   std::string buffer = "";
@@ -1063,34 +1118,6 @@ std::string _buildingInfoToString() {
   char elementDivider = ';';
 
   std::string data = "";
-
-  /*  OLD WAY OF DOING IT
-  int size = _getBuildingVectorSize();
-  std::vector<building*>::iterator iter = v_buildings.begin();
-  // iterate through each building in the list:
-  for (int i = 0; i < size; i++) {
-
-    // add x to string:
-    data = std::to_string((*iter)->xOrigin);
-    buildingInfo += data;
-    buildingInfo += dataDivider;
-
-    // add y to string:
-    data = std::to_string((*iter)->yOrigin);
-    buildingInfo += data;
-    buildingInfo += dataDivider;
-
-    // add type to string:
-    data = std::to_string((*iter)->type);
-    buildingInfo += data;
-    buildingInfo += elementDivider;
-
-    // iterate:
-    if (i < size - 1)
-      iter++;
-  }
-
-  */
 
   tile* curTile;
   for (auto it : v_buildings) {
@@ -1116,7 +1143,7 @@ std::string _buildingInfoToString() {
 
     // add pLine info:
     buildingInfo += 'P';
-    if (it->type == BT_PLINE) {
+    if (it->type == BT_PLINE || it->type == BT_POWERROAD) {
       curTile = map(it->xOrigin, it->yOrigin);
       int type = _getTileSectionType(curTile, TDT_PLINETYPE);
       buildingInfo += std::to_string(type);
@@ -2688,10 +2715,32 @@ double addBuilding(double type, double x, double y) {
   int canBuild = _checkPlacement(typeInt, xInt, yInt);
 
   // also check if we have enough money:
-  if (canBuild)
-    canBuild = _checkMoney(price);
+  int hasMoney = _checkMoney(price);
 
-  if (canBuild) {
+  // logic for building powered roads (roads with a power line)
+  if (type == BT_PLINE) {
+    tile* curTile = map(xInt, yInt);
+
+    if (curTile->buildingOnTop != NULL &&
+        curTile->buildingOnTop->type == BT_ROAD &&
+        hasMoney) {
+      canBuild = false; // don't follow normal build procedures
+
+      // change type to powered road building:
+      removeBuilding(x, y);
+      curTile->tileType = TT_GRASS;
+
+      // reminder: road is still in road vector
+      building* newBuilding = _newBuilding(BT_POWERROAD, xInt, yInt);
+      newBuilding->relatedZone = NULL;
+      v_buildings.push_back(newBuilding);
+      deductFunds(price);
+      return 1;
+    } // end if
+
+  } // end if PLINE
+
+  if (canBuild && hasMoney) {
 
     // NO MATTER WHAT TYPE, make a building in it's location:
     // create a new building:
@@ -2752,6 +2801,8 @@ double addBuilding(double type, double x, double y) {
   return 0;
 }
 
+// TODO TODO: buildings of type BT_POWERROAD need to be removed from the
+// buildings vector BUT ALSO the road vector! 
 double removeBuilding(double xOrigin, double yOrigin) {
   // DESCRIPTION: searches for and removes a building from the 
   // building vector, but also resets tiles underneath as appropriate
@@ -2875,6 +2926,11 @@ double getBuildingPrice(double buildingType) {
       return BP_AIRPORT;
       break;
       }
+
+    case BT_POWERROAD: {
+      return BP_PLINE;
+      break;
+    }
 
     // error
     default: {
@@ -3446,62 +3502,40 @@ double _testPLINETypes() {
   return 0;
 }
 
+double _testPowerRoad() {
 
-// TODO TODO TODO
-/*
-  PLAN FOR IMPLEMENTING ROAD AND ELECTRICITY SPRITES
+  std::cout << std::endl;
+  std::cout << std::endl;
 
-  * tiles will have a unique piece of data for the special sprite
-  needed in drawing one of two things:
-    * a power line
-    * a road
+  // add vertical road first:
+  std::cout << std::to_string(addBuilding(BT_ROAD, 5, 4));
+  std::cout << std::endl;
+  std::cout << std::to_string(addBuilding(BT_ROAD, 5, 5));
+  std::cout << std::endl;
+  std::cout << std::to_string(addBuilding(BT_ROAD, 5, 6));
+  std::cout << std::endl;
 
-    * Something like: int pLineSprite and int roadSprite with default values
-    of enum 'noPLineSprite' and 'noRoadSprite'
+  // add power lines ACROSS that road:
+  std::cout << std::to_string(addBuilding(BT_PLINE, 4, 5));
+  std::cout << std::endl;
+  std::cout << std::to_string(addBuilding(BT_PLINE, 5, 5));
+  std::cout << std::endl;
+  std::cout << std::to_string(addBuilding(BT_PLINE, 6, 5));
+  std::cout << std::endl;
+  std::cout << std::endl;
 
-  * Each of those data types will be separate, and an error code will
-  be used by default for a tile NOT containing those buildings.
+  tile* curTile;
+  for (int j = 2; j < 7; j++) {
+    for (int p = 2; p < 7; p++) {
+      curTile = map(j, p);
+      std::cout << "x=" << curTile->x;
+      std::cout << ", y=" << curTile->y;
+      std::cout << "\tCode: ";
+      std::cout << curTile->pLineType;
+      std::cout << std::endl;
+    }
+  }
 
-  * The types will be calculated whenever a road/powerline is created and
-  whenever a road/powerline is destroyed. This is done within a function simply
-  by checking the tiles around it and setting bits for adjacent neighbors.
+  return 0;
 
-
-
-  * bit setting pattern:
-                                     |3|
-                                  |4| X |1|
-                                     |2|
-  * tile codes:
-          ** ZERO PIECES ADJACENT **
-      0000            0       Horizontal Lane (default)
-
-          ** ONE PIECE ADJACENT **
-      0001            1       Horizontal Lane
-      0010            2       Vertical Lane
-      0100            4       Vertical Lane
-      1000            8       Horizontal Lane
-
-          ** TWO PIECES ADJACENT **
-      0110            6       Vertical Lane
-      1001            9       Horizontal Lane
-
-      1100            12      upLeft Corner
-      0101            5       upRight Corner
-      0011            3       downRight Corner
-      1010            10      downLeft Corner
-
-          ** THREE PIECES ADJACENT **
-      0111            7       rightT
-      1011            11      downT
-      1110            14      leftT
-      1101            13      upT
-
-          ** FOUR PIECES ADJACENT **
-      1111            15      Intersection
-
-  * THEN in game maker, whenever it comes time to draw these sprites, game maker
-  will calculate (during the draw event) for each of the road/powerline tiles on
-  the screen which sprite to draw based on that integer (using an enum, and a game
-  maker function to return the correct sprite)
-*/
+}

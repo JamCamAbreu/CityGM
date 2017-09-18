@@ -31,7 +31,7 @@ for (i = 0; i < argument0; i++) {
         var sprIndex = 0; // default
         
         // SPECIAL DRAWING - POWER LINES
-        if (bT == BT_PLINE) {
+        if (bT == BT_PLINE || BT_POWERROAD) {
             var typeIndex = argument1.pLineValueArray[i];
             
             if (typeIndex != 0) {

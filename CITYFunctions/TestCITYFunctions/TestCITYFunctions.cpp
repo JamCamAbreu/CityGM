@@ -52,7 +52,7 @@ int main() {
   std::cout << std::endl;
 
 
-  _testPLINETypes();
+  _testPowerRoad();
 
   std::cout << std::endl;
   std::cout << std::endl;

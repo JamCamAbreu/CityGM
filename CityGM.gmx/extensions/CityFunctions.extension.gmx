@@ -944,6 +944,11 @@
           <value>11</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>BT_POWERROAD</name>
+          <value>15</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

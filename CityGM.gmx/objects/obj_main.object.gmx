@@ -459,8 +459,8 @@ DLL_mapEnd();
             <string>draw_set_colour(c_black);
 if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
-    scr_drawScreenBuildings(buildingElements, id);
     scr_drawRoads(roadElements, id);
+    scr_drawScreenBuildings(buildingElements, id);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
     
     if (toggleMiniMap){ // 'M' key to toggle

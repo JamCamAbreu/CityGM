@@ -72,8 +72,9 @@
     </sprites>
     <sprites name="sectionBasedSprites">
       <sprite>sprites\spr_powerLine</sprite>
+      <sprite>sprites\spr_powerRoad</sprite>
       <sprite>sprites\spr_road</sprite>
-      <sprite>sprites\spr_roadPower</sprite>
+      <sprite>sprites\spr_powerRoadBK</sprite>
     </sprites>
     <sprites name="Zones">
       <sprite>sprites\spr_zoneIPlacement</sprite>

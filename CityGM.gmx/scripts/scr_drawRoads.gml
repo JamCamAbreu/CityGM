@@ -24,6 +24,7 @@ for (i = 0; i < argument0; i++) {
         drawRoad = false;
 
     if (drawRoad) {
+    
         // When ready, add this to the bT to get the offset sprite index for the correct season
         var seasonIndex = argument1.gameSeason;
         var imageIndex;

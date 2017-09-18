@@ -88,7 +88,8 @@ enum {
   BT_NUCLEAR,
   BT_WATERTOWER, // 12
   BT_ARCADE,
-  BT_AIRPORT
+  BT_AIRPORT,
+  BT_POWERROAD
 }buildingTypes;
 
 enum {
@@ -718,6 +719,6 @@ GMEXPORT double _testPowerSurge();
 GMEXPORT double _testRoadTypes();
 GMEXPORT double _testRoadPrintString();
 GMEXPORT double _testPLINETypes();
-
+GMEXPORT double _testPowerRoad();
 #endif
 

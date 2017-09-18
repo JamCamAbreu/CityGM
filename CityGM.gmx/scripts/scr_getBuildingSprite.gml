@@ -63,6 +63,10 @@ switch (argument0) {
         return spr_airport;
         break;
         
+    case BT_POWERROAD:
+        return spr_powerRoad;
+        break;
+        
     default:
         return spr_DEBUG;
         break;

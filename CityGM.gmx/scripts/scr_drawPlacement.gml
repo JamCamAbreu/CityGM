@@ -4,7 +4,7 @@ var sprite = scr_getBuildingSprite(argument0.selectedBuilding);
 var imageIndex;
 
 // special rules for road sprite:
-if (sprite == spr_road || sprite == spr_powerLine)
+if (sprite == spr_road || sprite == spr_powerLine || sprite == spr_powerRoad)
     imageIndex = 1;
 else
     imageIndex = argument0.gameSeason;
