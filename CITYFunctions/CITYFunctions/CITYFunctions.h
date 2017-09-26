@@ -339,7 +339,6 @@ enum {
 
 
 typedef struct zoneBuilding {
-  
   // general info
   int squarePos; // uses squarePosition enum
   int level;  // starts at 0
@@ -370,6 +369,8 @@ typedef struct zone {
   int totalPopCap; // capacity for people
 
   int totalPollution;
+
+  building* relatedZoneBuilding;
 
   // there are always 9 zone tiles inside:
   std::vector<zoneBuilding*> zoneBuildings;
@@ -427,7 +428,6 @@ void _setCityType(int type);
 int _checkNewCityType();
 int _updatePopulation();
 
-double _getPowerUsageRatio(int capacity, int used);
 
 void _setTotalPowerUsed(int amount);
 void _setTotalPowerAvailable(int amount);
@@ -550,6 +550,8 @@ int _getPopulation(int zoneType);
 
 void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
+int _zoneBuildingGetRequiredPower(zoneBuilding* curZB);
+
 int zoneGetTotalRequiredPower(zone* zoneID);
 
 
@@ -559,6 +561,7 @@ int zoneGetTotalRequiredPower(zone* zoneID);
 
 
 // POWER / ELECTRICITY Functions:
+double _getPowerUsageRatio(int capacity, int used);
 
 int _getPowerPlantPower(int type);
 
@@ -720,5 +723,6 @@ GMEXPORT double _testRoadTypes();
 GMEXPORT double _testRoadPrintString();
 GMEXPORT double _testPLINETypes();
 GMEXPORT double _testPowerRoad();
+GMEXPORT double _testZoneGrowthPowerless();
 #endif
 

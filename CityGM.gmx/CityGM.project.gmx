@@ -81,6 +81,7 @@
       <sprite>sprites\spr_zoneCPlacement</sprite>
       <sprite>sprites\spr_zoneRPlacement</sprite>
       <sprite>sprites\spr_zoneR</sprite>
+      <sprite>sprites\spr_zoneRProg</sprite>
       <sprite>sprites\spr_zoneC</sprite>
       <sprite>sprites\spr_zoneI</sprite>
       <sprite>sprites\spr_zoneError</sprite>

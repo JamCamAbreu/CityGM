@@ -52,7 +52,7 @@ int main() {
   std::cout << std::endl;
 
 
-  _testPowerRoad();
+  _testZoneGrowthPowerless();
 
   std::cout << std::endl;
   std::cout << std::endl;

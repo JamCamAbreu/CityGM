@@ -69,20 +69,6 @@ void _initGameData() {
 
 
 
-double _getPowerUsageRatio(int capacity, int used) {
-
-  // at least a 1 in denominator:
-  if (capacity <= 0)
-    capacity = 1;
-
-  // Don't know why, but I need to store it first:
-  double returnVal = (double)used / capacity;
-  return returnVal;
-}
-
-
-
-
 // GAME DATA functions:
 void _setCityType(int type) {
   curGameData.cityType = type;
@@ -234,7 +220,7 @@ std::string _tileTypeToString() {
     for (int c = 0; c < MAP_DIMENSION; c++) {
 
       switch (iter->tileType) {
-        case TT_GRASS: 
+        case TT_GRASS:
           typeData += CHAR_GRASS;
           break;
 
@@ -361,7 +347,7 @@ void _zeroTileData(int dataType) {
       else
         _setTileData(c, r, dataType, 0);
 
-      // DON'T SET DEFAULTS FOR TILE SECTION TYPE! 
+      // DON'T SET DEFAULTS FOR TILE SECTION TYPE!
       // (because this is used by pollution and land value
       //  reseting, which is done often. );
     }
@@ -389,14 +375,14 @@ void _setTileData(int xCoord, int yCoord, int dataType, int amount) {
 
   switch (dataType) {
 
-    case TDT_ALL: { 
+    case TDT_ALL: {
       curTile->pollution = amount;
       curTile->landValue = amount;
       curTile->fireDanger = amount;
       break;
     }
 
-    case TDT_POLLUTION: { 
+    case TDT_POLLUTION: {
       curTile->pollution = amount;
       break;
     }
@@ -426,7 +412,7 @@ void _addTileData(int xCoord, int yCoord, int dataType, int amount) {
 
   switch (dataType) {
 
-    case TDT_POLLUTION: { 
+    case TDT_POLLUTION: {
       curTile->pollution += amount;
       break;
     }
@@ -483,8 +469,8 @@ void _addAllBuildingData(int dataType) {
   int dataRadius;
   int dataValue;
 
-  // loop through buildings in vector and add their pollution to the tiles around 
-  // them in a radius. 
+  // loop through buildings in vector and add their pollution to the tiles around
+  // them in a radius.
   for (int i = 0; i < size; i++) {
     curBuilding = (v_buildings[i]);
     dataValue = _getBuildingData(curBuilding, dataType);
@@ -498,13 +484,13 @@ void _addAllBuildingData(int dataType) {
        dataRadius, dataType, dataValue);
     }
   } // end for
-  
+
 
 }
 
 void _addWaterTileValue(int dataType, int radius, int amount) {
 
-  // iterate through all tiles, adding data in a largish 
+  // iterate through all tiles, adding data in a largish
   // radius if the tile type is of water type.
   tile* curTile;
 
@@ -518,7 +504,7 @@ void _addWaterTileValue(int dataType, int radius, int amount) {
 
 
   // iterate through tiles again, reseting the water tiles
-  // themselves to having a -1 value for map printing. 
+  // themselves to having a -1 value for map printing.
   for (int r = 0; r < MAP_DIMENSION; r++) {
     for (int c = 0; c < MAP_DIMENSION; c++) {
       curTile = map(c, r);
@@ -544,7 +530,7 @@ void _subtractLandValuePollution() {
         _addTileData(c, r, TDT_LANDVALUE, (-pol));
 
       } // end if != TT_WATER
-    
+
     } // outer
   } // inner
 
@@ -553,7 +539,7 @@ void _subtractLandValuePollution() {
 
 // String:
 std::string _tileDataToString(int dataType) {
-  
+
   std::string dataString = "";
   tile* iter;
   int value;
@@ -931,7 +917,7 @@ int _getBuildingData(building* buildingID, int dataType) {
 
 void _setBuildingTiles(building* buildingID, int x, int y, int dimension) {
 
-  // push all tiles underneath the building starting from top 
+  // push all tiles underneath the building starting from top
   // left corner:
   tile* containedTile;
   for (int i = 0; i < dimension; i++) {
@@ -1232,22 +1218,6 @@ void removeMyselfFromNeighbors(building* buildingID) {
   }
 }
 
-int getRequiredPowerAllTypes(building* buildingID) {
-  int powerNeeded;
-  // Check for zone type (-2 code), find the required power needed:
-  if (buildingID->requiredPower == -2 ) {
-    // get required power from the related zone:
-    if (buildingID->relatedZone != NULL)
-      powerNeeded = zoneGetTotalRequiredPower(buildingID->relatedZone) - buildingID->currentPower;
-  }
-  else { // NON ZONE TYPE:
-    powerNeeded = (buildingID->requiredPower - buildingID->currentPower);
-  }
-
-  return powerNeeded;
-}
-
-
 
 
 
@@ -1289,11 +1259,6 @@ int _getRoadsVectorSize() { return v_roads.size(); }
 
 
 // Zone functions:
-
-// TODO: Make a building (which is the size of the zone) that acts like 
-// a large building to other objects that want to interact with the zone
-// note: is this the best solution?
-
 
 // General:
 int _zoneEnumToTileTypeEnum(int zoneType) {
@@ -1530,6 +1495,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    newZone->relatedZoneBuilding = NULL;
     break; }
 
   case Z_COM: {
@@ -1540,6 +1506,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    newZone->relatedZoneBuilding = NULL;
     break; }
 
   case Z_IND: {
@@ -1550,6 +1517,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    newZone->relatedZoneBuilding = NULL;
     break; }
 
   default: {
@@ -1560,6 +1528,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
     newZone->totalPopCur = 0;
     newZone->totalPollution = 0;
     _initZoneBuildings(newZone);
+    newZone->relatedZoneBuilding = NULL;
 
     break; }
   } // end switch
@@ -1571,7 +1540,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
 // Destroy (free from memory)
 void _cleanUpAllZones() {
 
-  // NEED TO UPDATE TILES UNDERNEATH! 
+  // NEED TO UPDATE TILES UNDERNEATH!
 
 
   // Residential:
@@ -1716,9 +1685,9 @@ std::string _zoneBuildingToString(int zoneType) {
 
       // add divider between buildings:
       zoneBuildingInfo += buildingDivider;
-      
+
       if (debug) {
-        // debug: 
+        // debug:
         std::cout << "ZB. X=" << CURxCordinate << ", Y=" << CURyCordinate;
         std::cout << ", ZT=" << CURZoneType << ", LVL=" << CURlevel;
         std::cout << ", Tvar=" << CURtypeVar << "\n";
@@ -1781,6 +1750,28 @@ void _growZones(int zoneType) {
       if (chance <= highestChance) {
 
         // access zoneBuildings in zone:
+        for (auto it : (*iter)->zoneBuildings) {
+          int chanceB = _getIntRange(1, 10);
+          int highestChanceB = 4;
+          if (chanceB <= highestChanceB) {
+
+            int growth = _calcPopGrowth(it);
+            it->popCur += growth;
+            if (it->popCur < 0)
+              it->popCur = 0;
+            // update level:
+            _updateZoneBuildingLevel(it);
+
+          } // end if chance (buildings within zone)
+
+
+
+        } // end auto : it
+
+
+
+
+        /* OLD MESSY WAY
         std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
         std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
         for (bIter; bIter != bIterEnd; bIter++) {
@@ -1800,13 +1791,13 @@ void _growZones(int zoneType) {
           } // end if chance (buildings within zone)
 
         } // end inner for (each building in zone)
+          */
+
 
       iter++;
-
       } // end if chance (zones)
     } // end while
   } // end if ready
-
 
 }
 
@@ -1814,37 +1805,60 @@ int _calcPopGrowth(zoneBuilding* curZ) {
 
   int level = curZ->level;
   int landValue = curZ->tileUnder->landValue;
+  bool isPowered = true;
+
 
   // pop growth based on level, some randomness
   double popGrowth = 10*(level + 1) + ((level + 1)*(_getIntRange(-(level + 4), level + 4)));
 
-  // Some land value impact:
-  int lv = 100 - landValue;
-  double lvImpact = (double)lv / 50.0;
-  if (lvImpact <= 0)
-    lvImpact = 1;
-  popGrowth = popGrowth / lvImpact;
+  // check for power, (lack of power haults/negates growth):
+  building* curZone = curZ->parentZone->relatedZoneBuilding;
+  if (curZone != NULL) {
+    int curPower = curZone->currentPower;
+    if (curPower > 0 && (curPower / 9) <= 0) {
+      curPower = 1;
+    }
+    else
+      curPower /= 9;
+
+    int reqPower = _zoneBuildingGetRequiredPower(curZ) / 2;
+
+    if ((curPower < reqPower) || (curPower <= 0)) {
+      if (popGrowth > 0)
+        popGrowth *= -1;
+      isPowered = false;
+    }
+  }
+
+  if (isPowered) {
+    // Some land value impact:
+    int lv = 100 - landValue;
+    double lvImpact = (double)lv / 50.0;
+    if (lvImpact <= 0)
+      lvImpact = 1;
+    popGrowth = popGrowth / lvImpact;
 
 
-  // punish for low land value, reward for high:
-  double lvLuck = (landValue - 50) / 20;
-  double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
-  if (luck == 0)
-    luck = 1;
-  popGrowth = popGrowth*luck;
+    // punish for low land value, reward for high:
+    double lvLuck = (landValue - 50) / 20;
+    double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
+    if (luck == 0)
+      luck = 1;
+    popGrowth = popGrowth*luck;
 
-  // Population can get crazy with high land values, so cap it:
-  //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-  double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/5);
-  if (popGrowth > popGrowthMax)
-    popGrowth = popGrowthMax;
+    // Population can get crazy with high land values, so cap it:
+    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
+    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/5);
+    if (popGrowth > popGrowthMax)
+      popGrowth = popGrowthMax;
+  }
 
   return (int)popGrowth;
 }
 
 int _getPopulation(int zoneType) {
 
-  // Adds up the population of ALL zoneBuildings for a zone type. 
+  // Adds up the population of ALL zoneBuildings for a zone type.
   int count = 0;
 
   int ready = false;
@@ -1886,7 +1900,6 @@ int _getPopulation(int zoneType) {
   return count;
 }
 
-
 void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
   // make sure popCap is correct first:
@@ -1908,16 +1921,19 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
 }
 
-
 int zoneGetTotalRequiredPower(zone* zoneID) {
 
   int sumPowerConsumption = 2;
   for (int i = 0; i < 9; i++) {
-    int level = zoneID->zoneBuildings[i]->level;
-    sumPowerConsumption += (level + 1) * 1; // TODO: change if needed
+    sumPowerConsumption += _zoneBuildingGetRequiredPower(zoneID->zoneBuildings[i]);
   }
 
   return sumPowerConsumption;
+}
+
+int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
+    int level = curZB->level;
+    return (level + 1) * 1; // TODO: change if needed
 }
 
 
@@ -1931,9 +1947,33 @@ int zoneGetTotalRequiredPower(zone* zoneID) {
 
 
 
-
-
 // POWER / ELECTRICITY Functions:
+
+int getRequiredPowerAllTypes(building* buildingID) {
+  int powerNeeded;
+  // Check for zone type (-2 code), find the required power needed:
+  if (buildingID->requiredPower == -2 ) {
+    // get required power from the related zone:
+    if (buildingID->relatedZone != NULL)
+      powerNeeded = zoneGetTotalRequiredPower(buildingID->relatedZone) - buildingID->currentPower;
+  }
+  else { // NON ZONE TYPE:
+    powerNeeded = (buildingID->requiredPower - buildingID->currentPower);
+  }
+
+  return powerNeeded;
+}
+
+double _getPowerUsageRatio(int capacity, int used) {
+
+  // at least a 1 in denominator:
+  if (capacity <= 0)
+    capacity = 1;
+
+  // Don't know why, but I need to store it first:
+  double returnVal = (double)used / capacity;
+  return returnVal;
+}
 
 int _getPowerPlantPower(int type) {
 
@@ -2428,7 +2468,7 @@ double incrementGameMonth() {
     curGameData.year++;
     curGameData.month = M_JAN;
   }
-  else 
+  else
     curGameData.month++;
 
   return 0;
@@ -2558,7 +2598,7 @@ double setTileType(double xCoord, double yCoord, double type) {
 // export MAP tile types to string for Game Maker to process quickly:
 char* tileTypeToString() {
 
-  std::string getString = _tileTypeToString();  
+  std::string getString = _tileTypeToString();
 
   char* cstr = new char[getString.length() + 1];
   std::strcpy(cstr, getString.c_str());
@@ -2761,6 +2801,9 @@ double addBuilding(double type, double x, double y) {
       // ADD ZONE TO BUILDING THAT WAS ALSO CREATED:
       newBuilding->relatedZone = newZone;
 
+      // connect the zone to the building also:
+      newZone->relatedZoneBuilding = newBuilding;
+
       if (type == BT_RZONE) {
         Rzones.push_front(newZone);
       }
@@ -2802,9 +2845,9 @@ double addBuilding(double type, double x, double y) {
 }
 
 // TODO TODO: buildings of type BT_POWERROAD need to be removed from the
-// buildings vector BUT ALSO the road vector! 
+// buildings vector BUT ALSO the road vector!
 double removeBuilding(double xOrigin, double yOrigin) {
-  // DESCRIPTION: searches for and removes a building from the 
+  // DESCRIPTION: searches for and removes a building from the
   // building vector, but also resets tiles underneath as appropriate
   int found = 0;
   int location;
@@ -2996,7 +3039,7 @@ double getPowerUsageRatio() {
 
 // TESTING/DEBUGGING FUNCTIONS ------------------------------------
 
-/* Prints the TYPES OF TILES of the map, including trees, 
+/* Prints the TYPES OF TILES of the map, including trees,
    buildings, zones, etc... */
 void _printMapTypes() {
 
@@ -3006,10 +3049,10 @@ void _printMapTypes() {
 
   for (int r = 0; r < MAP_DIMENSION; r++) {
     for (int c = 0; c < MAP_DIMENSION; c++) {
-      
+
       switch (iter->tileType) {
 
-        case TT_GRASS: 
+        case TT_GRASS:
           std::cout << CHAR_GRASS;
           break;
 
@@ -3255,7 +3298,7 @@ double _testBuildingNeighbors() {
   return 0;
 }
 
-/* Test to see if sending power from power plants to connected 
+/* Test to see if sending power from power plants to connected
 neighbors works */
 double _testPowerSurge() {
 
@@ -3538,4 +3581,64 @@ double _testPowerRoad() {
 
   return 0;
 
+}
+
+
+void _HELPER_printZoneInfo() {
+
+  int index = 1;
+  for (auto it : v_buildings) {
+
+    std::cout << "Rzone " << index << std::endl;
+    if (it->relatedZone != NULL) {
+      std::cout << "\tcurPower=";
+      if (it->relatedZone->relatedZoneBuilding != NULL) {
+        building* curBuilding = it->relatedZone->relatedZoneBuilding;
+        std::cout << curBuilding->currentPower;
+        std::cout << ", requiredPower=";
+        std::cout << curBuilding->requiredPower;
+        std::cout << ", zRP=";
+        std::cout << zoneGetTotalRequiredPower(it->relatedZone);
+      }
+      else {
+        std::cout << "NULL";
+      }
+
+      for (auto it2 : it->relatedZone->zoneBuildings) {
+        std::cout << std::endl;
+        std::cout << "\t\tzLevel=";
+        std::cout << it2->level;
+      }
+
+
+    }
+
+    index++;
+    std::cout << std::endl;
+    std::cout << std::endl;
+  }
+
+  std::cout << "---------------------------" << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+}
+
+double _testZoneGrowthPowerless() {
+
+  std::cout << std::endl;
+  addBuilding(BT_RZONE, 5, 5);
+  addBuilding(BT_RZONE, 10, 10);
+
+  _HELPER_printZoneInfo();
+
+
+  _growZones(Z_RES);
+
+  _HELPER_printZoneInfo();
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+  return 0;
 }
