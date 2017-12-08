@@ -2,8 +2,6 @@
 #pragma once
 #include "CITYFunctions.h"
 
-// (for DEBUGGING):
-#include <iostream>
 
 // GLOBAL VARIABLES AND POINTERS
 gameData curGameData;
@@ -64,6 +62,19 @@ void _initGameData() {
 
   curGameData.totalPowerUsed = 0;
   curGameData.totalPowerAvailable = 0;
+
+  curGameData.taxRes = 7;
+  curGameData.taxCom = 7;
+  curGameData.taxInd = 7;
+
+  // set the revenue rates:
+  int prev = 0;
+  int newAmount = 0;
+  for (int i = 0; i < MAX_ZONE_LEVEL + 1; i++) {
+    newAmount = (prev + (i + 1)*2);
+    curGameData.revenueRates[i] = newAmount;
+    prev = newAmount;
+  }
 }
 
 
@@ -188,8 +199,6 @@ void _setTotalPowerUsed(int amount) {
 void _setTotalPowerAvailable(int amount) {
   curGameData.totalPowerAvailable = amount;
 }
-
-
 
 
 
@@ -1937,6 +1946,66 @@ int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
 }
 
 
+// TODO FINISH!!
+int _getTaxRevenue(int zoneType) {
+
+
+  int revenue = 0;
+  int taxRate = 0;
+  int zoneRate = 0;
+
+  int ready = false;
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+  // first iterate through all zones in given data type:
+  if (zoneType == Z_RES) {
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+    taxRate = curGameData.taxRes;
+    zoneRate = REV_RES;
+    ready = true;
+  }
+  else if (zoneType == Z_COM) {
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+    taxRate = curGameData.taxCom;
+    zoneRate = REV_COM;
+    ready = true;
+  }
+  else if (zoneType == Z_IND) {
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+    taxRate = curGameData.taxInd;
+    zoneRate = REV_IND;
+    ready = true;
+  }
+
+
+  if (ready) {
+    while (iter != endZoneList) {
+
+      // access zoneBuildings in zone:
+      std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
+      std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+
+      // EACH ZONE BUILDING
+      int curPop;
+      int revRate;
+      for (bIter; bIter != bIterEnd; bIter++) {
+        curPop = (*bIter)->popCur;
+        revRate = curGameData.revenueRates[(*bIter)->level];
+        revenue += (curPop * zoneRate * revRate);
+
+      } // end inner for (each building in zone)
+    iter++; // iterate to next zone building
+    } // end while
+  } // end if ready
+
+  return revenue;
+}
+
+
+
 
 
 
@@ -2435,7 +2504,7 @@ double getGameMoney() { return curGameData.money; }
 double getPopulation() { return curGameData.population; }
 double getCityType() { return curGameData.cityType; }
 
-// todo: add taxes in december
+// TODO: add taxes in december
 double incrementGameMonth() {
   // update season from Winter to Spring
   if (curGameData.month == M_FEB) {
@@ -2501,6 +2570,12 @@ double deductFunds(double amount) {
   return 0;
 }
 
+double addFunds(double amount) {
+  int amountInt = (int)amount;
+  curGameData.money += amountInt;
+  return 0;
+}
+
 double setPopulation(double pop) {
   int population = (int)pop;
   int newCityType = 0; // false until proven true
@@ -2548,10 +2623,6 @@ double seedMap(double type, double seedAmount) {
     randomY = _getIntRange(0, MAP_DIMENSION);
 
     setTileType(randomX, randomY, typeInt);
-
-    // DEBUG
-    //getchar();
-    //_printMapTypes();
   }
 
   return 0;
@@ -2565,7 +2636,6 @@ double growSeeds(double type, double amount) {
   for (int i = 0; i < amountInt; i++) {
     _growSeeds(typeInt);
 
-    // DEBUG
     //getchar();
     //_printMapTypes();
   }
@@ -2735,7 +2805,14 @@ double cleanUpAllZones() {
   return 0;
 }
 
+double collectTax(double zoneType) {
+  int type = (int)zoneType;
 
+  int amount = _getTaxRevenue(type);
+  addFunds(amount);
+
+  return amount;
+}
 
 
 
@@ -3642,3 +3719,31 @@ double _testZoneGrowthPowerless() {
   std::cout << std::endl;
   return 0;
 }
+
+double _testCollectRevenue() {
+
+  int moneyBefore = getGameMoney();
+
+  std::cout << "Residential tax collected: ";
+  std::cout << collectTax(Z_RES) << std::endl;;
+  std::cout << "Commercial tax collected: ";
+  std::cout << collectTax(Z_COM) << std::endl;;
+  std::cout << "Industrial tax collected: ";
+  std::cout << collectTax(Z_IND) << std::endl;;
+  int moneyAfter = getGameMoney();
+  std::cout << "MONEY COLLECTED: " << moneyAfter - moneyBefore << std::endl;
+  std::cout << std::endl;
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+

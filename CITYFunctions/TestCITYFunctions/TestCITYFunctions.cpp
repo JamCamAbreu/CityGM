@@ -52,13 +52,22 @@ int main() {
   std::cout << std::endl;
 
 
-  _testZoneGrowthPowerless();
 
-  std::cout << std::endl;
-  std::cout << std::endl;
-  std::cout << "string=" << buildingsToString();
-  std::cout << std::endl;
-  std::cout << std::endl;
+  addBuilding(BT_RZONE, 10, 10);
+  addBuilding(BT_CZONE, 13, 10);
+  addBuilding(BT_IZONE, 16, 10);
+  addBuilding(BT_NUCLEAR, 19, 10);
+  sendElectricity();
+
+  _printMapTypes();
+
+  for (int i = 0; i < 7; i++) {
+    std::cout << "[Zones Growth: " << i << "]" << std::endl;
+    growZone(Z_RES);
+    growZone(Z_COM);
+    growZone(Z_IND);
+    _testCollectRevenue();
+  }
 
 
   // TEST COMPLETE:

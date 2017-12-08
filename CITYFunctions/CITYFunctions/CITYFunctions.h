@@ -40,6 +40,8 @@ const char CHAR_IZONE = 'i';
 
 const int TILE_SECTION_DEFAULT = -1;
 
+const int MAX_ZONE_LEVEL = 8;
+
 
 
 
@@ -195,6 +197,12 @@ enum {
   TS_INT
 }tileSectionType;
 
+// Multiplier rate for zone type
+enum {
+  REV_RES = 2,
+  REV_IND = 4,
+  REV_COM = 7
+}revenueZones;
 
 
 // STRUCT DEFINITIONS ----------------------
@@ -220,6 +228,12 @@ typedef struct gameData {
 
   int totalPowerAvailable;
   int totalPowerUsed;
+
+  int taxRes;
+  int taxCom;
+  int taxInd;
+  int revenueRates[MAX_ZONE_LEVEL + 1];
+
 }gameData;
 
 
@@ -554,6 +568,7 @@ int _zoneBuildingGetRequiredPower(zoneBuilding* curZB);
 
 int zoneGetTotalRequiredPower(zone* zoneID);
 
+int _getTaxRevenue(int zoneType);
 
 
 
@@ -653,6 +668,7 @@ GMEXPORT double setGameSpeed(double speed);
 GMEXPORT double getGameMoney();
 GMEXPORT double checkCanSpend(double cost);
 GMEXPORT double deductFunds(double cost);
+GMEXPORT double addFunds(double cost);
 GMEXPORT double setPopulation(double pop);
 
 GMEXPORT double updatePopulationZones();
@@ -695,6 +711,7 @@ GMEXPORT char* zoneBuildingsToString(double dataType);
 GMEXPORT double growZone(double zoneType);
 GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();
+GMEXPORT double collectTax(double zoneType);
 
 
 // POWER & ELECTRICITY FUNCTIONS ----------------
@@ -724,5 +741,6 @@ GMEXPORT double _testRoadPrintString();
 GMEXPORT double _testPLINETypes();
 GMEXPORT double _testPowerRoad();
 GMEXPORT double _testZoneGrowthPowerless();
+GMEXPORT double _testCollectRevenue();
 #endif
 
