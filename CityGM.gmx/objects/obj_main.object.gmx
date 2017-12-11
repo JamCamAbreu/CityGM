@@ -866,6 +866,35 @@ else
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="57">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+
+var moneyRes = DLL_collectTax(Z_RES);
+var moneyCom = DLL_collectTax(Z_COM);
+var moneyInd = DLL_collectTax(Z_IND);
+
+show_message("[TAXES COLLECTED]#RES: " + string(moneyRes) + "#COM: " + string(moneyCom) + "#IND: " + string(moneyInd));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="52">
       <action>
         <libid>1</libid>

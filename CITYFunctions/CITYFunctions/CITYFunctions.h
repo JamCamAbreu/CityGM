@@ -197,6 +197,15 @@ enum {
   TS_INT
 }tileSectionType;
 
+enum {
+  BDT_TYPE = 0,
+  BDT_SIZE,
+  BDT_CURPOWER,
+  BDT_REQPOWER,
+  BDT_POLLUTION,
+  BDT_LANDVALUEBOOST
+}buildingDataType;
+
 // Multiplier rate for zone type
 enum {
   REV_RES = 2,
@@ -251,7 +260,6 @@ typedef struct tile {
   int roadType;   // -1 for none (default)
   building* buildingOnTop;
 }tile;
-
 
 
 typedef struct building {
@@ -492,6 +500,16 @@ void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType);
 
 
 // BUILDING FUNCTIONS ----------------------
+
+building* _getBuildingWithCoord(int x, int y);
+
+int _getBuildingSize(building* curBuilding);
+int _getBuildingCurPower(building* curBuilding);
+int _getBuildingRequiredPower(building* curBuilding);
+int _getBuildingPollution(building* curBuilding);
+int _getBuildingValueBoost(building* curBuilding);
+
+
 int _getBuildingDimension(int type);
 
 int _getBuildingPollution(int type);
@@ -693,6 +711,7 @@ GMEXPORT double getTileSectionType(double x, double y, int tileDataType);
 
 
 // Building Functions
+GMEXPORT char* getBuildingInfo(double infoType, double x, double y);
 GMEXPORT double addBuilding(double type, double x, double y);
 GMEXPORT double removeBuilding(double xOrigin, double yOrigin);
 GMEXPORT double getBuildingVectorSize();
@@ -741,6 +760,7 @@ GMEXPORT double _testRoadPrintString();
 GMEXPORT double _testPLINETypes();
 GMEXPORT double _testPowerRoad();
 GMEXPORT double _testZoneGrowthPowerless();
+GMEXPORT double _testPrintZoneLevels(int zoneType);
 GMEXPORT double _testCollectRevenue();
 #endif
 

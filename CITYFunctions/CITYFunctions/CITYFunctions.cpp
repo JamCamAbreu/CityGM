@@ -2,6 +2,11 @@
 #pragma once
 #include "CITYFunctions.h"
 
+// TODO : The strings that I am passing to game maker (all of the char*
+// strings I mean: Are they a memory leak? If I need to, I can pass all
+// of those pointers to a vector of char* (just before sending it to GM)
+// Every once and a while, I can perform a 'clean' by iterating
+// through the vector of char* and deleting them.
 
 // GLOBAL VARIABLES AND POINTERS
 gameData curGameData;
@@ -286,8 +291,6 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
   } // outer for loop
 
 }
-
-
 
 
 
@@ -734,7 +737,43 @@ void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType) {
 
 
 
+
+
 // Building Functions------------
+building* _getBuildingWithCoord(int x, int y) {
+  tile* curTile = map(x, y);
+  return curTile->buildingOnTop;
+}
+
+std::string _getBuildingTypeName(int BT) {
+  std::string returnString;
+  switch (BT) {
+    case BT_TREE: { returnString += "Forest"; break; }
+    case BT_ROAD: { returnString += "Road"; break; }
+    case BT_PLINE: { returnString += "Power Line"; break; }
+    case BT_RZONE: { returnString += "Residential Zone"; break; }
+    case BT_CZONE: { returnString += "Commercial Zone"; break; }
+    case BT_IZONE: { returnString += "Industrial Zone"; break; }
+    case BT_POLICE: { returnString += "Police Station"; break; }
+    case BT_FIRE: { returnString += "Fire Station"; break; }
+    case BT_SCHOOL: { returnString += "School"; break; }
+    case BT_HOSPITAL: { returnString += "Hospital"; break; }
+    case BT_COAL: { returnString += "Coal Power Plant"; break; }
+    case BT_NUCLEAR: { returnString += "Nuclear Power Plant"; break; }
+    case BT_WATERTOWER: { returnString += "Water Tower"; break; }
+    case BT_ARCADE: { returnString += "Arcade"; break; }
+    case BT_AIRPORT: { returnString += "Airport"; break; }
+    case BT_POWERROAD: { returnString += "Powered Road"; break; }
+    default: { returnString += "typeError"; break; }
+  }
+  return returnString;
+}
+int _getBuildingSize(building* curBuilding) { return (curBuilding->buildingDimension); }
+int _getBuildingCurPower(building* curBuilding) { return curBuilding->currentPower; }
+int _getBuildingRequiredPower(building* curBuilding) { return curBuilding->requiredPower; }
+int _getBuildingPollution(building* curBuilding) { return curBuilding->pollution; }
+int _getBuildingValueBoost(building* curBuilding) { return curBuilding->landValueBoost; }
+
 int _getBuildingDimension(int type) {
 
   // use a switch and enum to return width:
@@ -1034,6 +1073,7 @@ int _getBuildingPowerRequirements(int buildingType) {
 
 }
 
+// CREATE A NEW BUILDING
 building* _newBuilding(int type, int x, int y) {
 
   building* newBuilding = new building;
@@ -1046,6 +1086,7 @@ building* _newBuilding(int type, int x, int y) {
   newBuilding->currentPower = 0;
   newBuilding->requiredPower = _getBuildingPowerRequirements(type);
   newBuilding->pollution = _getBuildingPollution(type);
+  newBuilding->landValueBoost = 0;
 
   // get size in tiles:
   int dim = _getBuildingDimension(type);
@@ -1226,6 +1267,8 @@ void removeMyselfFromNeighbors(building* buildingID) {
       it->neighbors.begin(), it->neighbors.end(), buildingID), it->neighbors.end());
   }
 }
+
+
 
 
 
@@ -1945,8 +1988,7 @@ int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
     return (level + 1) * 1; // TODO: change if needed
 }
 
-
-// TODO FINISH!!
+// Return the amount of revenue to be added for a certain zone type:
 int _getTaxRevenue(int zoneType) {
 
 
@@ -1982,19 +2024,22 @@ int _getTaxRevenue(int zoneType) {
 
 
   if (ready) {
+
+    // Each ZONE of given type:
     while (iter != endZoneList) {
 
-      // access zoneBuildings in zone:
       std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
       std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
 
-      // EACH ZONE BUILDING
+      // each zone BUILDING inside zone:
       int curPop;
       int revRate;
       for (bIter; bIter != bIterEnd; bIter++) {
         curPop = (*bIter)->popCur;
         revRate = curGameData.revenueRates[(*bIter)->level];
-        revenue += (curPop * zoneRate * revRate);
+
+        // HERE is the current forumla:
+        revenue += (curPop * zoneRate * revRate * taxRate);
 
       } // end inner for (each building in zone)
     iter++; // iterate to next zone building
@@ -2819,6 +2864,67 @@ double collectTax(double zoneType) {
 
 
 // BUILDING FUNCTIONS ------------------
+
+char* getBuildingInfo(double infoType, double x, double y) {
+
+  std::string returnString = "";
+  int type = (int)infoType;
+  int xCoord = (int)x;
+  int yCoord = (int)y;
+
+  building* curBuilding = _getBuildingWithCoord(xCoord, yCoord);
+  if (curBuilding != NULL) {
+
+    switch (type) {
+      case BDT_TYPE: {
+        returnString += _getBuildingTypeName(curBuilding->type);
+        break;
+      }
+
+      case BDT_SIZE: {
+        returnString += std::to_string(curBuilding->buildingDimension);
+        break;
+      }
+
+      case BDT_CURPOWER: {
+        returnString += std::to_string(curBuilding->currentPower);
+        break;
+      }
+
+      case BDT_REQPOWER: {
+        returnString += std::to_string(curBuilding->requiredPower);
+        break;
+      }
+
+      case BDT_POLLUTION: {
+        returnString += std::to_string(curBuilding->pollution);
+        break;
+      }
+
+      case BDT_LANDVALUEBOOST: {
+        returnString += std::to_string(curBuilding->landValueBoost);
+        break;
+      }
+
+      default: {
+        returnString += "noTypeSpecifiedError";
+        break;
+      }
+    } // end switch
+  }
+  else {
+    returnString += "No Building";
+  }
+
+  // convert to cstring and return to game maker:
+  char* cstr = new char[returnString.length() + 1];
+
+  // push string to string cleanup vector?
+
+  std::strcpy(cstr, returnString.c_str());
+  return cstr;
+}
+
 double addBuilding(double type, double x, double y) {
 
   // convert doubles to ints:
@@ -3720,16 +3826,82 @@ double _testZoneGrowthPowerless() {
   return 0;
 }
 
+double _testPrintZoneLevels(int zoneType) {
+
+  int ready = false;
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+
+  std::string typeString;
+
+  if (zoneType == Z_RES) {
+    typeString = "Rzone";
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_COM) {
+    typeString = "Czone";
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+    ready = true;
+  }
+  else if (zoneType == Z_IND) {
+    typeString = "Izone";
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+    ready = true;
+  }
+
+  else
+    std::cout << "_testPrintZoneLevels: Invalid Zone Type" << std::endl;
+
+  if (ready) {
+
+    int counter = 0;
+    // Each ZONE of given type:
+    while (iter != endZoneList) {
+
+      std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
+      std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+
+      std::cout << "\t" << typeString << " " << counter << ": ";
+
+      // each zone BUILDING inside zone:
+      for (bIter; bIter != bIterEnd; bIter++) {
+
+        std::cout << (*bIter)->level << " ";
+
+      } // end inner for (each building in zone)
+
+      std::cout << std::endl;
+
+    iter++; // iterate to next zone building
+    } // end while
+  } // end if ready
+
+  return 0;
+}
+
 double _testCollectRevenue() {
 
   int moneyBefore = getGameMoney();
 
   std::cout << "Residential tax collected: ";
   std::cout << collectTax(Z_RES) << std::endl;;
+  _testPrintZoneLevels(Z_RES);
+  std::cout << std::endl;
+
   std::cout << "Commercial tax collected: ";
   std::cout << collectTax(Z_COM) << std::endl;;
+  _testPrintZoneLevels(Z_COM);
+  std::cout << std::endl;
+
   std::cout << "Industrial tax collected: ";
   std::cout << collectTax(Z_IND) << std::endl;;
+  _testPrintZoneLevels(Z_IND);
+  std::cout << std::endl;
+
   int moneyAfter = getGameMoney();
   std::cout << "MONEY COLLECTED: " << moneyAfter - moneyBefore << std::endl;
   std::cout << std::endl;

@@ -522,6 +522,28 @@
           <argCount>0</argCount>
           <args/>
         </function>
+        <function>
+          <name>DLL_collectTax</name>
+          <externalName>collectTax</externalName>
+          <kind>12</kind>
+          <help>DLL_collectTax(int zoneType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_addFunds</name>
+          <externalName>addFunds</externalName>
+          <kind>12</kind>
+          <help>DLL_addFunds(int amount)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
