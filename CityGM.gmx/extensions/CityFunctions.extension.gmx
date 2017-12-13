@@ -557,6 +557,29 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_getTaxRate</name>
+          <externalName>getTaxRate</externalName>
+          <kind>12</kind>
+          <help>DLL_getTaxRate(int type)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_setTaxRate</name>
+          <externalName>setTaxRate</externalName>
+          <kind>12</kind>
+          <help>DLL_setTaxRate(int type, int val)</help>
+          <returnType>2</returnType>
+          <argCount>2</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -1012,6 +1035,21 @@
         <constant>
           <name>BDT_LANDVALUEBOOST</name>
           <value>5</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TAX_RES</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TAX_COM</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>TAX_IND</name>
+          <value>2</value>
           <hidden>0</hidden>
         </constant>
       </constants>

@@ -213,6 +213,11 @@ enum {
   REV_COM = 7
 }revenueZones;
 
+enum {
+  TAX_RES = 0,
+  TAX_COM,
+  TAX_IND
+}taxType;
 
 // STRUCT DEFINITIONS ----------------------
 
@@ -679,6 +684,9 @@ GMEXPORT double getGameMode();
 GMEXPORT double getGameSpeed();
 GMEXPORT double getPopulation();
 GMEXPORT double getCityType();
+
+GMEXPORT double getTaxRate(double type);
+GMEXPORT double setTaxRate(double type, double val);
 
 GMEXPORT double incrementGameMonth();
 GMEXPORT double setGameMode(double mode);

@@ -30,6 +30,7 @@ draw_set_font(ft_normal);
 var randomSeed = DLL_getRandomRange(1,100);
 random_set_seed(randomSeed);
 
+
 // DLL SETUP ---------------------------------
 DLL_initDLL();
 DLL_initMap();
@@ -125,7 +126,6 @@ drawCurtain = false;
 currentCurtainAlpha = 0;
 targetCurtainAlpha = 0;
 
-
 // money
 money = DLL_getGameMoney();
 moneyWithCommas = "";
@@ -181,6 +181,12 @@ displayPowerSign = 0;
 alarm[4] = TIME_ELECTRICSIGN;
 alarm[5] = TIME_SENDELECTRICITY;
 
+// Tax Season:
+drawTax = false;
+resRate = DLL_getTaxRate(TAX_RES);
+comRate = DLL_getTaxRate(TAX_COM);
+indRate = DLL_getTaxRate(TAX_IND);
+curTaxItem = TAX_ITEM_RES;
 
 </string>
           </argument>
@@ -383,6 +389,9 @@ if (gameMode == MD_MENU)
 if (gameMode == MD_MAPS)
     scr_selectMapKeys(id);
     
+if (gameMode == MD_TAX)
+    scr_taxScreenKeys(id);
+    
 /// PRESS AND HOLD building placement
 scr_placementHold(id);
 </string>
@@ -457,6 +466,7 @@ DLL_mapEnd();
           <argument>
             <kind>1</kind>
             <string>draw_set_colour(c_black);
+
 if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawRoads(roadElements, id);
@@ -546,11 +556,14 @@ if (canDraw) {
     if (drawCurtain) {
         scr_updateCurtainAlpha(id);
         scr_drawCurtain(currentCurtainAlpha);
-    
     }
-    
-    
 }
+
+
+if (drawTax = true) {
+    scr_drawTaxScreen(id);
+}
+
 
 
 // DEBUG:
@@ -642,15 +655,12 @@ scr_updateAll(id);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-
-
-// 'E' to turn on build mode
-
-if (gameMode != MD_NORMAL) {
+            <string>if (gameMode != MD_NORMAL) {
     DLL_setGameMode(MD_NORMAL);
     camera.camera_toggle = MD_NORMAL;
     scr_updateAll(id);
+    canDraw = true;
+    drawTax = false;
 }
 
 
@@ -917,6 +927,56 @@ var moneyCom = DLL_collectTax(Z_COM);
 var moneyInd = DLL_collectTax(Z_IND);
 
 show_message("[TAXES COLLECTED]#RES: " + string(moneyRes) + "#COM: " + string(moneyCom) + "#IND: " + string(moneyInd));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="56">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// update game mode:
+gameMode = DLL_getGameMode();
+
+
+if (gameMode != MD_TAX) {
+    // update tax rates first:
+    resRate = DLL_getTaxRate(TAX_RES);
+    comRate = DLL_getTaxRate(TAX_COM);
+    indRate = DLL_getTaxRate(TAX_IND);
+    
+    // change game state:
+    DLL_setGameMode(MD_TAX);
+    gameMode = DLL_getGameMode();
+    camera.camera_toggle = MD_TAX;
+    canDraw = false;
+    curTaxItem = TAX_ITEM_RES; // first selected item
+    drawTax = true;
+    scr_setSpeed(id, SP_PAUSE);
+}
+
+// return to normal game (like Q button)
+else {
+    DLL_setGameMode(MD_NORMAL);
+    camera.camera_toggle = MD_NORMAL;
+    scr_updateAll(id);
+    canDraw = true;
+    drawTax = false;
+}
 </string>
           </argument>
         </arguments>

@@ -200,6 +200,7 @@
       </scripts>
       <scripts name="ModeTax">
         <script>scripts\scr_drawTaxScreen.gml</script>
+        <script>scripts\scr_taxScreenKeys.gml</script>
       </scripts>
       <scripts name="ModeGraphs">
         <script>scripts\scr_drawGraphsScreen.gml</script>
@@ -287,7 +288,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="93">
+  <constants number="98">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -381,6 +382,11 @@
     <constant name="LANDVALUE_DEFAULT">50</constant>
     <constant name="MAX_ZONES">MAP_DIMENSION*MAP_DIMENSION</constant>
     <constant name="CAMERA_MOVESLOW">140</constant>
+    <constant name="TAX_ITEMS">4</constant>
+    <constant name="TAX_ITEM_RES">0</constant>
+    <constant name="TAX_ITEM_COM">1</constant>
+    <constant name="TAX_ITEM_IND">2</constant>
+    <constant name="TAX_ITEM_EXIT">3</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

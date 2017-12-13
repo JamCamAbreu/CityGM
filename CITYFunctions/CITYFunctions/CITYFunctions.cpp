@@ -2549,6 +2549,68 @@ double getGameMoney() { return curGameData.money; }
 double getPopulation() { return curGameData.population; }
 double getCityType() { return curGameData.cityType; }
 
+double getTaxRate(double type) {
+
+  int taxType = (int)type;
+  double returnVal = -1;
+
+  switch (taxType) {
+    case TAX_RES: {
+      returnVal = curGameData.taxRes;
+      break;
+    }
+
+    case TAX_COM: {
+      returnVal = curGameData.taxCom;
+      break;
+    }
+
+    case TAX_IND: {
+      returnVal = curGameData.taxInd;
+      break;
+    }
+    default: {
+      returnVal = -2;
+      break;
+    }
+  }
+
+  return returnVal;
+}
+
+double setTaxRate(double type, double val) {
+  int taxType = (int)type;
+  double setVal = (int)val;
+
+  if (setVal < 0)
+    setVal = 0;
+  else if (setVal > 99)
+    setVal = 99;
+
+  switch (taxType) {
+    case TAX_RES: {
+      curGameData.taxRes = val;
+      break;
+    }
+
+    case TAX_COM: {
+      curGameData.taxCom = val;
+      break;
+    }
+
+    case TAX_IND: {
+      curGameData.taxInd = val;
+      break;
+    }
+    default: {
+      return -1; // error
+      break;
+    }
+  }
+
+  return 0;
+}
+
 // TODO: add taxes in december
 double incrementGameMonth() {
   // update season from Winter to Spring

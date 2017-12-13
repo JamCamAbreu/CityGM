@@ -40,6 +40,8 @@ scr_updatePollution();
 scr_updateLandValue();
 
 
-
-
+// tax rates:
+argument0.resRate = DLL_getTaxRate(TAX_RES);
+argument0.comRate = DLL_getTaxRate(TAX_COM);
+argument0.indRate = DLL_getTaxRate(TAX_IND);
 
