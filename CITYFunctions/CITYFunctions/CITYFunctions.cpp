@@ -2913,7 +2913,7 @@ char* getBuildingInfo(double infoType, double x, double y) {
     } // end switch
   }
   else {
-    returnString += "No Building";
+    returnString += "";
   }
 
   // convert to cstring and return to game maker:

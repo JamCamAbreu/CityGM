@@ -139,6 +139,7 @@
       <scripts name="Roads">
         <script>scripts\scr_updateRoadsArrays.gml</script>
       </scripts>
+      <script>scripts\scr_getBuildingInfo.gml</script>
     </scripts>
     <scripts name="Camera">
       <script>scripts\scr_moveKeepInRoom.gml</script>

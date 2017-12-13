@@ -544,6 +544,19 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_getBuildingInfo</name>
+          <externalName>getBuildingInfo</externalName>
+          <kind>12</kind>
+          <help>getBuildingInfo(int infoType, int x, int y)</help>
+          <returnType>1</returnType>
+          <argCount>3</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>
@@ -969,6 +982,36 @@
         <constant>
           <name>BT_POWERROAD</name>
           <value>15</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_TYPE</name>
+          <value>0</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_SIZE</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_CURPOWER</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_REQPOWER</name>
+          <value>3</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_POLLUTION</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BDT_LANDVALUEBOOST</name>
+          <value>5</value>
           <hidden>0</hidden>
         </constant>
       </constants>
