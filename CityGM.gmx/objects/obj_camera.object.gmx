@@ -26,9 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>SHIFT_SPEED = 0;
-
 camera_toggle = MD_NORMAL;
-
 slowDown = 0;
 </string>
           </argument>

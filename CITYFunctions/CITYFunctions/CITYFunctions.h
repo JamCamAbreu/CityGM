@@ -537,9 +537,9 @@ void _setBuildingNeighbors(building* buildingID);
 
 int _getBuildingPowerRequirements(int buildingType);
 
-void removeMyselfFromNeighbors(building* buildingID);
+void _removeMyselfFromNeighbors(building* buildingID);
 
-int getRequiredPowerAllTypes(building* buildingID);
+int _getRequiredPowerAllTypes(building* buildingID);
 
 
 

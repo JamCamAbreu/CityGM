@@ -1259,7 +1259,7 @@ void _setBuildingNeighbors(building* buildingID) {
 
 }
 
-void removeMyselfFromNeighbors(building* buildingID) {
+void _removeMyselfFromNeighbors(building* buildingID) {
 
   // Update all neighbors to remove me from their neighbor list:
   for (auto it : buildingID->neighbors) {
@@ -2063,7 +2063,7 @@ int _getTaxRevenue(int zoneType) {
 
 // POWER / ELECTRICITY Functions:
 
-int getRequiredPowerAllTypes(building* buildingID) {
+int _getRequiredPowerAllTypes(building* buildingID) {
   int powerNeeded;
   // Check for zone type (-2 code), find the required power needed:
   if (buildingID->requiredPower == -2 ) {
@@ -2149,7 +2149,7 @@ void _sendElectricity() {
 
         // the POWER PLANTS neighbors:
         // Push neighbors to the list if they require power:
-        if (getRequiredPowerAllTypes(it) > 0)
+        if (_getRequiredPowerAllTypes(it) > 0)
           processList.push(it);
       } // end if certain building type
     } // end for each neighbor
@@ -2165,7 +2165,7 @@ void _sendElectricity() {
       processList.pop();
 
       // How much power will we need?
-      powerNeeded = getRequiredPowerAllTypes(curItem);
+      powerNeeded = _getRequiredPowerAllTypes(curItem);
 
       // only use what's needed:
       if (electricSurge >= powerNeeded) {
@@ -2186,7 +2186,7 @@ void _sendElectricity() {
           neighbor->type != BT_TREE) {
 
           // Push neighbors to the list if they require power:
-          if (getRequiredPowerAllTypes(neighbor) > 0)
+          if (_getRequiredPowerAllTypes(neighbor) > 0)
             processList.push(neighbor);
         } // end if certain building type
       } // end for each neighbor
@@ -2205,7 +2205,7 @@ void _consumeElectricity() {
   const double USAGE_RATE = 0.1;
 
   for (auto it : v_buildings) {
-    int consumptionAmount = getRequiredPowerAllTypes(it)*USAGE_RATE;
+    int consumptionAmount = _getRequiredPowerAllTypes(it)*USAGE_RATE;
 
     // at least take 1:
     if (consumptionAmount < 1)
@@ -2433,20 +2433,6 @@ int _getIntRange(int min, int max) {
   return roll;
 }
 
-double getClock() {
-
-  clock_t t = clock();
-  int convert = (int)t;
-
-  return convert;
-
-}
-
-double getTime(double clockBegin, double clockFinish) {
-
-  double time = clockFinish - clockBegin;
-  return (time / CLOCKS_PER_SEC);
-}
 
 
 
@@ -2589,17 +2575,17 @@ double setTaxRate(double type, double val) {
 
   switch (taxType) {
     case TAX_RES: {
-      curGameData.taxRes = val;
+      curGameData.taxRes = setVal;
       break;
     }
 
     case TAX_COM: {
-      curGameData.taxCom = val;
+      curGameData.taxCom = setVal;
       break;
     }
 
     case TAX_IND: {
-      curGameData.taxInd = val;
+      curGameData.taxInd = setVal;
       break;
     }
     default: {
@@ -3110,7 +3096,7 @@ double removeBuilding(double xOrigin, double yOrigin) {
   }
 
   // update neighbors:
-  removeMyselfFromNeighbors(buildingToDelete);
+  _removeMyselfFromNeighbors(buildingToDelete);
 
   // remove building from buildings list:
   v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
@@ -3257,6 +3243,21 @@ double getRandomRange(double min, double max) {
   int maxInt = (int)max;
 
   return _getIntRange(minInt, maxInt);
+}
+
+double getClock() {
+
+  clock_t t = clock();
+  int convert = (int)t;
+
+  return convert;
+
+}
+
+double getTime(double clockBegin, double clockFinish) {
+
+  double time = clockFinish - clockBegin;
+  return (time / CLOCKS_PER_SEC);
 }
 
 
