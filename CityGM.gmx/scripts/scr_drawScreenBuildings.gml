@@ -1,5 +1,6 @@
 // argument0 = amount of buildings in vector
 // argument1 = object holding the building arrays
+// argument2 = draw power? true of false
 
 
 var x1 = scr_getViewX1();
@@ -26,7 +27,9 @@ for (i = 0; i < argument0; i++) {
     if (((bY + padding) < y1) || ((bY - padding) > y2))
         drawBuilding = false;
 
-    if (drawBuilding) {
+
+    // DRAW BUILDINGS:
+    if (drawBuilding && (argument2 == DRAW_BUILDINGS)) {
         var sprite = scr_getBuildingSprite(bT);
         var sprIndex = 0; // default
         
@@ -54,15 +57,14 @@ for (i = 0; i < argument0; i++) {
         }
         
         draw_sprite(sprite, sprIndex, bX*TILE_SIZE, bY*TILE_SIZE);
-        
-        // ELECTRICITY SYMBOL ('needs power' symbol):
-        if(scr_checkDrawElectricitySign(bE)) {
-            draw_sprite(spr_needPower, argument1.displayPowerSign, bX*TILE_SIZE, bY*TILE_SIZE);
-        }
-        
-        
-        
     }
+    
+    // ELECTRICITY SYMBOL ('needs power' symbol):
+    else if (drawBuilding && (argument2 == DRAW_POWER)) {
+        if(scr_checkDrawElectricitySign(bE))
+            draw_sprite(spr_needPower, argument1.displayPowerSign, bX*TILE_SIZE, bY*TILE_SIZE);
+    }
+    
 } // end for loop
 
 

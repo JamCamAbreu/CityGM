@@ -580,6 +580,19 @@
             <arg>2</arg>
           </args>
         </function>
+        <function>
+          <name>DLL_addTreeTileValue</name>
+          <externalName>addTreeTileValue</externalName>
+          <kind>12</kind>
+          <help>DLL_addTreeTileValue(int dataType, int radius, int amount)</help>
+          <returnType>2</returnType>
+          <argCount>3</argCount>
+          <args>
+            <arg>2</arg>
+            <arg>2</arg>
+            <arg>2</arg>
+          </args>
+        </function>
       </functions>
       <constants>
         <constant>

@@ -472,8 +472,9 @@ DLL_mapEnd();
 if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawRoads(roadElements, id);
-    scr_drawScreenBuildings(buildingElements, id);
+    scr_drawScreenBuildings(buildingElements, id, DRAW_BUILDINGS);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
+    scr_drawScreenBuildings(buildingElements, id, DRAW_POWER);
     
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
@@ -613,6 +614,29 @@ if (updateSurfaces) {
             <string>scr_removeBuilding();
 
 scr_updateAll(id);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="85">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_updateAll(id);
 </string>
           </argument>
         </arguments>

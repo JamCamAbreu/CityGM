@@ -59,6 +59,8 @@ int main() {
   addBuilding(BT_NUCLEAR, 19, 10);
   sendElectricity();
 
+
+  /*
   std::cout << "Building info for 30, 30: " << std::endl;
   std::cout << "\t" << getBuildingInfo(BDT_TYPE, 30, 30) << std::endl;
   std::cout << "\t" << getBuildingInfo(BDT_SIZE, 30, 30) << std::endl;
@@ -78,7 +80,7 @@ int main() {
   std::cout << "\t" << getBuildingInfo(BDT_LANDVALUEBOOST, 40, 40) << std::endl;
   std::cout << std::endl;
   std::cout << std::endl;
-
+  */
 
   _printMapTypes();
 

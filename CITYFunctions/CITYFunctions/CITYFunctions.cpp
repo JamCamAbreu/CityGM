@@ -500,7 +500,7 @@ void _addAllBuildingData(int dataType) {
 
 }
 
-void _addWaterTileValue(int dataType, int radius, int amount) {
+void _addTileDataRadius(int tileType, int dataType, int radius, int amount) {
 
   // iterate through all tiles, adding data in a largish
   // radius if the tile type is of water type.
@@ -509,7 +509,7 @@ void _addWaterTileValue(int dataType, int radius, int amount) {
   for (int r = 0; r < MAP_DIMENSION; r++) {
     for (int c = 0; c < MAP_DIMENSION; c++) {
       curTile = map(c, r);
-      if (curTile->tileType == TT_WATER)
+      if (curTile->tileType == tileType)
         _addDataCircle(c, r, radius, dataType, amount);
     }
   }
@@ -528,6 +528,8 @@ void _addWaterTileValue(int dataType, int radius, int amount) {
 
 
 }
+
+
 
 // Subtract:
 void _subtractLandValuePollution() {
@@ -1084,7 +1086,10 @@ building* _newBuilding(int type, int x, int y) {
   newBuilding->yOrigin = y;
   newBuilding->buildingDimension = _getBuildingDimension(type);
   newBuilding->currentPower = 0;
-  newBuilding->requiredPower = _getBuildingPowerRequirements(type);
+  int reqPower = _getBuildingPowerRequirements(type);
+  if (reqPower == -2)
+    reqPower = 0; // zero for initial zones:
+  newBuilding->requiredPower = reqPower;
   newBuilding->pollution = _getBuildingPollution(type);
   newBuilding->landValueBoost = 0;
 
@@ -1172,8 +1177,14 @@ std::string _buildingInfoToString() {
 
     // add electricity info to string:
     buildingInfo += 'E';
-    if (it->currentPower >= (it->requiredPower / 2))
+    if (it->type == BT_PLINE)
       buildingInfo += '*'; // char representing power
+    else if (it->type == BT_ROAD)
+      buildingInfo += '*';
+    else if (it->type == BT_POWERROAD)
+      buildingInfo += '*';
+    else if (it->currentPower >= (it->requiredPower*SATISFIED_POWER))
+      buildingInfo += '*';
     else
       buildingInfo += '-'; // char representing needs power
 
@@ -1798,25 +1809,32 @@ void _growZones(int zoneType) {
 
       // not ALL zones are updated every time!
       int chance = _getIntRange(1, 10);
-      int highestChance = 7;
+      int highestChance = 6;
       if (chance <= highestChance) {
 
         // access zoneBuildings in zone:
         for (auto it : (*iter)->zoneBuildings) {
           int chanceB = _getIntRange(1, 10);
-          int highestChanceB = 4;
+          int highestChanceB = 3;
           if (chanceB <= highestChanceB) {
 
+            // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
             int growth = _calcPopGrowth(it);
             it->popCur += growth;
+
+            // Bound on zero:
             if (it->popCur < 0)
               it->popCur = 0;
+
             // update level:
             _updateZoneBuildingLevel(it);
 
           } // end if chance (buildings within zone)
 
-
+          // update required power for whole zone:
+          zone* curZone = (*iter);
+          int newReqPower = _zoneGetTotalRequiredPower(curZone);
+          curZone->relatedZoneBuilding->requiredPower = newReqPower;
 
         } // end auto : it
 
@@ -1855,34 +1873,26 @@ void _growZones(int zoneType) {
 
 int _calcPopGrowth(zoneBuilding* curZ) {
 
-  int level = curZ->level;
+  int level = curZ->level + 1; // make at least 1
   int landValue = curZ->tileUnder->landValue;
-  bool isPowered = true;
+  bool isPowered = false; // false until proven true
 
-
-  // pop growth based on level, some randomness
-  double popGrowth = 10*(level + 1) + ((level + 1)*(_getIntRange(-(level + 4), level + 4)));
+  double popGrowth = 0;
 
   // check for power, (lack of power haults/negates growth):
   building* curZone = curZ->parentZone->relatedZoneBuilding;
   if (curZone != NULL) {
-    int curPower = curZone->currentPower;
-    if (curPower > 0 && (curPower / 9) <= 0) {
-      curPower = 1;
-    }
-    else
-      curPower /= 9;
-
-    int reqPower = _zoneBuildingGetRequiredPower(curZ) / 2;
-
-    if ((curPower < reqPower) || (curPower <= 0)) {
-      if (popGrowth > 0)
-        popGrowth *= -1;
-      isPowered = false;
+    if (curZone->requiredPower > 0) {
+      // just make sure the whole zone is powered:
+      if (curZone->currentPower >= (curZone->requiredPower*SATISFIED_POWER))
+        isPowered = true;
     }
   }
 
   if (isPowered) {
+    // pop growth based on level, some randomness
+    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 3)));
+
     // Some land value impact:
     int lv = 100 - landValue;
     double lvImpact = (double)lv / 50.0;
@@ -1890,19 +1900,22 @@ int _calcPopGrowth(zoneBuilding* curZ) {
       lvImpact = 1;
     popGrowth = popGrowth / lvImpact;
 
-
     // punish for low land value, reward for high:
     double lvLuck = (landValue - 50) / 20;
     double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
-    if (luck == 0)
+    if (luck == 0) // don't multiply by zero
       luck = 1;
     popGrowth = popGrowth*luck;
 
     // Population can get crazy with high land values, so cap it:
     //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/5);
+    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level - 1)/5);
     if (popGrowth > popGrowthMax)
       popGrowth = popGrowthMax;
+  }
+
+  else {
+    popGrowth = (double)_getIntRange(-((level + 1) * 5), level*2);
   }
 
   return (int)popGrowth;
@@ -1973,7 +1986,7 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
 }
 
-int zoneGetTotalRequiredPower(zone* zoneID) {
+int _zoneGetTotalRequiredPower(zone* zoneID) {
 
   int sumPowerConsumption = 2;
   for (int i = 0; i < 9; i++) {
@@ -2069,7 +2082,7 @@ int _getRequiredPowerAllTypes(building* buildingID) {
   if (buildingID->requiredPower == -2 ) {
     // get required power from the related zone:
     if (buildingID->relatedZone != NULL)
-      powerNeeded = zoneGetTotalRequiredPower(buildingID->relatedZone) - buildingID->currentPower;
+      powerNeeded = _zoneGetTotalRequiredPower(buildingID->relatedZone) - buildingID->currentPower;
   }
   else { // NON ZONE TYPE:
     powerNeeded = (buildingID->requiredPower - buildingID->currentPower);
@@ -2827,7 +2840,16 @@ double addWaterTileValue(double dataType, double radius, double amount) {
   int radiusInt = (int)radius;
   int amountInt = (int)amount;
 
-  _addWaterTileValue(typeInt, radiusInt, amountInt);
+  _addTileDataRadius(TT_WATER, typeInt, radiusInt, amountInt);
+  return 0;
+}
+
+double addTreeTileValue(double dataType, double radius, double amount) {
+  int typeInt = (int)dataType;
+  int radiusInt = (int)radius;
+  int amountInt = (int)amount;
+
+  _addTileDataRadius(TT_TREE, typeInt, radiusInt, amountInt);
   return 0;
 }
 
@@ -3844,7 +3866,7 @@ void _HELPER_printZoneInfo() {
         std::cout << ", requiredPower=";
         std::cout << curBuilding->requiredPower;
         std::cout << ", zRP=";
-        std::cout << zoneGetTotalRequiredPower(it->relatedZone);
+        std::cout << _zoneGetTotalRequiredPower(it->relatedZone);
       }
       else {
         std::cout << "NULL";

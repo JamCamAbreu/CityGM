@@ -42,6 +42,7 @@ const int TILE_SECTION_DEFAULT = -1;
 
 const int MAX_ZONE_LEVEL = 8;
 
+const double SATISFIED_POWER = 0.6;
 
 
 
@@ -490,7 +491,7 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType);
 
 std::string _tileDataToString(int dataType);
 
-void _addWaterTileValue(int dataType, int radius, int amount);
+void _addTileDataRadius(int tileType, int dataType, int radius, int amount);
 
 void _subtractLandValuePollution();
 
@@ -589,7 +590,7 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB);
 
 int _zoneBuildingGetRequiredPower(zoneBuilding* curZB);
 
-int zoneGetTotalRequiredPower(zone* zoneID);
+int _zoneGetTotalRequiredPower(zone* zoneID);
 
 int _getTaxRevenue(int zoneType);
 
@@ -714,6 +715,7 @@ GMEXPORT double addDataCircle(double x, double y, double radius, double dataType
 GMEXPORT double addAllBuildingData(double dataType);
 GMEXPORT char* tileDataToString(double dataType);
 GMEXPORT double addWaterTileValue(double dataType, double radius, double amount);
+GMEXPORT double addTreeTileValue(double dataType, double radius, double amount);
 GMEXPORT double subtractLandValuePollution();
 GMEXPORT double getTileSectionType(double x, double y, int tileDataType);
 
