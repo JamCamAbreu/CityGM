@@ -650,6 +650,7 @@ void _setTilesSectionData(int xCoord, int yCoord, int tileDataType) {
     curTile->pLineType = type;
 }
 
+// The TYPE of POWERLINE or ROAD tile to draw!
 int _getTileSectionType(tile* tileToGet, int type) {
 
   int data;
@@ -725,7 +726,45 @@ void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType) {
 
 }
 
+void _setBuildingTileData(int tileDataType) {
 
+
+  // Each Building in V_buildings:
+  int bType;
+  int amount;
+  int radius;
+  int bX;
+  int bY;
+  int dim;
+  for (auto it : v_buildings) {
+    bType = it->type;
+    bX = it->xOrigin;
+    bY = it->yOrigin;
+    dim = it->buildingDimension;
+
+    if (tileDataType == TDT_LANDVALUE)
+      amount = _getBuildingLandValues(bType);
+    else if (tileDataType == TDT_FIREDANGER)
+      amount = _getBuildingFireDangers(bType);
+    else
+      amount = 0;
+
+    radius = amount;
+    if (radius > 12)
+      radius = 12;
+    else if (radius <= 0)
+      radius = 1;
+
+    // for each tile in building:
+    int R;
+    int C;
+    for (R = 0; R < dim; R++) {
+      for (C = 0; C < dim; C++) {
+        _addDataCircle(bX + C, bY + R, radius, tileDataType, amount);
+      }
+    }
+  } // end iterate all buildings
+}
 
 
 
@@ -942,6 +981,154 @@ int _getBuildingPollution(int type) {
 
 }
 
+int _getBuildingLandValues(int bType) {
+
+  // use a switch and enum to return width:
+  switch (bType) {
+
+  case BT_ROAD: {
+    return 1;
+    break;
+  }
+
+  case BT_PLINE: {
+    return 0;
+    break;
+  }
+
+    case BT_POLICE: {
+      return 3;
+      break;
+      }
+
+    case BT_FIRE: {
+      return 2;
+      break;
+      }
+
+    case BT_SCHOOL: {
+      return 7;
+      break;
+      }
+
+    case BT_HOSPITAL: {
+      return 5;
+      break;
+      }
+
+    case BT_COAL: {
+      return -3;
+      break;
+      }
+
+    case BT_NUCLEAR: {
+      return -4;
+      break;
+      }
+
+    case BT_WATERTOWER: {
+      return -2;
+      break;
+      }
+
+    case BT_ARCADE: {
+      return 8;
+      break;
+      }
+
+    case BT_AIRPORT: {
+      return -5;
+      break;
+      }
+
+    case BT_POWERROAD: {
+      return 1;
+      break;
+    }
+
+    default: {
+      return 0; // error code
+      break;
+    }
+  } // end switch
+
+  return 0; // error code
+}
+
+int _getBuildingFireDangers(int bType) {
+
+  // use a switch and enum to return width:
+  switch (bType) {
+
+  case BT_ROAD: {
+    return 0;
+    break;
+  }
+
+  case BT_PLINE: {
+    return 1;
+    break;
+  }
+
+    case BT_POLICE: {
+      return 3;
+      break;
+      }
+
+    case BT_FIRE: {
+      return -20;
+      break;
+      }
+
+    case BT_SCHOOL: {
+      return 3;
+      break;
+      }
+
+    case BT_HOSPITAL: {
+      return 4;
+      break;
+      }
+
+    case BT_COAL: {
+      return 7;
+      break;
+      }
+
+    case BT_NUCLEAR: {
+      return 5;
+      break;
+      }
+
+    case BT_WATERTOWER: {
+      return -4;
+      break;
+      }
+
+    case BT_ARCADE: {
+      return 5;
+      break;
+      }
+
+    case BT_AIRPORT: {
+      return 7;
+      break;
+      }
+
+    case BT_POWERROAD: {
+      return 1;
+      break;
+    }
+
+    default: {
+      return 0; // error code
+      break;
+    }
+  } // end switch
+
+  return 0; // error code
+}
+
 int _getBuildingData(building* buildingID, int dataType) {
 
   switch (dataType) {
@@ -1088,7 +1275,7 @@ building* _newBuilding(int type, int x, int y) {
   newBuilding->currentPower = 0;
   int reqPower = _getBuildingPowerRequirements(type);
   if (reqPower == -2)
-    reqPower = 0; // zero for initial zones:
+    reqPower = ZONE_START_REQUIRED_POWER; // three for initial zones:
   newBuilding->requiredPower = reqPower;
   newBuilding->pollution = _getBuildingPollution(type);
   newBuilding->landValueBoost = 0;
@@ -1112,6 +1299,22 @@ building* _newBuilding(int type, int x, int y) {
     _setTilesSectionData(x, y, TDT_PLINETYPE);
     _updateNeighborSectionTypes(x, y, TDT_PLINETYPE);
   }
+
+  // For buildings, update powerline data:
+  // Note: fixes when you place ONE powerline between two buildings,
+  // previously, the wrong powerline would be drawn
+  if ((type != BT_ROAD) && (type != BT_PLINE) && type != BT_POWERROAD) {
+    int dimensions = newBuilding->buildingDimension;
+    int width;
+    int height;
+    for (width = 0; width < dimensions; width++) {
+      for (height = 0; height < dimensions; height++) {
+        _setTilesSectionData(x + width, y + height, TDT_PLINETYPE);
+        _updateNeighborSectionTypes(x + width, y + height, TDT_PLINETYPE);
+      }
+    }
+  }
+
 
   return newBuilding;
 }
@@ -1278,6 +1481,7 @@ void _removeMyselfFromNeighbors(building* buildingID) {
       it->neighbors.begin(), it->neighbors.end(), buildingID), it->neighbors.end());
   }
 }
+
 
 
 
@@ -1815,7 +2019,7 @@ void _growZones(int zoneType) {
         // access zoneBuildings in zone:
         for (auto it : (*iter)->zoneBuildings) {
           int chanceB = _getIntRange(1, 10);
-          int highestChanceB = 3;
+          int highestChanceB = 2;
           if (chanceB <= highestChanceB) {
 
             // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
@@ -1830,45 +2034,20 @@ void _growZones(int zoneType) {
             _updateZoneBuildingLevel(it);
 
           } // end if chance (buildings within zone)
-
-          // update required power for whole zone:
-          zone* curZone = (*iter);
-          int newReqPower = _zoneGetTotalRequiredPower(curZone);
-          curZone->relatedZoneBuilding->requiredPower = newReqPower;
-
         } // end auto : it
 
-
-
-
-        /* OLD MESSY WAY
-        std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
-        std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
-        for (bIter; bIter != bIterEnd; bIter++) {
-
-          // not ALL buildings in zone are updated.
-          int chanceB = _getIntRange(1, 10);
-          int highestChanceB = 4;
-          if (chanceB <= highestChanceB) {
-
-            int growth = _calcPopGrowth((*bIter));
-            (*bIter)->popCur += growth;
-            if ((*bIter)->popCur < 0)
-              (*bIter)->popCur = 0;
-            // update level:
-            _updateZoneBuildingLevel((*bIter));
-
-          } // end if chance (buildings within zone)
-
-        } // end inner for (each building in zone)
-          */
-
+        // update required power AFTER processing the zone:
+        zone* curZone = (*iter);
+        int newReqPower = _zoneGetTotalRequiredPower(curZone);
+        curZone->relatedZoneBuilding->requiredPower = newReqPower;
 
       iter++;
       } // end if chance (zones)
     } // end while
   } // end if ready
 
+  // Finally, update the population:
+  updatePopulationZones();
 }
 
 int _calcPopGrowth(zoneBuilding* curZ) {
@@ -1891,7 +2070,7 @@ int _calcPopGrowth(zoneBuilding* curZ) {
 
   if (isPowered) {
     // pop growth based on level, some randomness
-    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 3)));
+    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
 
     // Some land value impact:
     int lv = 100 - landValue;
@@ -1902,14 +2081,14 @@ int _calcPopGrowth(zoneBuilding* curZ) {
 
     // punish for low land value, reward for high:
     double lvLuck = (landValue - 50) / 20;
-    double luck = _getIntRange(lvLuck - 2, lvLuck + 2);
+    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
     if (luck == 0) // don't multiply by zero
       luck = 1;
     popGrowth = popGrowth*luck;
 
     // Population can get crazy with high land values, so cap it:
     //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level - 1)/5);
+    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/10);
     if (popGrowth > popGrowthMax)
       popGrowth = popGrowthMax;
   }
@@ -2853,11 +3032,13 @@ double addTreeTileValue(double dataType, double radius, double amount) {
   return 0;
 }
 
+// pollution causes land value to decrease:
 double subtractLandValuePollution() {
   _subtractLandValuePollution();
   return 0;
 }
 
+// for roads and powerlines:
 double getTileSectionType(double x, double y, int tileDataType) {
   // convert to int first
   int xCoord = (int)x;
@@ -2868,7 +3049,12 @@ double getTileSectionType(double x, double y, int tileDataType) {
   return (_getTileSectionType(tileToGet, tileDataType));
 }
 
-
+// For Land Value and Fire Danger caused by buildings:
+double setBuildingTileData(double tileDataType) {
+  int dataType = (int)tileDataType;
+  _setBuildingTileData(tileDataType);
+  return 0;
+}
 
 
 
@@ -3995,7 +4181,34 @@ double _testCollectRevenue() {
 }
 
 
+double _deepDebugPopGrowth() {
 
+  // Rzones NO power:
+  //addBuilding(BT_RZONE, 2, 5);
+  //addBuilding(BT_RZONE, 5, 5);
+  //addBuilding(BT_RZONE, 8, 5);
+
+  // Rzones WITH power:
+  //addBuilding(BT_RZONE, 10, 10);
+  addBuilding(BT_RZONE, 13, 10);
+  addBuilding(BT_RZONE, 16, 10);
+  addBuilding(BT_NUCLEAR, 19, 10);
+
+  _printMapTypes();
+
+
+  int times;
+  for (times = 0; times < 20; times++) {
+    sendElectricity();
+    std::cout << times << ". Population: " << getPopulation() << std::endl;
+    growZone(Z_RES);
+  }
+
+
+
+
+  return 0;
+}
 
 
 

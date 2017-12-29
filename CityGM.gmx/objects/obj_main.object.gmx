@@ -474,7 +474,7 @@ if (canDraw) {
     scr_drawRoads(roadElements, id);
     scr_drawScreenBuildings(buildingElements, id, DRAW_BUILDINGS);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
-    scr_drawScreenBuildings(buildingElements, id, DRAW_POWER);
+    scr_drawScreenBuildings(buildingElements, id, DRAW_POWER); // draw power signs
     
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
@@ -520,7 +520,7 @@ if (canDraw) {
         scr_drawMenuHelp();
     
     // Game Paused:
-    scr_drawPause(drawPause);
+    scr_drawPause(id, drawPause);
     
     // Build Menu:
     if (gameMode == MD_SELECT) {
@@ -904,6 +904,70 @@ else {
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="69">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>//var randomBuilding = irandom_range(0, BT_GYM);
+//scr_placeBuilding(randomBuilding); // fixme
+//scr_updateAll(id);
+
+// Go to build menu if in normal mode:
+if (gameMode == MD_NORMAL) {
+    DLL_setGameMode(MD_SELECT);
+    camera.camera_toggle = MD_SELECT;
+    scr_updateAll(id);
+}
+    
+// Select a building in building select mode:
+else if (gameMode == MD_SELECT) {
+    DLL_setGameMode(MD_PLACE);
+    camera.camera_toggle = MD_PLACE;
+    scr_updateAll(id);
+}
+
+// Place a building in placement mode:
+else if (gameMode == MD_PLACE) {
+    scr_placeBuilding(id, selectedBuilding);
+    //pressHoldMode = true;
+    //camera.slowDown = CAMERA_MOVESLOW;
+}
+
+// Enter a menu option when in menu mode:
+else if (gameMode == MD_MENU) {
+    scr_selectMenuOption(id);
+}
+
+// select a map type in menu maps:
+else if (gameMode == MD_MAPS) {
+
+    if (mapUnlocked[selectedMap]) {
+        DLL_setGameMode(MD_NORMAL);
+        camera.camera_toggle = MD_NORMAL;
+        curSpecialMap = selectedMap;
+        scr_updateAll(id);
+    }
+    else
+        audio_play_sound(sfx_error, 5, false);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="67">
       <action>
         <libid>1</libid>
@@ -1100,70 +1164,6 @@ else {
           <argument>
             <kind>1</kind>
             <string>scr_setSpeed(id, SP_PAUSE);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="32">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>//var randomBuilding = irandom_range(0, BT_GYM);
-//scr_placeBuilding(randomBuilding); // fixme
-//scr_updateAll(id);
-
-// Go to build menu if in normal mode:
-if (gameMode == MD_NORMAL) {
-    DLL_setGameMode(MD_SELECT);
-    camera.camera_toggle = MD_SELECT;
-    scr_updateAll(id);
-}
-    
-// Select a building in building select mode:
-else if (gameMode == MD_SELECT) {
-    DLL_setGameMode(MD_PLACE);
-    camera.camera_toggle = MD_PLACE;
-    scr_updateAll(id);
-}
-
-// Place a building in placement mode:
-else if (gameMode == MD_PLACE) {
-    scr_placeBuilding(id, selectedBuilding);
-    //pressHoldMode = true;
-    //camera.slowDown = CAMERA_MOVESLOW;
-}
-
-// Enter a menu option when in menu mode:
-else if (gameMode == MD_MENU) {
-    scr_selectMenuOption(id);
-}
-
-// select a map type in menu maps:
-else if (gameMode == MD_MAPS) {
-
-    if (mapUnlocked[selectedMap]) {
-        DLL_setGameMode(MD_NORMAL);
-        camera.camera_toggle = MD_NORMAL;
-        curSpecialMap = selectedMap;
-        scr_updateAll(id);
-    }
-    else
-        audio_play_sound(sfx_error, 5, false);
-}
 </string>
           </argument>
         </arguments>

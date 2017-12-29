@@ -38,7 +38,8 @@ argument0.gameMode = DLL_getGameMode();
 // update tile data:
 scr_updatePollution();
 scr_updateLandValue();
-
+DLL_setBuildingTileData(TDT_LANDVALUE);
+DLL_setBuildingTileData(TDT_FIREDANGER);
 
 // tax rates:
 argument0.resRate = DLL_getTaxRate(TAX_RES);

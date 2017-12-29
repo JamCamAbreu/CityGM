@@ -44,6 +44,7 @@ const int MAX_ZONE_LEVEL = 8;
 
 const double SATISFIED_POWER = 0.6;
 
+const int ZONE_START_REQUIRED_POWER = 3;
 
 
 // ENUMS -----------------------------------
@@ -227,7 +228,7 @@ enum {
 struct zone;
 struct building;
 
-
+// GAME DATA
 typedef struct gameData {
   int year;
   int month; // M_JAN, etc..
@@ -251,8 +252,7 @@ typedef struct gameData {
 
 }gameData;
 
-
-
+// TILE
 typedef struct tile {
   int x;
   int y;
@@ -267,7 +267,7 @@ typedef struct tile {
   building* buildingOnTop;
 }tile;
 
-
+// BUILDING
 typedef struct building {
 
   // tiles covered by this building
@@ -329,14 +329,14 @@ enum {
 
 enum {
   RL0 = 0,
-  RL1 = 10,
-  RL2 = 50,
-  RL3 = 150,
-  RL4 = 300,
-  RL5 = 750,
-  RL6 = 1250,
+  RL1 = 35,
+  RL2 = 90,
+  RL3 = 180,
+  RL4 = 350,
+  RL5 = 850,
+  RL6 = 1650,
   RL7 = 3750,
-  RL8 = 8500 
+  RL8 = 8500
 } RlevelPopMin;
 
 enum {
@@ -501,6 +501,7 @@ int _getTileSectionType(tile* tileToGet, int type);
 
 void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType);
 
+void _setBuildingTileData(int tileDataType);
 
 
 
@@ -519,6 +520,8 @@ int _getBuildingValueBoost(building* curBuilding);
 int _getBuildingDimension(int type);
 
 int _getBuildingPollution(int type);
+int _getBuildingLandValues(int bType);
+int _getBuildingFireDangers(int bType);
 
 int _getBuildingData(building* buildingID, int dataType);
 
@@ -718,6 +721,7 @@ GMEXPORT double addWaterTileValue(double dataType, double radius, double amount)
 GMEXPORT double addTreeTileValue(double dataType, double radius, double amount);
 GMEXPORT double subtractLandValuePollution();
 GMEXPORT double getTileSectionType(double x, double y, int tileDataType);
+GMEXPORT double setBuildingTileData(double tileDataType);
 
 
 // Building Functions
@@ -772,5 +776,6 @@ GMEXPORT double _testPowerRoad();
 GMEXPORT double _testZoneGrowthPowerless();
 GMEXPORT double _testPrintZoneLevels(int zoneType);
 GMEXPORT double _testCollectRevenue();
+GMEXPORT double _deepDebugPopGrowth();
 #endif
 
