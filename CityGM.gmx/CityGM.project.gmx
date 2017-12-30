@@ -202,6 +202,7 @@
       <scripts name="ModeTax">
         <script>scripts\scr_drawTaxScreen.gml</script>
         <script>scripts\scr_taxScreenKeys.gml</script>
+        <script>scripts\scr_changeToTaxMode.gml</script>
       </scripts>
       <scripts name="ModeGraphs">
         <script>scripts\scr_drawGraphsScreen.gml</script>
@@ -276,6 +277,9 @@
     <scripts name="UTILITY">
       <script>scripts\scr_ease.gml</script>
     </scripts>
+    <scripts name="Notifications">
+      <script>scripts\scr_drawMessageBox.gml</script>
+    </scripts>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_normal</font>
@@ -290,7 +294,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="103">
+  <constants number="107">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -394,6 +398,10 @@
     <constant name="TAX_SELECT_PUSH_ALARM">4</constant>
     <constant name="DRAW_BUILDINGS">0</constant>
     <constant name="DRAW_POWER">1</constant>
+    <constant name="MESSBOX_X1">view_xview + view_wview/3</constant>
+    <constant name="MESSBOX_X2">view_xview + view_wview + 32</constant>
+    <constant name="MESSBOX_Y1">SPEEDICON_Y1 - 4</constant>
+    <constant name="MESSBOX_Y2">view_yview + view_hview + 32</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

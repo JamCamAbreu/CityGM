@@ -5,7 +5,7 @@ var spriteWidth = 32;
 var spriteHeight = 32;
 // bar behind:
 draw_set_alpha(MENU_ALPHA);
-draw_rectangle(SPEEDICON_X1 - 4, SPEEDICON_Y1 - 4, SPEEDICON_X1 + spriteWidth*4 + 4, SPEEDICON_Y1 + spriteHeight + 4, false);
+draw_roundrect_ext(SPEEDICON_X1 - 4, SPEEDICON_Y1 - 4, SPEEDICON_X1 + spriteWidth*4 + 4, SPEEDICON_Y1 + spriteHeight + 4, 10, 10, false);
 draw_set_alpha(1);
 var selected = 0;
 

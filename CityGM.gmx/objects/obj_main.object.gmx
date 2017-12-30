@@ -273,6 +273,11 @@ alarm[4] = TIME_ELECTRICSIGN;
             <kind>1</kind>
             <string>/// CURTAIN OUT EFFECT FOR SEASON
 
+
+
+
+
+
 drawCurtain = false;
 </string>
           </argument>
@@ -302,6 +307,14 @@ targetCurtainAlpha = 0;
 
 // NOW update the season to draw the correct sprites:
 gameSeason = DLL_getGameSeason();
+
+
+// Check for tax season!
+if ((gameSeason == S_SPRING) &amp;&amp; (gameMode != MD_TAX)) {
+    camera.camera_toggle = MD_TAX; // this must come first
+    scr_changeToTaxMode(id);
+}
+
 
 alarm[2] = CURTAIN_OUT;
 </string>
@@ -524,9 +537,20 @@ if (canDraw) {
     else
         scr_drawMenuHelp();
     
+        
+    // draw Notification (message) box:
+    scr_drawMessageBox(id);
+        
+        
     // Game Paused:
     scr_drawPause(id, drawPause);
     
+    
+    
+    
+    
+    
+    // ---------------------- MODES ------------------
     // Build Menu:
     if (gameMode == MD_SELECT) {
         scr_drawBuildMenu(id);
@@ -547,8 +571,6 @@ if (canDraw) {
         scr_drawQtoQuit();
     }
     
-
-    
     // Graphs Menu:
     
     // Map Menu:
@@ -560,12 +582,15 @@ if (canDraw) {
     
     // File Menu:
     
+    
+    
+    
     // season change:
     if (drawCurtain) {
         scr_updateCurtainAlpha(id);
         scr_drawCurtain(currentCurtainAlpha);
     }
-}
+} // end if canDraw
 
 
 // Tax Menu:
@@ -664,29 +689,8 @@ scr_updateMoneyString(id);
 gameMode = DLL_getGameMode();
 
 
-if (gameMode != MD_TAX) {
-    // update tax rates first:
-    resRate = DLL_getTaxRate(TAX_RES);
-    comRate = DLL_getTaxRate(TAX_COM);
-    indRate = DLL_getTaxRate(TAX_IND);
-    
-    // change game state:
-    DLL_setGameMode(MD_TAX);
-    gameMode = DLL_getGameMode();
-    camera.camera_toggle = MD_TAX;
-    canDraw = false;
-    curTaxItem = TAX_ITEM_RES; // first selected item
-    scr_setSpeed(id, SP_PAUSE);
-}
 
-// return to normal game (like Q button)
-else {
-    DLL_setGameMode(MD_NORMAL);
-    camera.camera_toggle = MD_NORMAL;
-    scr_updateAll(id);
-    canDraw = true;
-    drawTax = false;
-}
+
 </string>
           </argument>
         </arguments>
@@ -817,6 +821,7 @@ if (gameMode != MD_NORMAL) {
     camera.camera_toggle = MD_NORMAL;
     scr_updateAll(id);
     canDraw = true;
+    drawTax = false;
 }
 
 
