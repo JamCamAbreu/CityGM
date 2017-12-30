@@ -190,6 +190,11 @@ taxSelectTimer = 0;
 taxSelectPushTimer = 0;
 taxSelectBoostRate = 0;
 
+// Game End Question:
+gameEndMessage = false;
+quit_m1 = "Quit game without saving?";
+quit_m2 = "'esc' to cancel";
+quit_m3 = "'q' to quit!";
 </string>
           </argument>
         </arguments>
@@ -589,6 +594,149 @@ if (updateSurfaces) {
     scr_updateAll(id)
     updateSurfaces = false;
 }
+
+
+// game end message:
+if (gameEndMessage) 
+    scr_drawQuitGameMessage(id);
+
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="105">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// DEBUG: COLLECT TAXES
+
+var moneyRes = DLL_collectTax(Z_RES);
+var moneyCom = DLL_collectTax(Z_COM);
+var moneyInd = DLL_collectTax(Z_IND);
+
+
+
+show_message("[TAXES COLLECTED]#RES: " + string(moneyRes) + "#COM: " + string(moneyCom) + "#IND: " + string(moneyInd));
+
+money = DLL_getGameMoney();
+scr_updateMoneyString(id);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="104">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// DEBUG: SHOW TAX SCREEN
+
+// update game mode:
+gameMode = DLL_getGameMode();
+
+
+if (gameMode != MD_TAX) {
+    // update tax rates first:
+    resRate = DLL_getTaxRate(TAX_RES);
+    comRate = DLL_getTaxRate(TAX_COM);
+    indRate = DLL_getTaxRate(TAX_IND);
+    
+    // change game state:
+    DLL_setGameMode(MD_TAX);
+    gameMode = DLL_getGameMode();
+    camera.camera_toggle = MD_TAX;
+    canDraw = false;
+    curTaxItem = TAX_ITEM_RES; // first selected item
+    scr_setSpeed(id, SP_PAUSE);
+}
+
+// return to normal game (like Q button)
+else {
+    DLL_setGameMode(MD_NORMAL);
+    camera.camera_toggle = MD_NORMAL;
+    scr_updateAll(id);
+    canDraw = true;
+    drawTax = false;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="97">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// DEBUG
+
+
+show_message("season: " + string(gameSeason));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="96">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// DEBUG
+scr_updateAll(id);
 </string>
           </argument>
         </arguments>
@@ -614,29 +762,6 @@ if (updateSurfaces) {
             <string>scr_removeBuilding();
 
 scr_updateAll(id);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="85">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>scr_updateAll(id);
 </string>
           </argument>
         </arguments>
@@ -682,7 +807,11 @@ scr_updateAll(id);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if (gameMode != MD_NORMAL) {
+            <string>// game end screen?
+if (gameEndMessage == true)
+    game_end();
+
+if (gameMode != MD_NORMAL) {
     DLL_setGameMode(MD_NORMAL);
     gameMode = DLL_getGameMode();
     camera.camera_toggle = MD_NORMAL;
@@ -691,29 +820,6 @@ scr_updateAll(id);
 }
 
 
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="80">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>scr_testFunctionSpeed(id);
 </string>
           </argument>
         </arguments>
@@ -748,33 +854,6 @@ updateSurfaces = true;
         </arguments>
       </action>
     </event>
-    <event eventtype="9" enumb="74">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>// DEBUG
-
-var ratio = DLL_getPowerUsageRatio();
-
-show_message("ratio = " + string(ratio));
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="9" enumb="73">
       <action>
         <libid>1</libid>
@@ -792,80 +871,10 @@ show_message("ratio = " + string(ratio));
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
+            <string>// Get building info from building under the cursor:
 var currentX = scr_getX(camera);
 var currentY = scr_getY(camera);
-
 scr_getBuildingInfo(currentX, currentY);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="72">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>//scr_growAllZones(id);
-
-
-var numElements = DLL_getRoadsVectorSize();
-
-var message;
-for (i = 0; i &lt; numElements; i++) {
-    message = "";
-    message += "Num: " + string(i);
-    message += ", x=" + string(roadXArray[i]);
-    message += ", y=" + string(roadYArray[i]);
-    message += ", Type=" + string(roadTypeArray[i]);
-    show_message(message);
-}
-
-
-
-
-
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="71">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// DEBUG STUFF
-
-
-var message = DLL_roadsToString();
-
-show_message("message: " + message);
 </string>
           </argument>
         </arguments>
@@ -888,7 +897,9 @@ show_message("message: " + message);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if (gameMode != MD_MENU){
+            <string>// TOP MENU OPTIONS
+
+if (gameMode != MD_MENU){
     toggleDrawMenus = true;
     camera.camera_toggle = MD_MENU;
     DLL_setGameMode(MD_MENU);
@@ -921,9 +932,9 @@ else {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//var randomBuilding = irandom_range(0, BT_GYM);
-//scr_placeBuilding(randomBuilding); // fixme
-//scr_updateAll(id);
+            <string>
+
+
 
 // Go to build menu if in normal mode:
 if (gameMode == MD_NORMAL) {
@@ -963,6 +974,11 @@ else if (gameMode == MD_MAPS) {
     else
         audio_play_sound(sfx_error, 5, false);
 }
+
+
+
+
+
 </string>
           </argument>
         </arguments>
@@ -989,89 +1005,6 @@ else if (gameMode == MD_MAPS) {
     toggleDrawMenus = false;
 else
     toggleDrawMenus = true;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="57">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>
-
-var moneyRes = DLL_collectTax(Z_RES);
-var moneyCom = DLL_collectTax(Z_COM);
-var moneyInd = DLL_collectTax(Z_IND);
-
-
-
-show_message("[TAXES COLLECTED]#RES: " + string(moneyRes) + "#COM: " + string(moneyCom) + "#IND: " + string(moneyInd));
-
-money = DLL_getGameMoney();
-scr_updateMoneyString(id);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="56">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>// update game mode:
-gameMode = DLL_getGameMode();
-
-
-if (gameMode != MD_TAX) {
-    // update tax rates first:
-    resRate = DLL_getTaxRate(TAX_RES);
-    comRate = DLL_getTaxRate(TAX_COM);
-    indRate = DLL_getTaxRate(TAX_IND);
-    
-    // change game state:
-    DLL_setGameMode(MD_TAX);
-    gameMode = DLL_getGameMode();
-    camera.camera_toggle = MD_TAX;
-    canDraw = false;
-    curTaxItem = TAX_ITEM_RES; // first selected item
-    scr_setSpeed(id, SP_PAUSE);
-}
-
-// return to normal game (like Q button)
-else {
-    DLL_setGameMode(MD_NORMAL);
-    camera.camera_toggle = MD_NORMAL;
-    scr_updateAll(id);
-    canDraw = true;
-    drawTax = false;
-}
 </string>
           </argument>
         </arguments>
@@ -1186,7 +1119,14 @@ else {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>game_end();
+            <string>
+
+if (gameEndMessage == false)
+    gameEndMessage = true;
+else
+    gameEndMessage = false;
+
+
 </string>
           </argument>
         </arguments>

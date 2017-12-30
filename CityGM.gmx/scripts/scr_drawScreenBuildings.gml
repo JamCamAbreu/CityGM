@@ -34,7 +34,7 @@ for (i = 0; i < argument0; i++) {
         var sprIndex = 0; // default
         
         // SPECIAL DRAWING - POWER LINES
-        if (bT == BT_PLINE || BT_POWERROAD) {
+        if ((bT == BT_PLINE) || (bT == BT_POWERROAD)) {
             var typeIndex = argument1.pLineValueArray[i];
             
             if (typeIndex != 0) {
@@ -44,7 +44,7 @@ for (i = 0; i < argument0; i++) {
             else {
                 sprIndex = 0;
             }
-        }
+        } // end powerline/road
         
         // SPECIAL DRAWING - TREES
         else if (bT == BT_TREE) {

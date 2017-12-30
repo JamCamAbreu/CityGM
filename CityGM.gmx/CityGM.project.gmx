@@ -244,8 +244,9 @@
         <script>scripts\scr_seasonChange.gml</script>
       </scripts>
       <script>scripts\scr_drawPowerBar.gml</script>
+      <script>scripts\scr_drawQuitGameMessage.gml</script>
     </scripts>
-    <scripts name="Screen">
+    <scripts name="DrawGameScreen">
       <script>scripts\scr_drawZones.gml</script>
       <script>scripts\scr_drawScreenBuildings.gml</script>
       <script>scripts\scr_drawRoads.gml</script>
