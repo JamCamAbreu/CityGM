@@ -279,6 +279,7 @@
     </scripts>
     <scripts name="Notifications">
       <script>scripts\scr_drawMessageBox.gml</script>
+      <script>scripts\scr_pushMessage.gml</script>
     </scripts>
   </scripts>
   <fonts name="fonts">
@@ -290,11 +291,12 @@
     <object>objects\obj_camera</object>
     <object>objects\obj_main</object>
     <object>objects\obj_debugger</object>
+    <object>objects\obj_messageQueue</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="107">
+  <constants number="117">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -402,6 +404,16 @@
     <constant name="MESSBOX_X2">view_xview + view_wview + 32</constant>
     <constant name="MESSBOX_Y1">SPEEDICON_Y1 - 4</constant>
     <constant name="MESSBOX_Y2">view_yview + view_hview + 32</constant>
+    <constant name="MAX_MESSAGES">99</constant>
+    <constant name="MT_TIP">0</constant>
+    <constant name="MT_WARNING">1</constant>
+    <constant name="MT_CONGRAT">2</constant>
+    <constant name="MT_FUNNY">3</constant>
+    <constant name="MT_OTHER">4</constant>
+    <constant name="MSG_LISTENER_ALARM">15</constant>
+    <constant name="MESSAGE_SPEED">60*2</constant>
+    <constant name="MESSAGE_X1">MESSBOX_X1 + 8</constant>
+    <constant name="MESSAGE_Y1">MESSBOX_Y1 + 8</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

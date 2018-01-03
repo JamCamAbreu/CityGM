@@ -35,7 +35,6 @@ random_set_seed(randomSeed);
 DLL_initDLL();
 DLL_initMap();
 
-
 // Map Generation ----------------------------
 // Trees:
 var treeSeeds = irandom_range(4, 12);
@@ -195,6 +194,11 @@ gameEndMessage = false;
 quit_m1 = "Quit game without saving?";
 quit_m2 = "'esc' to cancel";
 quit_m3 = "'q' to quit!";
+
+
+// Messages:
+messageQueue = instance_create(x, y, obj_messageQueue);
+
 </string>
           </argument>
         </arguments>
@@ -696,6 +700,33 @@ gameMode = DLL_getGameMode();
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="98">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>scr_pushMessage(messageQueue, "Here's Test 1!!", c_red, 60*3);
+scr_pushMessage(messageQueue, "Here's Test 2!!", c_green, 60*1);
+scr_pushMessage(messageQueue, "Here's Test 3!!", c_white, 60*5);
+scr_pushMessage(messageQueue, "Here's Test 4!!", c_blue, 20);
+scr_pushMessage(messageQueue, "Here's Test 5!!", c_teal, 60*3);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="97">
       <action>
         <libid>1</libid>
@@ -822,6 +853,7 @@ if (gameMode != MD_NORMAL) {
     scr_updateAll(id);
     canDraw = true;
     drawTax = false;
+    messageQueue.canDraw = true;
 }
 
 

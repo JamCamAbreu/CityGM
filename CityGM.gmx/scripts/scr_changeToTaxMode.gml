@@ -12,5 +12,7 @@ if (argument0.gameMode != MD_TAX) {
     argument0.canDraw = false;
     argument0.curTaxItem = TAX_ITEM_RES; // first selected item
     scr_setSpeed(argument0, SP_PAUSE);
+    var queue = argument0.messageQueue;
+    queue.canDraw = false;
 }
 
