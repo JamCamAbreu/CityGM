@@ -1,6 +1,6 @@
 // argument0 = calling instance id (that stores the variables needed)
 
-// update DLL string:
+// update TILES:
 argument0.tileString = DLL_tileTypeToString();
 argument0.tileStringSize = string_length(tileString);
 

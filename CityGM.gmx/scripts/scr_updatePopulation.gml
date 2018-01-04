@@ -14,5 +14,5 @@ if (newCityType) {
     var oldType = scr_getCityTypeStringPrevious(type);
     var newType = scr_getCityTypeString(type);
     var congrats = "Congratulations! Your " + oldType + " has now grown into a " + newType + "!"
-    show_message(congrats);
+    scr_pushMessage(argument0.messageQueue, congrats, MC_CONGRAT, 60*4);
 }

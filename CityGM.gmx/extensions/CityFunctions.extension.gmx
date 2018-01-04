@@ -1076,6 +1076,11 @@
           <value>2</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>MD_NOTIFICATIONS</name>
+          <value>8</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

@@ -129,7 +129,8 @@ enum {
   MD_TAX,
   MD_GRAPHS,
   MD_MAPS,
-  MD_FILE
+  MD_FILE,
+  MD_NOTIFICATIONS
 }modeTypes;
 
 enum {

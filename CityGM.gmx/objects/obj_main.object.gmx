@@ -198,7 +198,61 @@ quit_m3 = "'q' to quit!";
 
 // Messages:
 messageQueue = instance_create(x, y, obj_messageQueue);
+drawMessageScreen = false;
 
+// TIPS:
+tips = ds_list_create();
+scr_initTips(id);
+funnies = ds_list_create();
+scr_initFunnies(id);
+alarmIncreaser = 0;
+alarm[6] = MESSAGE_BASE_ALARM;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="6">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// RANDOM TIPS
+
+alarmIncreaser += 5;
+randomIncreaser = irandom_range(-60*6, 60*8);
+
+var roll = choose(0, 1, 1, 1, 2, 2);
+// TIPS
+if (roll == 1) {
+    var tipSize = ds_list_size(tips);
+    var msgNum = irandom_range(0, tipSize - 1);
+    var message = tips[| msgNum];
+    scr_pushMessage(messageQueue, message, MC_TIP, 60*4);
+}
+
+// FUNNIES
+else if (roll == 2){
+    var tipSize = ds_list_size(funnies);
+    var msgNum = irandom_range(0, tipSize - 1);
+    var message = funnies[| msgNum];
+    scr_pushMessage(messageQueue, message, MC_FUNNY, 60*4);
+}
+
+
+alarm[6] = MESSAGE_BASE_ALARM + alarmIncreaser + randomIncreaser;
 </string>
           </argument>
         </arguments>
@@ -630,6 +684,9 @@ if (gameEndMessage)
     scr_drawQuitGameMessage(id);
 
 
+if (drawMessageScreen) {
+    scr_drawMessageScreen(messageQueue);
+}
 
 </string>
           </argument>
@@ -700,6 +757,46 @@ gameMode = DLL_getGameMode();
         </arguments>
       </action>
     </event>
+    <event eventtype="9" enumb="99">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// OPEN the screen
+if (!drawMessageScreen) {
+    drawMessageScreen = true;
+    camera.camera_toggle = MD_MENU;
+    DLL_setGameMode(MD_NOTIFICATIONS);
+    gameMode = DLL_getGameMode();
+}
+
+// CLOSE the screen
+else {
+    drawMessageScreen = false;
+    camera.camera_toggle = MD_NORMAL;
+    DLL_setGameMode(MD_NORMAL);
+
+    gameMode = DLL_getGameMode();
+}
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="9" enumb="98">
       <action>
         <libid>1</libid>
@@ -717,7 +814,7 @@ gameMode = DLL_getGameMode();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scr_pushMessage(messageQueue, "Here's Test 1!!", c_red, 60*3);
+            <string>scr_pushMessage(messageQueue, "XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX ", c_red, 60*3);
 scr_pushMessage(messageQueue, "Here's Test 2!!", c_green, 60*1);
 scr_pushMessage(messageQueue, "Here's Test 3!!", c_white, 60*5);
 scr_pushMessage(messageQueue, "Here's Test 4!!", c_blue, 20);
