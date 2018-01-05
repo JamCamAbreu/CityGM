@@ -19,7 +19,6 @@ ds_list_add(argument0.tips, "Tip: Residents like living by water...");
 ds_list_add(argument0.tips, "Tip: Residents like trees...");
 ds_list_add(argument0.tips, "Tip: Citizens do not like living by smogg.");
 
-
 // Zones
 ds_list_add(argument0.tips, "Tip: Create residential zones for residents to move in!");
 ds_list_add(argument0.tips, "Tip: Commercial Zones give residents places to build jobs.");

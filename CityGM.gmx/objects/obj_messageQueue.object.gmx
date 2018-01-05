@@ -44,6 +44,10 @@ PAD = 8;
 
 // start the listener
 alarm[0] = MSG_LISTENER_ALARM;
+
+
+// contains the lines for drawing:
+line[MAX_LINE_NUM] = "";
 </string>
           </argument>
         </arguments>
@@ -123,6 +127,42 @@ alarm[2] = messageLife[curMessage];
 
 if (curMessage &lt; lastMessage) {
     alarm[1] = MESSAGE_SPEED;
+    
+    // reset lines:
+    for (i = 0; i &lt; MAX_LINE_NUM; i++) { line[i] = ""; }
+    
+    // chop up message:
+    var message = messageStrings[curMessage];
+    var length = string_length(message);
+    var lineNum = 0;
+    var snipSpot;
+    
+    while ((lineNum &lt; MAX_LINE_NUM) &amp;&amp; (length &gt; MAX_CHARS_MSG)) {
+    
+        // only snip at a space:
+        snipSpot = MAX_CHARS_MSG;
+        while (string_char_at(message, snipSpot) != ' ') { snipSpot--; }
+    
+        // take snipSpot characters and store them in each line:
+        line[lineNum] = string_copy(message, 1, snipSpot);
+        
+        // remove from original message:
+        message = string_delete(message, 1, snipSpot);
+        
+        // update length:
+        length = string_length(message);
+    
+        // new line:
+        lineNum++;
+    }
+    
+    // add last line:
+    if (length &gt; 0) {
+        line[lineNum] = message;
+    }
+    
+    
+    // start drawing message:
     startNextMessage = true;
 }
 else 
@@ -151,9 +191,24 @@ else
             <kind>1</kind>
             <string>if (canDraw) {
     if (startNextMessage) {
+    
+        // draw another thicker message box:
+        scr_drawMessageBox();
+    
         var color = messageColors[curMessage];
-        draw_set_font(ft_small);
-        draw_text_colour(MESSAGE_X1, MESSAGE_Y1, messageStrings[curMessage], color, color, color, color, 1);
+        draw_set_font(ft_notifications);
+        
+        // draw each line:
+        var indent = 0;
+        for (i = 0; i &lt; MAX_LINE_NUM; i++) {
+            if (i &gt; 0) { indent = 8; }
+            // black backdrop
+            draw_text_colour(MESSAGE_X1 + indent - 1, MESSAGE_Y1 + MESSAGE_HEIGHT*i - 1, line[i], c_black, c_black, c_black, c_black, 1);
+            // line:
+            draw_text_colour(MESSAGE_X1 + indent, MESSAGE_Y1 + MESSAGE_HEIGHT*i, line[i], color, color, color, color, 1);
+        }
+            
+            
     }
 }
 

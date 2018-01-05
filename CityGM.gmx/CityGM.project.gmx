@@ -288,6 +288,7 @@
   <fonts name="fonts">
     <font>fonts\ft_normal</font>
     <font>fonts\ft_small</font>
+    <font>fonts\ft_notifications</font>
     <font>fonts\ft_title</font>
   </fonts>
   <objects name="objects">
@@ -299,7 +300,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="126">
+  <constants number="128">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -348,7 +349,7 @@
     <constant name="POWER_BAR_X2">POWER_BAR_X1 + BAR_UNIT*11</constant>
     <constant name="POWER_BAR_Y2">POWER_BAR_Y1 + BAR_UNIT/4</constant>
     <constant name="SPEEDICON_X1">view_xview + BAR_UNIT</constant>
-    <constant name="SPEEDICON_Y1">view_yview + view_hview - 32</constant>
+    <constant name="SPEEDICON_Y1">view_yview + view_hview - 40</constant>
     <constant name="BUILDMENU_W">BAR_UNIT*15</constant>
     <constant name="BUILDMENU_H">BAR_UNIT*26</constant>
     <constant name="BUILDMENU_X1">view_xview + BAR_UNIT</constant>
@@ -415,17 +416,19 @@
     <constant name="MT_OTHER">4</constant>
     <constant name="MC_TIP">c_white</constant>
     <constant name="MC_WARNING">c_red</constant>
-    <constant name="MC_CONGRAT">c_blue</constant>
-    <constant name="MC_FUNNY">c_green</constant>
+    <constant name="MC_CONGRAT">c_aqua</constant>
+    <constant name="MC_FUNNY">c_lime</constant>
     <constant name="MC_OTHER">c_orange</constant>
     <constant name="MSG_LISTENER_ALARM">15</constant>
     <constant name="MESSAGE_SPEED">60*2</constant>
-    <constant name="MESSAGE_X1">MESSBOX_X1 + 8</constant>
-    <constant name="MESSAGE_Y1">MESSBOX_Y1 + 8</constant>
+    <constant name="MESSAGE_X1">MESSBOX_X1 + 4</constant>
+    <constant name="MESSAGE_Y1">MESSBOX_Y1</constant>
+    <constant name="MESSAGE_HEIGHT">12</constant>
     <constant name="MAX_TIPS">99</constant>
     <constant name="MESSAGE_BASE_ALARM">60*7</constant>
     <constant name="MAX_CHARS_MESSAGE_SCREEN">37</constant>
-    <constant name="MAX_CHARS_MSG">45</constant>
+    <constant name="MAX_CHARS_MSG">50</constant>
+    <constant name="MAX_LINE_NUM">3</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
