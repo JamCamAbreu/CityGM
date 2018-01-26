@@ -639,6 +639,14 @@ if (canDraw) {
         scr_drawQtoQuit();
     }
     
+    else if (gameMode == MD_MULTIPLACEEND) {
+        multiPlaceFinishX = scr_getX(camera);
+        multiPlaceFinishY = scr_getY(camera);
+        scr_drawMultiPlacement(id);
+        scr_drawPlacement(id);
+    }
+    
+    
     else if (gameMode == MD_MULTIPLACESTART) {
         scr_drawPlacement(id); // This is fine to keep this the same
     }
@@ -1134,7 +1142,7 @@ else if (gameMode == MD_MULTIPLACESTART) {
     multiPlaceStartX = scr_getX(camera);
     multiPlaceStartY = scr_getY(camera);
     
-    show_message("START X=" + string(multiPlaceStartX) + ", START Y=" + string(multiPlaceStartY));
+    //show_message("START X=" + string(multiPlaceStartX) + ", START Y=" + string(multiPlaceStartY));
 
     DLL_setGameMode(MD_MULTIPLACEEND);
     gameMode = DLL_getGameMode();
@@ -1151,11 +1159,15 @@ else if (gameMode == MD_MULTIPLACEEND) {
     multiPlaceFinishX = scr_getX(camera);
     multiPlaceFinishY = scr_getY(camera);
     
-    show_message("FINISH X=" + string(multiPlaceFinishX) + ", FINISH Y=" + string(multiPlaceFinishY));
+    //show_message("FINISH X=" + string(multiPlaceFinishX) + ", FINISH Y=" + string(multiPlaceFinishY));
 
-    // Go back to place-start mode:
-    DLL_setGameMode(MD_MULTIPLACESTART);
-    gameMode = DLL_getGameMode();
+    // Place the buildings:
+    scr_placeMulti(id);
+    
+    // Reset start position:
+    multiPlaceStartX = scr_getX(camera);
+    multiPlaceStartY = scr_getY(camera);
+    
     scr_updateAll(id);
 }
 

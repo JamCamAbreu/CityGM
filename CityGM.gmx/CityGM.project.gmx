@@ -126,7 +126,9 @@
     </scripts>
     <scripts name="Buildings">
       <script>scripts\scr_drawPlacement.gml</script>
+      <script>scripts\scr_drawSpriteAt.gml</script>
       <script>scripts\scr_placeBuilding.gml</script>
+      <script>scripts\scr_placeBuildingAt.gml</script>
       <script>scripts\scr_removeBuilding.gml</script>
       <scripts name="DLLgetStringBuildings">
         <script>scripts\scr_updateBuildings.gml</script>
@@ -141,6 +143,8 @@
         <script>scripts\scr_updateRoadsArrays.gml</script>
       </scripts>
       <script>scripts\scr_getBuildingInfo.gml</script>
+      <script>scripts\scr_drawMultiPlacement.gml</script>
+      <script>scripts\scr_placeMulti.gml</script>
     </scripts>
     <scripts name="Camera">
       <script>scripts\scr_moveKeepInRoom.gml</script>
@@ -151,6 +155,7 @@
       <script>scripts\scr_moveAlarm0.gml</script>
       <script>scripts\scr_move.gml</script>
       <script>scripts\scr_getX.gml</script>
+      <script>scripts\scr_getRoomCoord.gml</script>
       <script>scripts\scr_getY.gml</script>
     </scripts>
     <scripts name="Map">
