@@ -182,6 +182,8 @@
       <scripts name="buildMenu">
         <script>scripts\scr_drawBuildMenu.gml</script>
         <script>scripts\scr_drawBuildMenuHelp.gml</script>
+        <script>scripts\scr_drawMultiBuildStartHelp.gml</script>
+        <script>scripts\scr_drawMultiBuildEndHelp.gml</script>
         <script>scripts\scr_buildMenuKeys.gml</script>
         <script>scripts\scr_buildMenuGetRow.gml</script>
         <script>scripts\scr_buildMenuGetColumn.gml</script>

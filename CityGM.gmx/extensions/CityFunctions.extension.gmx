@@ -1081,6 +1081,16 @@
           <value>8</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>MD_MULTIPLACESTART</name>
+          <value>9</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>MD_MULTIPLACEEND</name>
+          <value>10</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>

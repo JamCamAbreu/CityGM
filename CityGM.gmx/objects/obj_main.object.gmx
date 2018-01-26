@@ -207,6 +207,13 @@ funnies = ds_list_create();
 scr_initFunnies(id);
 alarmIncreaser = 0;
 alarm[6] = MESSAGE_BASE_ALARM;
+
+
+// multi placement (roads and powerlines)
+multiPlaceStartX = 0;
+multiPlaceStartY = 0;
+multiPlaceFinishX = 0;
+multiPlaceFinishY = 0;
 </string>
           </argument>
         </arguments>
@@ -591,6 +598,15 @@ if (canDraw) {
         // build menu help
         if (gameMode == MD_NORMAL)
             scr_drawBuildMenuHelp();
+            
+        // Multi-build mode help:
+        if (gameMode == MD_MULTIPLACESTART)
+            scr_drawMultiBuildStartHelp();
+        
+        if (gameMode == MD_MULTIPLACEEND)
+            scr_drawMultiBuildEndHelp();
+            
+            
     }
     else
         scr_drawMenuHelp();
@@ -621,6 +637,13 @@ if (canDraw) {
         scr_drawPlacement(id);
         scr_drawBuildingInfo(id);
         scr_drawQtoQuit();
+    }
+    
+    else if (gameMode == MD_MULTIPLACESTART) {
+        scr_drawPlacement(id); // This is fine to keep this the same
+    }
+    else if (gameMode == MD_MULTIPLACEEND) {
+        scr_drawPlacement(id); // replace with my own draw code for multi-build
     }
     
     // Game Menu:
@@ -1069,15 +1092,30 @@ else {
 // Go to build menu if in normal mode:
 if (gameMode == MD_NORMAL) {
     DLL_setGameMode(MD_SELECT);
+    gamemode = DLL_getGameMode();
     camera.camera_toggle = MD_SELECT;
     scr_updateAll(id);
 }
     
 // Select a building in building select mode:
 else if (gameMode == MD_SELECT) {
-    DLL_setGameMode(MD_PLACE);
-    camera.camera_toggle = MD_PLACE;
-    scr_updateAll(id);
+
+    // Special Multi-Placement (roads and powerlines):
+    if ((selectedBuilding == BT_ROAD) || (selectedBuilding == BT_PLINE)) {
+        DLL_setGameMode(MD_MULTIPLACESTART);
+        gameMode = DLL_getGameMode();
+        camera.camera_toggle = MD_PLACE;
+        scr_updateAll(id);
+    
+    }
+    
+    // Normal Placement
+    else {
+        DLL_setGameMode(MD_PLACE);
+        gameMode = DLL_getGameMode();
+        camera.camera_toggle = MD_PLACE;
+        scr_updateAll(id);
+    }
 }
 
 // Place a building in placement mode:
@@ -1087,16 +1125,61 @@ else if (gameMode == MD_PLACE) {
     //camera.slowDown = CAMERA_MOVESLOW;
 }
 
+
+
+// Select finish location for multi-build:
+else if (gameMode == MD_MULTIPLACESTART) {
+
+    // Update start location and end location:
+    multiPlaceStartX = scr_getX(camera);
+    multiPlaceStartY = scr_getY(camera);
+    
+    show_message("START X=" + string(multiPlaceStartX) + ", START Y=" + string(multiPlaceStartY));
+
+    DLL_setGameMode(MD_MULTIPLACEEND);
+    gameMode = DLL_getGameMode();
+    scr_updateAll(id);
+}
+
+
+
+
+// Select finish location for multi-build:
+else if (gameMode == MD_MULTIPLACEEND) {
+
+    // Update start location and end location:
+    multiPlaceFinishX = scr_getX(camera);
+    multiPlaceFinishY = scr_getY(camera);
+    
+    show_message("FINISH X=" + string(multiPlaceFinishX) + ", FINISH Y=" + string(multiPlaceFinishY));
+
+    // Go back to place-start mode:
+    DLL_setGameMode(MD_MULTIPLACESTART);
+    gameMode = DLL_getGameMode();
+    scr_updateAll(id);
+}
+
+
+
+
+
+
+
+
 // Enter a menu option when in menu mode:
 else if (gameMode == MD_MENU) {
     scr_selectMenuOption(id);
 }
+
+
+
 
 // select a map type in menu maps:
 else if (gameMode == MD_MAPS) {
 
     if (mapUnlocked[selectedMap]) {
         DLL_setGameMode(MD_NORMAL);
+        gameMode = DLL_getGameMode();
         camera.camera_toggle = MD_NORMAL;
         curSpecialMap = selectedMap;
         scr_updateAll(id);
