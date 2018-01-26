@@ -214,6 +214,42 @@ multiPlaceStartX = 0;
 multiPlaceStartY = 0;
 multiPlaceFinishX = 0;
 multiPlaceFinishY = 0;
+drawBuildingInProgress = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="7">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Build for MultiBuild
+
+// Place the buildings:
+scr_placeMulti(id);
+
+// Reset start position:
+multiPlaceStartX = scr_getX(camera);
+multiPlaceStartY = scr_getY(camera);
+
+scr_updateAll(id);
+
+// Stop Drawing, building is done:
+drawBuildingInProgress = false;
 </string>
           </argument>
         </arguments>
@@ -606,7 +642,8 @@ if (canDraw) {
         if (gameMode == MD_MULTIPLACEEND)
             scr_drawMultiBuildEndHelp();
             
-            
+        if (drawBuildingInProgress) 
+            scr_drawBuildingInProgress();
     }
     else
         scr_drawMenuHelp();
@@ -1135,14 +1172,12 @@ else if (gameMode == MD_PLACE) {
 
 
 
-// Select finish location for multi-build:
+// Select start location for multi-build:
 else if (gameMode == MD_MULTIPLACESTART) {
 
     // Update start location and end location:
     multiPlaceStartX = scr_getX(camera);
     multiPlaceStartY = scr_getY(camera);
-    
-    //show_message("START X=" + string(multiPlaceStartX) + ", START Y=" + string(multiPlaceStartY));
 
     DLL_setGameMode(MD_MULTIPLACEEND);
     gameMode = DLL_getGameMode();
@@ -1161,14 +1196,10 @@ else if (gameMode == MD_MULTIPLACEEND) {
     
     //show_message("FINISH X=" + string(multiPlaceFinishX) + ", FINISH Y=" + string(multiPlaceFinishY));
 
-    // Place the buildings:
-    scr_placeMulti(id);
-    
-    // Reset start position:
-    multiPlaceStartX = scr_getX(camera);
-    multiPlaceStartY = scr_getY(camera);
-    
-    scr_updateAll(id);
+    // Draw the text "Building in Progress" to the screen
+    drawBuildingInProgress = true;
+
+    alarm[7] = 3; // allows for "building in progress" to be written to screen
 }
 
 
