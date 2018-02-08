@@ -2,8 +2,8 @@
 /********************************************************************
   * Author: James Cameron Abreu
   * Date: 03/07/2017
-  * Description: Contains the prototypes for all the functions related 
-  *  to the CITYFunctions.dll file. Individual function descriptions 
+  * Description: Contains the prototypes for all the functions related
+  *  to the CITYFunctions.dll file. Individual function descriptions
   *  will be provided inline.
   ********************************************************************/
 #ifndef CITYFUNCTIONS_H
@@ -165,9 +165,9 @@ enum {
 }speedTypes;
 
 enum {
-  CT_RURAL = 0, // 0 to 49 
+  CT_RURAL = 0, // 0 to 49
   CT_DWELLING = 50, // 50 to 99
-  CT_HAMLET = 100, // 100 to 299 
+  CT_HAMLET = 100, // 100 to 299
   CT_TOWN = 300, // 300 to 999
   CT_LARGETOWN = 1000, // 1000 to 9999
   CT_CITY = 10000, // 10000 to 24999
@@ -396,10 +396,14 @@ typedef struct zone {
 
   int zoneType;
 
+  // TODO
+  int zoneLevel;
+  int typeVariation;
+
   int totalPopCur; // current people residing in
   int totalPopCap; // capacity for people
 
-  int totalPollution;
+  int totalPollution; // TODO need to update
 
   building* relatedZoneBuilding;
 
@@ -585,7 +589,8 @@ zone* _newZone(int xCoord, int yCoord, int zoneType);
 void _cleanUpAllZones();
 void _clearOneZone(zone* deleteZone);
 
-std::string _zoneBuildingToString(int zoneType);
+std::string _zoneBuildingToString(int zoneType); // OLD
+std::string _zonesToString(int zoneType); // NEW
 
 void _growZones(int zoneType);
 int _calcPopGrowth(zoneBuilding* curZ);
@@ -744,6 +749,7 @@ GMEXPORT double getRoadsVectorSize();
 // Zone Functions
 GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
 GMEXPORT char* zoneBuildingsToString(double dataType);
+GMEXPORT char* zonesToString(double dataType); // NEW string function
 GMEXPORT double growZone(double zoneType);
 GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();

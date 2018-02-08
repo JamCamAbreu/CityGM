@@ -1854,7 +1854,7 @@ zoneBuilding::~zoneBuilding() {
   this->tileUnder->tileType = TT_GRASS;
 }
 
-// String:
+// String: OLD
 std::string _zoneBuildingToString(int zoneType) {
 
 
@@ -1982,6 +1982,92 @@ std::string _zoneBuildingToString(int zoneType) {
 
   return zoneBuildingInfo;
 }
+
+// NEW VERSION:
+std::string _zonesToString(int zoneType) {
+
+
+  // NEW VERSION NOTES:
+  // We no longer care about the small zone 1X1 buildings. Now we
+  // only care about the 3X3 building
+
+  // FINISHED STRING WILL HAVE THE FOLLOWING SYNTAX:
+  // xCoord,yCoord,ZoneType,level,typeVar.etc...
+
+  std::string zoneBuildingInfo = "";
+  std::string buffer = "";
+  char dataDivider = ',';
+  char elementDivider = ';';
+
+  bool debug = false;
+
+  std::list<zone*>::iterator iter;
+  std::list<zone*>::iterator endZoneList;
+  // first iterate through all zones in given data type:
+  if (zoneType == Z_RES) {
+    iter = Rzones.begin();
+    endZoneList = Rzones.end();
+  }
+  else if (zoneType == Z_COM) {
+    iter = Czones.begin();
+    endZoneList = Czones.end();
+  }
+  else if (zoneType == Z_IND) {
+    iter = Izones.begin();
+    endZoneList = Izones.end();
+  }
+  else {
+    zoneBuildingInfo += "zoneType error: default case";
+    return zoneBuildingInfo;
+  }
+
+
+  while (iter != endZoneList) {
+
+    int CURxCordinate = (*iter)->xOrigin;
+    int CURyCordinate = (*iter)->yOrigin;
+    int CURZoneType = (*iter)->zoneType;
+    int CURlevel = (*iter)->zoneLevel;
+    int CURtypeVar = (*iter)->typeVariation;
+
+    // ADD TO STRING:
+    std::string data = "";
+    // add x to string:
+    data = std::to_string(CURxCordinate);
+    zoneBuildingInfo += data;
+    zoneBuildingInfo += dataDivider;
+
+    // add y to string:
+    data = std::to_string(CURyCordinate);
+    zoneBuildingInfo += data;
+    zoneBuildingInfo += dataDivider;
+
+    // add zoneType to string:
+    data = std::to_string(CURZoneType);
+    zoneBuildingInfo += data;
+    zoneBuildingInfo += dataDivider;
+
+    // add level to string:
+    data = std::to_string(CURlevel);
+    zoneBuildingInfo += data;
+    zoneBuildingInfo += dataDivider;
+
+    // add typeVar to string:
+    data = std::to_string(CURtypeVar);
+    zoneBuildingInfo += data;
+    zoneBuildingInfo += dataDivider;
+
+    zoneBuildingInfo += data;
+
+    // add divider between buildings:
+    zoneBuildingInfo += elementDivider;
+
+    iter++;
+  } // end while iter
+
+  return zoneBuildingInfo;
+}
+
 
 
 // Grow:
@@ -2789,7 +2875,6 @@ double setTaxRate(double type, double val) {
   return 0;
 }
 
-// TODO: add taxes in december
 double incrementGameMonth() {
   // update season from Winter to Spring
   if (curGameData.month == M_FEB) {
@@ -3078,6 +3163,17 @@ double addZone(double xCoord, double yCoord, double zoneType) {
 char* zoneBuildingsToString(double dataType) {
   int dataTypeInt = (int)dataType;
   std::string getString = _zoneBuildingToString(dataTypeInt);
+
+  char* dataString = new char[getString.length() + 1];
+  std::strcpy(dataString, getString.c_str());
+
+  return dataString;
+}
+
+// NEW UDPDATED version of 'zoneBuildingsToString
+char* zonesToString(double dataType) {
+  int dataTypeInt = (int)dataType;
+  std::string getString = _zonesToString(dataTypeInt);
 
   char* dataString = new char[getString.length() + 1];
   std::strcpy(dataString, getString.c_str());
