@@ -46,6 +46,8 @@ const double SATISFIED_POWER = 0.6;
 
 const int ZONE_START_REQUIRED_POWER = 3;
 
+const int MAX_ZONE_VARIATIONS = 5;
+
 
 // ENUMS -----------------------------------
 enum {
@@ -408,7 +410,7 @@ typedef struct zone {
   building* relatedZoneBuilding;
 
   // there are always 9 zone tiles inside:
-  std::vector<zoneBuilding*> zoneBuildings;
+  //std::vector<zoneBuilding*> zoneBuildings; // OLD
 
 }zone;
 

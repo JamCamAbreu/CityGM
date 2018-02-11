@@ -1553,6 +1553,7 @@ int _BtypeToZtype(int bType) {
 }
 
 // Get:
+// OLD
 int _getZoneBuildingX(int squarePos) {
   if (squarePos == 0 || squarePos == 3 || squarePos == 6)
     return 0;
@@ -1752,51 +1753,35 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
 
   zone* newZone = new zone;
 
+  newZone->xOrigin = xCoord;
+  newZone->yOrigin = yCoord;
+  newZone->totalPopCur = 0;
+  newZone->totalPollution = 0;
+  //_initZoneBuildings(newZone); // OLd
+  newZone->relatedZoneBuilding = NULL;
+  newZone->zoneLevel = 1;
+  newZone->typeVariation = getRandomRange(0, MAX_ZONE_VARIATIONS - 1);
+
   switch (zoneType) {
 
   case Z_RES: {
-    newZone->xOrigin = xCoord;
-    newZone->yOrigin = yCoord;
     newZone->zoneType = Z_RES;
     newZone->totalPopCap = RL1;
-    newZone->totalPopCur = 0;
-    newZone->totalPollution = 0;
-    _initZoneBuildings(newZone);
-    newZone->relatedZoneBuilding = NULL;
     break; }
 
   case Z_COM: {
-    newZone->xOrigin = xCoord;
-    newZone->yOrigin = yCoord;
     newZone->zoneType = Z_COM;
     newZone->totalPopCap = CL1;
-    newZone->totalPopCur = 0;
-    newZone->totalPollution = 0;
-    _initZoneBuildings(newZone);
-    newZone->relatedZoneBuilding = NULL;
     break; }
 
   case Z_IND: {
-    newZone->xOrigin = xCoord;
-    newZone->yOrigin = yCoord;
     newZone->zoneType = Z_IND;
     newZone->totalPopCap = IL1;
-    newZone->totalPopCur = 0;
-    newZone->totalPollution = 0;
-    _initZoneBuildings(newZone);
-    newZone->relatedZoneBuilding = NULL;
     break; }
 
   default: {
-    newZone->xOrigin = xCoord;
-    newZone->yOrigin = yCoord;
     newZone->zoneType = -1; // error type
     newZone->totalPopCap = 0;
-    newZone->totalPopCur = 0;
-    newZone->totalPollution = 0;
-    _initZoneBuildings(newZone);
-    newZone->relatedZoneBuilding = NULL;
-
     break; }
   } // end switch
 
@@ -1805,36 +1790,49 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
 
 
 // Destroy (free from memory)
+// TODO TEST
 void _cleanUpAllZones() {
 
   // NEED TO UPDATE TILES UNDERNEATH!
 
 
   // Residential:
-  // Cleanup all zoneBuildings in linked list:
-  for (std::list<zone*>::iterator it = Rzones.begin(); it != Rzones.end(); it++)
-    (*it)->zoneBuildings.clear();
+  // Cleanup all zones in linked list:
+  std::list<zone*>::iterator it = Rzones.begin();
+    while (it != Rzones.end()) {
+      zone* temp = (*it);
+      it++;
+      delete temp;
+    }
   // cleanup zone itself:
   Rzones.clear();
 
   // Commercial:
-  // Cleanup all zoneBuildings in linked list:
-  for (std::list<zone*>::iterator itC = Czones.begin(); itC != Czones.end(); itC++)
-    (*itC)->zoneBuildings.clear();
+  std::list<zone*>::iterator itC = Czones.begin();
+    while (it != Czones.end()) {
+      zone* temp = (*it);
+      it++;
+      delete temp;
+    }
   // cleanup zone itself:
   Czones.clear();
 
   // Industrial:
-  // Cleanup all zoneBuildings in linked list:
-  for (std::list<zone*>::iterator itI = Izones.begin(); itI != Izones.end(); itI++)
-    (*itI)->zoneBuildings.clear();
+  std::list<zone*>::iterator itI = Izones.begin();
+    while (it != Izones.end()) {
+      zone* temp = (*it);
+      it++;
+      delete temp;
+    }
   // cleanup zone itself:
   Izones.clear();
 }
 
+// TODO TEST
 void _clearOneZone(zone* deleteZone) {
 
-  // look up zone in any of the lists:
+  // look up zone in any of the lists, remove from list:
+  // NOTE: DOES NOT FREE THE MEMORY
   if (deleteZone != NULL)
     Rzones.remove(deleteZone);
   if (deleteZone != NULL)
@@ -1842,13 +1840,14 @@ void _clearOneZone(zone* deleteZone) {
   if (deleteZone != NULL)
     Izones.remove(deleteZone);
 
+  // free the memory:
   if (deleteZone != NULL) {
-    deleteZone->zoneBuildings.clear();
     delete deleteZone;
   }
 }
 
 // destructor (clean up buildings by changing tiles underneath):
+// OLD
 zoneBuilding::~zoneBuilding() {
   // reset tile underneath:
   this->tileUnder->tileType = TT_GRASS;
@@ -2071,6 +2070,7 @@ std::string _zonesToString(int zoneType) {
 
 
 // Grow:
+// TODO update this with new zones
 void _growZones(int zoneType) {
 
   int ready = false;
@@ -2136,6 +2136,7 @@ void _growZones(int zoneType) {
   updatePopulationZones();
 }
 
+// TODO update this with new zones
 int _calcPopGrowth(zoneBuilding* curZ) {
 
   int level = curZ->level + 1; // make at least 1
@@ -2186,6 +2187,7 @@ int _calcPopGrowth(zoneBuilding* curZ) {
   return (int)popGrowth;
 }
 
+// TODO update this with new zones
 int _getPopulation(int zoneType) {
 
   // Adds up the population of ALL zoneBuildings for a zone type.
@@ -2230,6 +2232,7 @@ int _getPopulation(int zoneType) {
   return count;
 }
 
+// TODO update this with new zones
 void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
   // make sure popCap is correct first:
@@ -2251,6 +2254,7 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
 }
 
+// TODO update this with new zones
 int _zoneGetTotalRequiredPower(zone* zoneID) {
 
   int sumPowerConsumption = 2;
@@ -2261,12 +2265,14 @@ int _zoneGetTotalRequiredPower(zone* zoneID) {
   return sumPowerConsumption;
 }
 
+// TODO update this with new zones
 int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
     int level = curZB->level;
     return (level + 1) * 1; // TODO: change if needed
 }
 
 // Return the amount of revenue to be added for a certain zone type:
+// TODO update this with new zones
 int _getTaxRevenue(int zoneType) {
 
 
