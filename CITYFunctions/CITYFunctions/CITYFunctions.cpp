@@ -18,6 +18,11 @@ int mode;
 // containers (that stay persistant throughout the life of the DLL)
 std::vector<building*> v_buildings; // cleaned up in mapEnd function
 std::vector<building*> v_roads;
+  // Note: these two seem to need at least 4 bytes each when the
+  // first element is added to either one (at the first push).
+  // Aka. the first time a building is pushed to these vectors
+  // during their creation
+  // There doesn't seem to be any leak, just 8 bytes.
 
 std::list<zone*> Rzones;            // cleaned up in mapEnd function
 std::list<zone*> Czones;
@@ -303,43 +308,46 @@ void _setTileCircle(int xOrigin, int yOrigin, int radius, int tileType) {
 int _getTileData(int x, int y, int dataType) {
   tile* curTile = map(x, y);
 
-  switch (dataType) {
-    case TDT_ALL: {
-      return -1; // error code
-      break;
-    }
+  if (curTile != NULL) {
+    switch (dataType) {
+      case TDT_ALL: {
+        return -1; // error code
+        break;
+      }
 
-    case TDT_POLLUTION: {
-      return curTile->pollution;
-      break;
-    }
+      case TDT_POLLUTION: {
+        return curTile->pollution;
+        break;
+      }
 
-    case TDT_LANDVALUE: {
-      return curTile->landValue;
-      break;
-    }
+      case TDT_LANDVALUE: {
+        return curTile->landValue;
+        break;
+      }
 
-    case TDT_FIREDANGER: {
-      return curTile->fireDanger;
-      break;
-    }
+      case TDT_FIREDANGER: {
+        return curTile->fireDanger;
+        break;
+      }
 
-    case TDT_PLINETYPE: {
-      return curTile->pLineType;
-      break;
-    }
+      case TDT_PLINETYPE: {
+        return curTile->pLineType;
+        break;
+      }
 
-    case TDT_ROADTYPE: {
-      return curTile->roadType;
-      break;
-    }
+      case TDT_ROADTYPE: {
+        return curTile->roadType;
+        break;
+      }
 
-    default: {
-      return -2; // error code
-      break;
-    }
+      default: {
+        return -2; // error code
+        break;
+      }
 
-  }
+    } // end switch
+  } // end check null pointer
+
   return -3; // error code
 }
 
@@ -644,10 +652,12 @@ void _setTilesSectionData(int xCoord, int yCoord, int tileDataType) {
 
   // store information in tile:
   tile* curTile = map(xCoord, yCoord);
-  if (tileDataType == TDT_ROADTYPE)
-    curTile->roadType = type;
-  else if (tileDataType == TDT_PLINETYPE)
-    curTile->pLineType = type;
+  if (curTile != NULL) {
+    if (tileDataType == TDT_ROADTYPE)
+      curTile->roadType = type;
+    else if (tileDataType == TDT_PLINETYPE)
+      curTile->pLineType = type;
+  } // end check null pointer
 }
 
 // The TYPE of POWERLINE or ROAD tile to draw!
@@ -682,13 +692,17 @@ int _getTileSectionType(tile* tileToGet, int type) {
 }
 
 int _getTileSectionData(tile* tileToGet, int type) {
-  if (type == TDT_ROADTYPE)
-    return tileToGet->roadType;
 
-  else if (type == TDT_PLINETYPE)
-    return tileToGet->pLineType;
+  if (tileToGet != NULL) {
+    if (type == TDT_ROADTYPE)
+      return tileToGet->roadType;
 
-  else return -5; // error code
+    else if (type == TDT_PLINETYPE)
+      return tileToGet->pLineType;
+
+    else return -5; // error code
+  }
+  return -6; // error code
 }
 
 void _updateNeighborSectionTypes(int xCoord, int yCoord, int tileDataType) {
@@ -1718,8 +1732,6 @@ int _getZoneBuildingPopMin(int zoneType, int level) {
 // Init:
 int _initZoneBuildings(zone* zoneID) {
 
-  zoneID->zoneBuildings.resize(9); // always 9 zone buildings
-
   for (int i = 0; i < 9; i++) {
 
     zoneBuilding* curZB = new zoneBuilding;
@@ -1743,7 +1755,7 @@ int _initZoneBuildings(zone* zoneID) {
     curZB->parentZone = zoneID;
 
     // LAST: update zoneBuildings[i]
-    zoneID->zoneBuildings[i] = curZB;
+    //zoneID->zoneBuildings[i] = curZB;
   }
 
   return 0;
@@ -1809,9 +1821,9 @@ void _cleanUpAllZones() {
 
   // Commercial:
   std::list<zone*>::iterator itC = Czones.begin();
-    while (it != Czones.end()) {
-      zone* temp = (*it);
-      it++;
+    while (itC != Czones.end()) {
+      zone* temp = (*itC);
+      itC++;
       delete temp;
     }
   // cleanup zone itself:
@@ -1819,9 +1831,9 @@ void _cleanUpAllZones() {
 
   // Industrial:
   std::list<zone*>::iterator itI = Izones.begin();
-    while (it != Izones.end()) {
-      zone* temp = (*it);
-      it++;
+    while (itI != Izones.end()) {
+      zone* temp = (*itI);
+      itI++;
       delete temp;
     }
   // cleanup zone itself:
@@ -1895,6 +1907,7 @@ std::string _zoneBuildingToString(int zoneType) {
   std::cout << std::endl;
   }
 
+    /*
 
   while (iter != endZoneList) {
 
@@ -1969,6 +1982,8 @@ std::string _zoneBuildingToString(int zoneType) {
     iter++;
     } // end while (iteration through Llist)
 
+    */
+
   if (debug) {
     // debug:
     std::cout << std::endl;
@@ -1981,6 +1996,8 @@ std::string _zoneBuildingToString(int zoneType) {
 
   return zoneBuildingInfo;
 }
+
+
 
 // NEW VERSION:
 std::string _zonesToString(int zoneType) {
@@ -2102,25 +2119,17 @@ void _growZones(int zoneType) {
       int highestChance = 6;
       if (chance <= highestChance) {
 
-        // access zoneBuildings in zone:
-        for (auto it : (*iter)->zoneBuildings) {
-          int chanceB = _getIntRange(1, 10);
-          int highestChanceB = 2;
-          if (chanceB <= highestChanceB) {
-
             // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
-            int growth = _calcPopGrowth(it);
-            it->popCur += growth;
+            //int growth = _calcPopGrowth(it);
+            int growth = 1;
+            //it->popCur += growth;
 
             // Bound on zero:
-            if (it->popCur < 0)
-              it->popCur = 0;
+            //if (it->popCur < 0)
+              //it->popCur = 0;
 
             // update level:
-            _updateZoneBuildingLevel(it);
-
-          } // end if chance (buildings within zone)
-        } // end auto : it
+            //_updateZoneBuildingLevel(it);
 
         // update required power AFTER processing the zone:
         zone* curZone = (*iter);
@@ -2217,12 +2226,16 @@ int _getPopulation(int zoneType) {
 
     while (iter != endZoneList) {
 
+
+      // TODO HERE
+      /*
       // access zoneBuildings in zone:
       std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
       std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
       for (bIter; bIter != bIterEnd; bIter++) {
         count += (*bIter)->popCur;
       } // end inner for (each building in zone)
+      */
 
     iter++;
 
@@ -2258,9 +2271,13 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 int _zoneGetTotalRequiredPower(zone* zoneID) {
 
   int sumPowerConsumption = 2;
+
+  // TODO HERE
+  /*
   for (int i = 0; i < 9; i++) {
     sumPowerConsumption += _zoneBuildingGetRequiredPower(zoneID->zoneBuildings[i]);
   }
+  */
 
   return sumPowerConsumption;
 }
@@ -2312,6 +2329,8 @@ int _getTaxRevenue(int zoneType) {
     // Each ZONE of given type:
     while (iter != endZoneList) {
 
+      // TODO HERE
+      /*
       std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
       std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
 
@@ -2326,6 +2345,9 @@ int _getTaxRevenue(int zoneType) {
         revenue += (curPop * zoneRate * revRate * taxRate);
 
       } // end inner for (each building in zone)
+
+      */
+
     iter++; // iterate to next zone building
     } // end while
   } // end if ready
@@ -3397,21 +3419,32 @@ double removeBuilding(double xOrigin, double yOrigin) {
   tile* deleteTile = map(xOrigin, yOrigin);
   building* buildingToDelete = deleteTile->buildingOnTop;
 
-  // update tiles underneath:
-  for (auto it : buildingToDelete->tiles) {
-    it->tileType = TT_GRASS;
-    it->buildingOnTop = NULL;
-    //it->fireDanger *= 1.5; // increase fire danger from destruction?
-    //it->pollution = 0;
-  }
+  if (buildingToDelete != NULL) {
 
-  // update neighbors:
-  _removeMyselfFromNeighbors(buildingToDelete);
+    // update tiles underneath:
+    for (auto it : buildingToDelete->tiles) {
+      it->tileType = TT_GRASS;
+      it->buildingOnTop = NULL;
+      //it->fireDanger *= 1.5; // increase fire danger from destruction?
+      //it->pollution = 0;
+    }
 
-  // remove building from buildings list:
-  v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
+    // update neighbors:
+    _removeMyselfFromNeighbors(buildingToDelete);
 
-  // delete buildingToDelete; // FOR SOME REASON THIS BREAKS EVERYTHING :'(
+    // remove building from road or building vector:
+    if (buildingToDelete->type == BT_ROAD) {
+      std::vector<building*>::iterator pos = std::find(v_roads.begin(), v_roads.end(), buildingToDelete);
+      if (pos != v_roads.end())
+        v_roads.erase(pos);
+      //v_roads.erase(std::remove(v_roads.begin(), v_roads.end(), buildingToDelete), v_roads.end());
+    }
+    else { // building vector
+      v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
+    }
+
+    delete buildingToDelete;
+  } // end if null
 
   return 0;
 }
@@ -4160,14 +4193,7 @@ void _HELPER_printZoneInfo() {
         std::cout << "NULL";
       }
 
-      for (auto it2 : it->relatedZone->zoneBuildings) {
-        std::cout << std::endl;
-        std::cout << "\t\tzLevel=";
-        std::cout << it2->level;
-      }
-
-
-    }
+    } // end it->relatedZone
 
     index++;
     std::cout << std::endl;
@@ -4235,6 +4261,7 @@ double _testPrintZoneLevels(int zoneType) {
     // Each ZONE of given type:
     while (iter != endZoneList) {
 
+      /*
       std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
       std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
 
@@ -4246,6 +4273,7 @@ double _testPrintZoneLevels(int zoneType) {
         std::cout << (*bIter)->level << " ";
 
       } // end inner for (each building in zone)
+      */
 
       std::cout << std::endl;
 

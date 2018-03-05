@@ -12,7 +12,7 @@ var placed = DLL_addBuilding(argument1, myX, myY);
 if (placed) {
 
     // SOUND:
-    if (argument4)
+    if ((argument4 == SFX_BUILDONLY) || (argument4 == SFX_ALL))
         audio_play_sound(sfx_placement, 5, false);
     
     // update zone if zone was placed:
@@ -24,7 +24,7 @@ if (placed) {
         scr_updateZoneBuildings(argument0, Z_IND);
 }
 else { // could not play sound:
-    if (argument4)
+    if ((argument4 == SFX_ERRORONLY) || (argument4 == SFX_ALL))
         audio_play_sound(sfx_error, 5, false);
 }
 

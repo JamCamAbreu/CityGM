@@ -34,7 +34,7 @@ if (deltaX > 0) {
         
             // fill in holes:
             while (prevY < curY) {
-                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, false);
+                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, SFX_BUILDONLY);
                 prevY++;
             }
         }
@@ -42,12 +42,12 @@ if (deltaX > 0) {
         else {  // slope down
             // fill in holes:
             while (prevY > curY) {
-                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, false);
+                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, SFX_BUILDONLY);
                 prevY--;
             }
         }
     
-        scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, round(curY), false);
+        scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, round(curY), SFX_BUILDONLY);
         prevY = round(curY);
         curY += riseOverRun;
     }
@@ -68,19 +68,19 @@ else if (deltaX < 0){
         
             // fill in holes:
             while (prevY < curY) {
-                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, false);
+                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, SFX_BUILDONLY);
                 prevY++;
             }
         }
         else {  // slope down
             // fill in holes:
             while (prevY > curY) {
-                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, false);
+                scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, prevY, SFX_BUILDONLY);
                 prevY--;
             }
         }
     
-        scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, round(curY), false);
+        scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, round(curY), SFX_BUILDONLY);
         prevY = round(curY);
         curY += riseOverRun;
     }
@@ -88,14 +88,14 @@ else if (deltaX < 0){
 
 
 // vertical line:
-else if (deltaX == 0) {
+else if ((deltaX == 0) && (deltaY != 0)) {
 
     curX = x0;
 
     // going up:
     if (deltaY > 0) {
         while (curY < y1) {
-            scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, curY, false);
+            scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, curY, SFX_BUILDONLY);
             curY++;
         }
     }
@@ -103,10 +103,18 @@ else if (deltaX == 0) {
     // going down:
     if (deltaY < 0) {
         while (curY > y1) {
-            scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, curY, false);
+            scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, curY, SFX_BUILDONLY);
             curY--;
         }
     }
+}
+
+
+// Single tile:
+else if ((deltaX == 0) && (deltaY == 0)) {
+    curX = x0; // or x1, they are the same
+    curY = y0; // or y1, they are the same
+    scr_placeBuildingAt(argument0, argument0.selectedBuilding, curX, curY, SFX_BUILDONLY);
 }
 
 

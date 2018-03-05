@@ -308,7 +308,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="128">
+  <constants number="132">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -437,6 +437,10 @@
     <constant name="MAX_CHARS_MESSAGE_SCREEN">37</constant>
     <constant name="MAX_CHARS_MSG">50</constant>
     <constant name="MAX_LINE_NUM">3</constant>
+    <constant name="SFX_NOSOUND">0</constant>
+    <constant name="SFX_BUILDONLY">1</constant>
+    <constant name="SFX_ERRORONLY">2</constant>
+    <constant name="SFX_ALL">3</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
