@@ -80,11 +80,15 @@ void _initGameData() {
   // set the revenue rates:
   int prev = 0;
   int newAmount = 0;
-  for (int i = 0; i < MAX_ZONE_LEVEL + 1; i++) {
+  for (int i = 0; i <= MAX_ZONE_LEVEL; i++) {
     newAmount = (prev + (i + 1)*2);
     curGameData.revenueRates[i] = newAmount;
     prev = newAmount;
   }
+
+    // i =      0   1   2   3   4   5   6
+    // output:  2   6   12  20  30  42  66
+
 }
 
 
@@ -1496,6 +1500,17 @@ void _removeMyselfFromNeighbors(building* buildingID) {
   }
 }
 
+void _buildingResetTilesUnderneath(building* deleteBuilding, int tileType) {
+  if (deleteBuilding != NULL) {
+    for (auto it : deleteBuilding->tiles) {
+      it->tileType = tileType;
+      it->buildingOnTop = NULL;
+      //it->fireDanger *= 1.5; // increase fire danger from destruction?
+      //it->pollution = 0;
+    }
+  }
+}
+
 
 
 
@@ -1566,7 +1581,8 @@ int _BtypeToZtype(int bType) {
     return -1; // error code
 }
 
-// Get:
+
+
 // OLD
 int _getZoneBuildingX(int squarePos) {
   if (squarePos == 0 || squarePos == 3 || squarePos == 6)
@@ -1728,8 +1744,6 @@ int _getZoneBuildingPopMin(int zoneType, int level) {
 
   return -1; // error code
 }
-
-// Init:
 int _initZoneBuildings(zone* zoneID) {
 
   for (int i = 0; i < 9; i++) {
@@ -1760,112 +1774,10 @@ int _initZoneBuildings(zone* zoneID) {
 
   return 0;
 }
-
-zone* _newZone(int xCoord, int yCoord, int zoneType) {
-
-  zone* newZone = new zone;
-
-  newZone->xOrigin = xCoord;
-  newZone->yOrigin = yCoord;
-  newZone->totalPopCur = 0;
-  newZone->totalPollution = 0;
-  //_initZoneBuildings(newZone); // OLd
-  newZone->relatedZoneBuilding = NULL;
-  newZone->zoneLevel = 1;
-  newZone->typeVariation = getRandomRange(0, MAX_ZONE_VARIATIONS - 1);
-
-  switch (zoneType) {
-
-  case Z_RES: {
-    newZone->zoneType = Z_RES;
-    newZone->totalPopCap = RL1;
-    break; }
-
-  case Z_COM: {
-    newZone->zoneType = Z_COM;
-    newZone->totalPopCap = CL1;
-    break; }
-
-  case Z_IND: {
-    newZone->zoneType = Z_IND;
-    newZone->totalPopCap = IL1;
-    break; }
-
-  default: {
-    newZone->zoneType = -1; // error type
-    newZone->totalPopCap = 0;
-    break; }
-  } // end switch
-
-  return newZone;
-}
-
-
-// Destroy (free from memory)
-// TODO TEST
-void _cleanUpAllZones() {
-
-  // NEED TO UPDATE TILES UNDERNEATH!
-
-
-  // Residential:
-  // Cleanup all zones in linked list:
-  std::list<zone*>::iterator it = Rzones.begin();
-    while (it != Rzones.end()) {
-      zone* temp = (*it);
-      it++;
-      delete temp;
-    }
-  // cleanup zone itself:
-  Rzones.clear();
-
-  // Commercial:
-  std::list<zone*>::iterator itC = Czones.begin();
-    while (itC != Czones.end()) {
-      zone* temp = (*itC);
-      itC++;
-      delete temp;
-    }
-  // cleanup zone itself:
-  Czones.clear();
-
-  // Industrial:
-  std::list<zone*>::iterator itI = Izones.begin();
-    while (itI != Izones.end()) {
-      zone* temp = (*itI);
-      itI++;
-      delete temp;
-    }
-  // cleanup zone itself:
-  Izones.clear();
-}
-
-// TODO TEST
-void _clearOneZone(zone* deleteZone) {
-
-  // look up zone in any of the lists, remove from list:
-  // NOTE: DOES NOT FREE THE MEMORY
-  if (deleteZone != NULL)
-    Rzones.remove(deleteZone);
-  if (deleteZone != NULL)
-    Czones.remove(deleteZone);
-  if (deleteZone != NULL)
-    Izones.remove(deleteZone);
-
-  // free the memory:
-  if (deleteZone != NULL) {
-    delete deleteZone;
-  }
-}
-
-// destructor (clean up buildings by changing tiles underneath):
-// OLD
 zoneBuilding::~zoneBuilding() {
   // reset tile underneath:
   this->tileUnder->tileType = TT_GRASS;
 }
-
-// String: OLD
 std::string _zoneBuildingToString(int zoneType) {
 
 
@@ -1996,10 +1908,193 @@ std::string _zoneBuildingToString(int zoneType) {
 
   return zoneBuildingInfo;
 }
+int _calcPopGrowth(zoneBuilding* curZ) {
+
+  int level = curZ->level + 1; // make at least 1
+  int landValue = curZ->tileUnder->landValue;
+  bool isPowered = false; // false until proven true
+
+  double popGrowth = 0;
+
+  // check for power, (lack of power haults/negates growth):
+  building* curZone = curZ->parentZone->relatedZoneBuilding;
+  if (curZone != NULL) {
+    if (curZone->requiredPower > 0) {
+      // just make sure the whole zone is powered:
+      if (curZone->currentPower >= (curZone->requiredPower*SATISFIED_POWER))
+        isPowered = true;
+    }
+  }
+
+  if (isPowered) {
+    // pop growth based on level, some randomness
+    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
+
+    // Some land value impact:
+    int lv = 100 - landValue;
+    double lvImpact = (double)lv / 50.0;
+    if (lvImpact <= 0)
+      lvImpact = 1;
+    popGrowth = popGrowth / lvImpact;
+
+    // punish for low land value, reward for high:
+    double lvLuck = (landValue - 50) / 20;
+    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
+    if (luck == 0) // don't multiply by zero
+      luck = 1;
+    popGrowth = popGrowth*luck;
+
+    // Population can get crazy with high land values, so cap it:
+    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
+    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/10);
+    if (popGrowth > popGrowthMax)
+      popGrowth = popGrowthMax;
+  }
+
+  else {
+    popGrowth = (double)_getIntRange(-((level + 1) * 5), level*2);
+  }
+
+  return (int)popGrowth;
+}
+void _updateZoneBuildingLevel(zoneBuilding* curZB) {
+
+  // make sure popCap is correct first:
+  curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
+
+  // Goes up any levels?
+  while (curZB->popCur > curZB->popCap) {
+      curZB->level++;
+      curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
+  }
+
+  // Goes down any levels?
+  int levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
+  while (curZB->popCur < levelBelow) {
+    curZB->level--;
+    if (curZB->level > 0)
+      levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
+  }
+
+}
+int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
+    int level = curZB->level;
+    return (level + 1) * 1; // TODO: change if needed
+}
+
+// == NEW ZONE ==
+zone* _newZone(int xCoord, int yCoord, int zoneType) {
+
+  zone* newZone = new zone;
+
+  newZone->xOrigin = xCoord;
+  newZone->yOrigin = yCoord;
+  newZone->totalPopCur = 0;
+  newZone->totalPollution = 0;
+  //_initZoneBuildings(newZone); // OLd
+  newZone->relatedZoneBuilding = NULL;
+  newZone->zoneLevel = 1;
+  newZone->typeVariation = getRandomRange(0, MAX_ZONE_VARIATIONS - 1);
+
+  switch (zoneType) {
+
+  case Z_RES: {
+    newZone->zoneType = Z_RES;
+    newZone->totalPopCap = RL1;
+    break; }
+
+  case Z_COM: {
+    newZone->zoneType = Z_COM;
+    newZone->totalPopCap = CL1;
+    break; }
+
+  case Z_IND: {
+    newZone->zoneType = Z_IND;
+    newZone->totalPopCap = IL1;
+    break; }
+
+  default: {
+    newZone->zoneType = -1; // error type
+    newZone->totalPopCap = 0;
+    break; }
+  } // end switch
+
+  return newZone;
+}
+
+// Used for when a zone is destroyed/cleared
+void _zoneResetTilesUnderneath(zone* deleteZone, int tileType) {
+
+  if (deleteZone != NULL) {
+    building* ref = deleteZone->relatedZoneBuilding;
+    _buildingResetTilesUnderneath(ref, tileType);
+  }
+
+}
 
 
+// Destroy (free from memory)
+// TODO: unit tests, check for memory leak
+void _cleanUpAllZones() {
 
-// NEW VERSION:
+  // Residential:
+  // Cleanup all zones in linked list:
+  std::list<zone*>::iterator it = Rzones.begin();
+    while (it != Rzones.end()) {
+      zone* temp = (*it);
+      it++;
+      _zoneResetTilesUnderneath(temp, TT_GRASS);
+      delete temp;
+    }
+  // cleanup zone itself:
+  Rzones.clear();
+
+  // Commercial:
+  std::list<zone*>::iterator itC = Czones.begin();
+    while (itC != Czones.end()) {
+      zone* temp = (*itC);
+      itC++;
+      _zoneResetTilesUnderneath(temp, TT_GRASS);
+      delete temp;
+    }
+  // cleanup zone itself:
+  Czones.clear();
+
+  // Industrial:
+  std::list<zone*>::iterator itI = Izones.begin();
+    while (itI != Izones.end()) {
+      zone* temp = (*itI);
+      itI++;
+      _zoneResetTilesUnderneath(temp, TT_GRASS);
+      delete temp;
+    }
+  // cleanup zone itself:
+  Izones.clear();
+}
+
+// TODO TEST
+void _clearOneZone(zone* deleteZone) {
+
+  // look up zone in any of the lists, remove from list:
+  // NOTE: DOES NOT FREE THE MEMORY (that is done at the bottom)
+  if (deleteZone != NULL) {
+
+    if (deleteZone->zoneType == Z_RES)
+      Rzones.remove(deleteZone);
+
+    else if (deleteZone->zoneType == Z_COM)
+      Czones.remove(deleteZone);
+
+    else if (deleteZone->zoneType == Z_IND)
+      Izones.remove(deleteZone);
+
+    // free the memory:
+    delete deleteZone;
+  }
+}
+
+
+// NEW VERSION: EXPORT STRING
 std::string _zonesToString(int zoneType) {
 
 
@@ -2087,6 +2182,7 @@ std::string _zonesToString(int zoneType) {
 
 
 // Grow:
+// TODO START HERE -~_~_~_~_~_~_~_~
 // TODO update this with new zones
 void _growZones(int zoneType) {
 
@@ -2121,7 +2217,7 @@ void _growZones(int zoneType) {
 
             // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
             //int growth = _calcPopGrowth(it);
-            int growth = 1;
+            int growth = 3;
             //it->popCur += growth;
 
             // Bound on zero:
@@ -2145,58 +2241,7 @@ void _growZones(int zoneType) {
   updatePopulationZones();
 }
 
-// TODO update this with new zones
-int _calcPopGrowth(zoneBuilding* curZ) {
-
-  int level = curZ->level + 1; // make at least 1
-  int landValue = curZ->tileUnder->landValue;
-  bool isPowered = false; // false until proven true
-
-  double popGrowth = 0;
-
-  // check for power, (lack of power haults/negates growth):
-  building* curZone = curZ->parentZone->relatedZoneBuilding;
-  if (curZone != NULL) {
-    if (curZone->requiredPower > 0) {
-      // just make sure the whole zone is powered:
-      if (curZone->currentPower >= (curZone->requiredPower*SATISFIED_POWER))
-        isPowered = true;
-    }
-  }
-
-  if (isPowered) {
-    // pop growth based on level, some randomness
-    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
-
-    // Some land value impact:
-    int lv = 100 - landValue;
-    double lvImpact = (double)lv / 50.0;
-    if (lvImpact <= 0)
-      lvImpact = 1;
-    popGrowth = popGrowth / lvImpact;
-
-    // punish for low land value, reward for high:
-    double lvLuck = (landValue - 50) / 20;
-    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
-    if (luck == 0) // don't multiply by zero
-      luck = 1;
-    popGrowth = popGrowth*luck;
-
-    // Population can get crazy with high land values, so cap it:
-    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/10);
-    if (popGrowth > popGrowthMax)
-      popGrowth = popGrowthMax;
-  }
-
-  else {
-    popGrowth = (double)_getIntRange(-((level + 1) * 5), level*2);
-  }
-
-  return (int)popGrowth;
-}
-
-// TODO update this with new zones
+// TODO: unit test
 int _getPopulation(int zoneType) {
 
   // Adds up the population of ALL zoneBuildings for a zone type.
@@ -2226,72 +2271,33 @@ int _getPopulation(int zoneType) {
 
     while (iter != endZoneList) {
 
-
-      // TODO HERE
-      /*
-      // access zoneBuildings in zone:
-      std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
-      std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
-      for (bIter; bIter != bIterEnd; bIter++) {
-        count += (*bIter)->popCur;
-      } // end inner for (each building in zone)
-      */
-
+      // revised, simple:
+      count += (*iter)->totalPopCur;
     iter++;
-
     } // end while
   } // end if ready
 
   return count;
 }
 
-// TODO update this with new zones
-void _updateZoneBuildingLevel(zoneBuilding* curZB) {
-
-  // make sure popCap is correct first:
-  curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
-
-  // Goes up any levels?
-  while (curZB->popCur > curZB->popCap) {
-      curZB->level++;
-      curZB->popCap = _getZoneBuildingPopMin(curZB->zoneType, curZB->level);
-  }
-
-  // Goes down any levels?
-  int levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
-  while (curZB->popCur < levelBelow) {
-    curZB->level--;
-    if (curZB->level > 0)
-      levelBelow = _getZoneBuildingPopMin(curZB->zoneType, (curZB->level - 1));
-  }
-
-}
-
-// TODO update this with new zones
+// TODO make more interesting? also, TEST this
 int _zoneGetTotalRequiredPower(zone* zoneID) {
 
-  int sumPowerConsumption = 2;
+  // just for now:
+  int sumPowerConsumption;
 
-  // TODO HERE
-  /*
-  for (int i = 0; i < 9; i++) {
-    sumPowerConsumption += _zoneBuildingGetRequiredPower(zoneID->zoneBuildings[i]);
-  }
-  */
+  // add variation???? (after all, people use different amounts of
+  // power on different days, right?!)
+  int mult = _getIntRange(1, 3);
+  sumPowerConsumption = (int)((zoneID->zoneLevel + 2) * mult);
 
   return sumPowerConsumption;
 }
 
-// TODO update this with new zones
-int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
-    int level = curZB->level;
-    return (level + 1) * 1; // TODO: change if needed
-}
 
 // Return the amount of revenue to be added for a certain zone type:
-// TODO update this with new zones
+// TODO: Need to make unit tests
 int _getTaxRevenue(int zoneType) {
-
 
   int revenue = 0;
   int taxRate = 0;
@@ -2323,30 +2329,17 @@ int _getTaxRevenue(int zoneType) {
     ready = true;
   }
 
-
   if (ready) {
 
     // Each ZONE of given type:
     while (iter != endZoneList) {
 
-      // TODO HERE
-      /*
-      std::vector<zoneBuilding*>::iterator bIter = (*iter)->zoneBuildings.begin();
-      std::vector<zoneBuilding*>::iterator bIterEnd = (*iter)->zoneBuildings.end();
+      int pop = (*iter)->totalPopCur;
+      int lvl = (*iter)->zoneLevel;
+      int revRate = curGameData.revenueRates[lvl];
 
-      // each zone BUILDING inside zone:
-      int curPop;
-      int revRate;
-      for (bIter; bIter != bIterEnd; bIter++) {
-        curPop = (*bIter)->popCur;
-        revRate = curGameData.revenueRates[(*bIter)->level];
-
-        // HERE is the current forumla:
-        revenue += (curPop * zoneRate * revRate * taxRate);
-
-      } // end inner for (each building in zone)
-
-      */
+      // for now...
+      revenue = (pop * revRate * zoneRate * taxRate);
 
     iter++; // iterate to next zone building
     } // end while
@@ -3422,32 +3415,35 @@ double removeBuilding(double xOrigin, double yOrigin) {
   if (buildingToDelete != NULL) {
 
     // update tiles underneath:
-    for (auto it : buildingToDelete->tiles) {
-      it->tileType = TT_GRASS;
-      it->buildingOnTop = NULL;
-      //it->fireDanger *= 1.5; // increase fire danger from destruction?
-      //it->pollution = 0;
-    }
+    _buildingResetTilesUnderneath(buildingToDelete, TT_GRASS);
 
     // update neighbors:
     _removeMyselfFromNeighbors(buildingToDelete);
 
-    // remove building from road or building vector:
+    // REMOVE ELEMENT FROM VECTOR HERE (if it's found):
     if (buildingToDelete->type == BT_ROAD) {
       std::vector<building*>::iterator pos = std::find(v_roads.begin(), v_roads.end(), buildingToDelete);
       if (pos != v_roads.end())
         v_roads.erase(pos);
       //v_roads.erase(std::remove(v_roads.begin(), v_roads.end(), buildingToDelete), v_roads.end());
     }
-    else { // building vector
-      v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
+    else { // normal buildings
+      std::vector<building*>::iterator pos = std::find(v_buildings.begin(), v_buildings.end(), buildingToDelete);
+      if (pos != v_buildings.end());
+      v_buildings.erase(pos);
     }
+
+      // this is another way of doing the same this as above.
+      // apparently this is called the "erase-remove idiom" on
+      // stackoverflow
+      //v_buildings.erase(std::remove(v_buildings.begin(), v_buildings.end(), buildingToDelete), v_buildings.end());
 
     delete buildingToDelete;
   } // end if null
 
   return 0;
 }
+
 
 double getBuildingVectorSize() {
 

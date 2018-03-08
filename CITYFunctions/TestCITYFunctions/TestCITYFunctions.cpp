@@ -91,7 +91,7 @@ int main() {
 
 
   // Draw screen:
-  //_printMapTypes();
+  _printMapTypes();
 
 
 

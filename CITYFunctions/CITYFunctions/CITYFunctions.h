@@ -371,6 +371,7 @@ enum {
 } IlevelPopMin;
 
 
+// NO LONGER USED!!!
 typedef struct zoneBuilding {
   // general info
   int squarePos; // uses squarePosition enum
@@ -554,7 +555,7 @@ void _removeMyselfFromNeighbors(building* buildingID);
 
 int _getRequiredPowerAllTypes(building* buildingID);
 
-
+void _buildingResetTilesUnderneath(building* deleteBuilding, int tileType);
 
 
 
@@ -587,6 +588,8 @@ int _getZoneBuildingPopMin(int zoneType, int level);
 
 int _initZoneBuildings(zone* zoneID);
 zone* _newZone(int xCoord, int yCoord, int zoneType);
+
+void _zoneResetTilesUnderneath(zone* deleteZone, int tileType);
 
 void _cleanUpAllZones();
 void _clearOneZone(zone* deleteZone);
