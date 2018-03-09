@@ -22,8 +22,8 @@ int main() {
   seedMap(TT_WATER, 3);
   growSeeds(TT_WATER, 5);
 
-  seedMap(TT_TREE, 4);
-  growSeeds(TT_TREE, 3);
+  seedMap(TT_TREE, 6);
+  growSeeds(TT_TREE, 5);
 
 
   /*
@@ -36,70 +36,29 @@ int main() {
   }
   */
 
-  int x;
-  int y;
 
-  // Check top left corner
-  x = 0;
-  y = 0;
-  addBuilding(BT_ROAD, x, y);
-  removeBuilding(x, y);
+  _getGameDataStuff();
 
-  // check top right corner
-  x = MAP_DIMENSION - 1;
-  y = 0;
-  addBuilding(BT_ROAD, x, y);
-  removeBuilding(x, y);
-
-  // check bottom left corner
-  x = 0;
-  y = MAP_DIMENSION - 1;
-  addBuilding(BT_ROAD, x, y);
-  removeBuilding(x, y);
-
-  // check bottom right corner
-  x = MAP_DIMENSION - 1;
-  y = MAP_DIMENSION - 1;
-  addBuilding(BT_ROAD, x, y);
-  removeBuilding(x, y);
-
-
-  // check diagnal from 0,0 to down right
-  x = 0;
-  y = 0;
-  int times = 8;
-  for (times; times > 0; times--) {
-    x++;
-    y++;
-    addBuilding(BT_ROAD, x, y);
-    removeBuilding(x, y);
-  }
-
-  // check bigger building
-  x = 4;
-  y = 4;
-  addBuilding(BT_NUCLEAR, x, y);
-  removeBuilding(x, y);
-
-
-  // check removing from tile RELATED to building but not origin
-  x = 4;
-  y = 4;
-  addBuilding(BT_NUCLEAR, x, y);
-  removeBuilding(x + 1, y + 1);
-
-
-
-  // Draw screen:
+  // add R zone:
+  addBuilding(BT_NUCLEAR, 0, 0);
+  addBuilding(BT_RZONE, 4, 0);
+  sendElectricity();
   _printMapTypes();
 
+  _getGameDataStuff();
+
+  // grow zone:
+  for (int j = 0; j < 6; j++) {
+    growZone(Z_RES);
+    _getGameDataStuff();
+  }
+
+  growZone(Z_RES);
+  _getGameDataStuff();
 
 
-
-  x++;
-
-
-
+  growZone(Z_RES);
+  _getGameDataStuff();
 
 
   // TEST COMPLETE:

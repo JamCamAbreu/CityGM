@@ -44,6 +44,64 @@ tile* map(int x, int y) {
 }
 
 
+// how to determine zone leveling up:
+// from header: (const int MAX_ZONE_LEVEL = 14;)
+const int R_minPop[] = {
+  RL0,
+  RL1,
+  RL2,
+  RL3,
+  RL4,
+  RL5,
+  RL6,
+  RL7,
+  RL8,
+  RL9,
+  RL10,
+  RL11,
+  RL12,
+  RL13,
+  RL14
+};
+
+const int C_minPop[] = {
+  CL0,
+  CL1,
+  CL2,
+  CL3,
+  CL4,
+  CL5,
+  CL6,
+  CL7,
+  CL8,
+  CL9,
+  CL10,
+  CL11,
+  CL12,
+  CL13,
+  CL14
+};
+
+const int I_minPop[] = {
+  IL0,
+  IL1,
+  IL2,
+  IL3,
+  IL4,
+  IL5,
+  IL6,
+  IL7,
+  IL8,
+  IL9,
+  IL10,
+  IL11,
+  IL12,
+  IL13,
+  IL14
+};
+
+
+
 
 //-----------------------------------------------------------------
 // -----------------------INTERNAL FUNCTIONS ----------------------
@@ -1908,55 +1966,6 @@ std::string _zoneBuildingToString(int zoneType) {
 
   return zoneBuildingInfo;
 }
-int _calcPopGrowth(zoneBuilding* curZ) {
-
-  int level = curZ->level + 1; // make at least 1
-  int landValue = curZ->tileUnder->landValue;
-  bool isPowered = false; // false until proven true
-
-  double popGrowth = 0;
-
-  // check for power, (lack of power haults/negates growth):
-  building* curZone = curZ->parentZone->relatedZoneBuilding;
-  if (curZone != NULL) {
-    if (curZone->requiredPower > 0) {
-      // just make sure the whole zone is powered:
-      if (curZone->currentPower >= (curZone->requiredPower*SATISFIED_POWER))
-        isPowered = true;
-    }
-  }
-
-  if (isPowered) {
-    // pop growth based on level, some randomness
-    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
-
-    // Some land value impact:
-    int lv = 100 - landValue;
-    double lvImpact = (double)lv / 50.0;
-    if (lvImpact <= 0)
-      lvImpact = 1;
-    popGrowth = popGrowth / lvImpact;
-
-    // punish for low land value, reward for high:
-    double lvLuck = (landValue - 50) / 20;
-    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
-    if (luck == 0) // don't multiply by zero
-      luck = 1;
-    popGrowth = popGrowth*luck;
-
-    // Population can get crazy with high land values, so cap it:
-    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-    double popGrowthMax = (int)(_getZoneBuildingPopMin(curZ->zoneType, level)/10);
-    if (popGrowth > popGrowthMax)
-      popGrowth = popGrowthMax;
-  }
-
-  else {
-    popGrowth = (double)_getIntRange(-((level + 1) * 5), level*2);
-  }
-
-  return (int)popGrowth;
-}
 void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 
   // make sure popCap is correct first:
@@ -1979,8 +1988,9 @@ void _updateZoneBuildingLevel(zoneBuilding* curZB) {
 }
 int _zoneBuildingGetRequiredPower(zoneBuilding* curZB) {
     int level = curZB->level;
-    return (level + 1) * 1; // TODO: change if needed
+    return (level + 1) * 1;
 }
+
 
 // == NEW ZONE ==
 zone* _newZone(int xCoord, int yCoord, int zoneType) {
@@ -2094,6 +2104,10 @@ void _clearOneZone(zone* deleteZone) {
 }
 
 
+// TODO TODO TODO
+// TODO: start here!!! BUT FIRST, work on the special
+// variable for zone buildings (a single int that I will
+// use as a bitmap)
 // NEW VERSION: EXPORT STRING
 std::string _zonesToString(int zoneType) {
 
@@ -2182,8 +2196,7 @@ std::string _zonesToString(int zoneType) {
 
 
 // Grow:
-// TODO START HERE -~_~_~_~_~_~_~_~
-// TODO update this with new zones
+// TODO: reworked but needs testing!!
 void _growZones(int zoneType) {
 
   int ready = false;
@@ -2208,38 +2221,116 @@ void _growZones(int zoneType) {
 
   if (ready) {
 
+    zone* Z;
     while (iter != endZoneList) {
 
-      // not ALL zones are updated every time!
-      int chance = _getIntRange(1, 10);
-      int highestChance = 6;
-      if (chance <= highestChance) {
+      // current zone we are working with:
+      Z = (*iter);
 
-            // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
-            //int growth = _calcPopGrowth(it);
-            int growth = 3;
-            //it->popCur += growth;
+      if (Z != NULL) {
 
-            // Bound on zero:
-            //if (it->popCur < 0)
-              //it->popCur = 0;
+        // not ALL zones are updated every time!
+        int chance = _getIntRange(1, 10);
+        int highestChance = 9;        // DEBUG TODO lower this later
+        if (chance <= highestChance) {
 
-            // update level:
-            //_updateZoneBuildingLevel(it);
+              // HERE IS THE ALGORITHM FOR POPULATION GROWTH:
+              int growth = _calcPopGrowth(Z);
+              Z->totalPopCur += growth;
 
-        // update required power AFTER processing the zone:
-        zone* curZone = (*iter);
-        int newReqPower = _zoneGetTotalRequiredPower(curZone);
-        curZone->relatedZoneBuilding->requiredPower = newReqPower;
+              // Bound on zero:
+              if (Z->totalPopCur < 0)
+                Z->totalPopCur = 0;
 
-      iter++;
-      } // end if chance (zones)
+              // update level:
+              _updateZoneBuildingLevel(Z);
+
+          // update required power AFTER processing the zone:
+          int newReqPower = _zoneGetTotalRequiredPower(Z);
+          Z->relatedZoneBuilding->requiredPower = newReqPower;
+
+        iter++;
+        } // end if chance (zones)
+
+      } // end if Z != NULL
+
     } // end while
+
+
+
   } // end if ready
 
   // Finally, update the population:
   updatePopulationZones();
+
+  // TODO
+  // Test! send power because of new power requirements:
+  sendElectricity();
 }
+
+
+// TODO (updated), but needs unit tests
+int _calcPopGrowth(zone* Z) {
+
+  // accumulator, later cast to int:
+  double popGrowth = 0;
+
+  int level = Z->zoneLevel + 1; // make at least 1
+
+  // Get the total count of land value:
+  int avg_LV = _sumTileDataUnderZone(Z, TDT_LANDVALUE);
+  // average it (9 total tiles, using int division):
+  avg_LV = (avg_LV / 9);
+
+  bool isPowered = false; // false until proven true
+
+
+  // check for power, (lack of power haults/negates growth):
+  building* curZone = Z->relatedZoneBuilding;
+  if (curZone != NULL) {
+    if (curZone->requiredPower > 0) {
+      // just make sure the whole zone is powered:
+      if (curZone->currentPower >= (curZone->requiredPower*SATISFIED_POWER))
+        isPowered = true;
+    }
+  }
+
+  if (isPowered) {
+    // pop growth based on level, some randomness
+    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
+
+    // Some land value impact:
+    int lv = 100 - avg_LV;
+    double lvImpact = (double)lv / 50.0;
+    if (lvImpact <= 0)
+      lvImpact = 1;
+    popGrowth = popGrowth / lvImpact;
+
+    // punish for low land value, reward for high:
+    double lvLuck = (avg_LV - 50) / 20;
+    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
+    if (luck == 0) // don't multiply by zero, but also allow negatives
+      luck = 1;
+    popGrowth = popGrowth*luck;
+
+    // Population can get crazy with high land values, so cap it:
+    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
+    double popGrowthMax = (_getZonePopMin(Z->zoneType, Z->zoneLevel + 1));
+    if (popGrowthMax == -1) {
+      // this will catch my attention:
+      popGrowth -= 150;
+    }
+    else if (popGrowth > popGrowthMax)
+      popGrowth = popGrowthMax;
+  } // end if powered
+
+  else {
+    popGrowth = (double)_getIntRange(-((level + 1) * 5), level*2);
+  }
+
+  return (int)popGrowth;
+}
+
 
 // TODO: unit test
 int _getPopulation(int zoneType) {
@@ -2293,7 +2384,6 @@ int _zoneGetTotalRequiredPower(zone* zoneID) {
 
   return sumPowerConsumption;
 }
-
 
 // Return the amount of revenue to be added for a certain zone type:
 // TODO: Need to make unit tests
@@ -2349,10 +2439,74 @@ int _getTaxRevenue(int zoneType) {
 }
 
 
+// NEW and improved!! :D
+int _sumTileDataUnderZone(zone* Z, int dataType) {
+  int total = 0;
+
+  if (Z != NULL) {
+    int xStart = Z->xOrigin;
+    int yStart = Z->yOrigin;
+
+    int x;
+    int y;
+    for (x = xStart; x < xStart + 2; x++) {
+      for (y = yStart; y < yStart + 2; y++) {
+        total += _getTileData(x, y, dataType);
+      } // end y
+    } // end x
+  } // end if null
+
+  return total;
+}
+
+int _getZonePopMin(int zoneType, int level) {
+
+  // protect out of bounds array:
+  if (level > MAX_ZONE_LEVEL)
+    level = MAX_ZONE_LEVEL;
+  else if (level < 0)
+    level = 0;
+
+  // array indexing is so much faster than switches:
+  // trade space for efficiency ;)
+  if (zoneType == Z_RES) {
+    return R_minPop[level];
+  }
+  else if (zoneType == Z_COM) {
+    return C_minPop[level];
+  }
+  else if (zoneType == Z_IND) {
+    return I_minPop[level];
+  }
+  else
+    return -1; // error code
+}
+
+void _updateZoneBuildingLevel(zone* Z) {
+
+  // Goes up any levels?
+  int curPop = Z->totalPopCur;
+  int curLvl = Z->zoneLevel;
+  int curLvlCap = _getZonePopMin(Z->zoneType, curLvl);
+
+  while (curPop > curLvlCap) {
+    curLvl = (Z->zoneLevel++); // update zone level
+    curLvlCap = _getZonePopMin(Z->zoneType, curLvl);
+  }
+
+  // Goes down any levels?
+  int capBelow = _getZonePopMin(Z->zoneType, curLvl - 1);
+  while (curPop < capBelow) {
+    curLvl = (Z->zoneLevel--); // update zone level
+    if (curLvl > 0)
+      capBelow = _getZonePopMin(Z->zoneType, curLvl - 1);
+  }
+}
 
 
-
-
+// TODO TODO TODO
+// remove zone function? Look at remove building code to make sure
+// that it handles zones too?
 
 
 
@@ -4337,6 +4491,15 @@ double _deepDebugPopGrowth() {
 }
 
 
+double _getGameDataStuff() {
+
+  std::cout << std::endl;
+  std::cout << "Data Stuffs:" << std::endl;
+  std::cout << "\tPopulation: " << getPopulation() << std::endl;
+  std::cout << "\tMoney: " << getGameMoney() << std::endl;
+
+  return 0;
+}
 
 
 

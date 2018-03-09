@@ -40,7 +40,7 @@ const char CHAR_IZONE = 'i';
 
 const int TILE_SECTION_DEFAULT = -1;
 
-const int MAX_ZONE_LEVEL = 8;
+const int MAX_ZONE_LEVEL = 14;
 
 const double SATISFIED_POWER = 0.6;
 
@@ -334,14 +334,20 @@ enum {
 
 enum {
   RL0 = 0,
-  RL1 = 35,
-  RL2 = 90,
-  RL3 = 180,
-  RL4 = 350,
-  RL5 = 850,
-  RL6 = 1650,
-  RL7 = 3750,
-  RL8 = 8500
+  RL1 = 12,
+  RL2 = 35,
+  RL3 = 65,
+  RL4 = 100,
+  RL5 = 150,
+  RL6 = 220,
+  RL7 = 350,
+  RL8 = 500,
+  RL9 = 700,
+  RL10 = 1000,
+  RL11 = 1500,
+  RL12 = 3000,
+  RL13 = 5000,
+  RL14 = 8500
 } RlevelPopMin;
 
 enum {
@@ -351,23 +357,35 @@ enum {
   CL2 = 12,
   CL3 = 24,
   CL4 = 50,
-  CL5 = 120,
-  CL6 = 250,
-  CL7 = 500,
-  CL8 = 1000
+  CL5 = 80,
+  CL6 = 120,
+  CL7 = 175,
+  CL8 = 230,
+  CL9 = 300,
+  CL10 = 400,
+  CL11 = 550,
+  CL12 = 800,
+  CL13 = 1000,
+  CL14 = 1250
 } ClevelPopMin;
 
 enum {
 
   IL0 = 0,
   IL1 = 10,
-  IL2 = 30,
-  IL3 = 60,
-  IL4 = 120,
-  IL5 = 200,
-  IL6 = 250,
-  IL7 = 350,
-  IL8 = 550
+  IL2 = 25,
+  IL3 = 40,
+  IL4 = 70,
+  IL5 = 110,
+  IL6 = 150,
+  IL7 = 190,
+  IL8 = 230,
+  IL9 = 280,
+  IL10 = 340,
+  IL11 = 410,
+  IL12 = 500,
+  IL13 = 600,
+  IL14 = 750
 } IlevelPopMin;
 
 
@@ -598,7 +616,7 @@ std::string _zoneBuildingToString(int zoneType); // OLD
 std::string _zonesToString(int zoneType); // NEW
 
 void _growZones(int zoneType);
-int _calcPopGrowth(zoneBuilding* curZ);
+int _calcPopGrowth(zone* Z);
 
 int _getPopulation(int zoneType);
 
@@ -610,7 +628,11 @@ int _zoneGetTotalRequiredPower(zone* zoneID);
 
 int _getTaxRevenue(int zoneType);
 
+int _sumTileDataUnderZone(zone* Z, int dataType);
 
+int _getZonePopMin(int zoneType, int level);
+
+void _updateZoneBuildingLevel(zone* Z);
 
 
 
@@ -791,5 +813,6 @@ GMEXPORT double _testZoneGrowthPowerless();
 GMEXPORT double _testPrintZoneLevels(int zoneType);
 GMEXPORT double _testCollectRevenue();
 GMEXPORT double _deepDebugPopGrowth();
+GMEXPORT double _getGameDataStuff();
 #endif
 
