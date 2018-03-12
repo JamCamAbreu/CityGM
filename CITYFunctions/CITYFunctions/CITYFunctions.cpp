@@ -101,7 +101,7 @@ const int I_minPop[] = {
 };
 
 // bitmap Placement enums:
-const int bitmapConstants[] = {
+const unsigned int bitmapConstants[] = {
   bm_TL,
   bm_T,
   bm_TR,
@@ -2017,7 +2017,7 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
   newZone->relatedZoneBuilding = NULL;
   newZone->zoneLevel = 1;
   newZone->typeVariation = getRandomRange(0, MAX_ZONE_VARIATIONS - 1);
-  newZone->buildingBM = 0;
+  newZone->shape = 0;
 
   // to start, all tile buildings available
   for (int j = 0; j < 9; j++) {
@@ -2123,9 +2123,7 @@ void _clearOneZone(zone* deleteZone) {
 
 
 // TODO TODO TODO
-// TODO: start here!!! BUT FIRST, work on the special
-// variable for zone buildings (a single int that I will
-// use as a bitmap)
+// TODO: start here!!!
 // NEW VERSION: EXPORT STRING
 std::string _zonesToString(int zoneType) {
 
@@ -2172,6 +2170,7 @@ std::string _zonesToString(int zoneType) {
     int CURZoneType = (*iter)->zoneType;
     int CURlevel = (*iter)->zoneLevel;
     int CURtypeVar = (*iter)->typeVariation;
+    unsigned int CURshape = (*iter)->shape;
 
     // ADD TO STRING:
     std::string data = "";
@@ -2200,6 +2199,8 @@ std::string _zonesToString(int zoneType) {
     zoneBuildingInfo += data;
     zoneBuildingInfo += dataDivider;
 
+    // add bip map shape to string:
+    data = std::to_string(CURshape);
     zoneBuildingInfo += data;
 
     // add divider between buildings:
@@ -2550,6 +2551,8 @@ void _updateZoneBuildingLevel(zone* Z) {
 // that it handles zones too?
 
 
+
+
 // TODO TODO test
 void _addTileBuilding(zone* Z) {
 
@@ -2567,7 +2570,7 @@ void _addTileBuilding(zone* Z) {
 
 
       // 'OR' the bit:
-      Z->buildingBM |= BM_code;
+      Z->shape |= BM_code;
 
       // Remove the building from possible buildings:
       Z->TBRemaining.erase(Z->TBRemaining.begin() + ran);
@@ -2592,11 +2595,12 @@ void _removeTileBuilding(zone* Z) {
 
       // get correct power of 2:
       int BM_code = bitmapConstants[index];
+
+      // Following code to REMOVE from bitmap:
       // perform invert:
       BM_code = ~BM_code;
-
-      // 'OR' the bit:
-      Z->buildingBM |= BM_code;
+      // 'AND' the bit:
+      Z->shape &= BM_code;
 
       // Remove the building from possible buildings:
       Z->TB.erase(Z->TB.begin() + ran);
@@ -3516,15 +3520,18 @@ double addZone(double xCoord, double yCoord, double zoneType) {
   return 0;
 }
 
-char* zoneBuildingsToString(double dataType) {
-  int dataTypeInt = (int)dataType;
-  std::string getString = _zoneBuildingToString(dataTypeInt);
+// OLD:
+/*
+char* zoneBuildingsToString(double zoneType) {
+  int zoneTypeInt = (int)zoneType;
+  std::string getString = _zoneBuildingToString(zoneTypeInt);
 
   char* dataString = new char[getString.length() + 1];
   std::strcpy(dataString, getString.c_str());
 
   return dataString;
 }
+*/
 
 // NEW UDPDATED version of 'zoneBuildingsToString
 char* zonesToString(double dataType) {
@@ -4695,7 +4702,7 @@ double _printBMinfo() {
   zone* Z = B->relatedZone;
 
   std::cout << std::endl;
-  std::cout << "BP: " << Z->buildingBM << std::endl;
+  std::cout << "BP: " << Z->shape << std::endl;
   std::cout << "Buildings left: ";
   int size = Z->TBRemaining.size();
   for (int j = 0; j < size; j++) {

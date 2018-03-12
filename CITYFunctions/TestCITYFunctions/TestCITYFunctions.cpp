@@ -50,6 +50,8 @@ int main() {
     _getGameDataStuff();
     _printBMinfo();
     std::cout << std::endl;
+    std::cout << zonesToString(Z_RES);
+    std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
   }

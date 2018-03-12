@@ -463,7 +463,7 @@ typedef struct zone {
   building* relatedZoneBuilding;
 
   // Buildings Bit Map
-  int buildingBM;
+  unsigned int shape;
   std::vector<int> TBRemaining;
   std::vector<int> TB;
 
@@ -818,8 +818,8 @@ GMEXPORT double getRoadsVectorSize();
 
 // Zone Functions
 GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
-GMEXPORT char* zoneBuildingsToString(double dataType);
-GMEXPORT char* zonesToString(double dataType); // NEW string function
+//GMEXPORT char* zoneBuildingsToString(double dataType);
+GMEXPORT char* zonesToString(double zoneType); // NEW string function
 GMEXPORT double growZone(double zoneType);
 GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();
