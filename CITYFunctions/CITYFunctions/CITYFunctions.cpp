@@ -100,6 +100,18 @@ const int I_minPop[] = {
   IL14
 };
 
+// bitmap Placement enums:
+const int bitmapConstants[] = {
+  bm_TL,
+  bm_T,
+  bm_TR,
+  bm_L,
+  bm_M,
+  bm_R,
+  bm_BL,
+  bm_B,
+  bm_BR
+};
 
 
 
@@ -2005,6 +2017,12 @@ zone* _newZone(int xCoord, int yCoord, int zoneType) {
   newZone->relatedZoneBuilding = NULL;
   newZone->zoneLevel = 1;
   newZone->typeVariation = getRandomRange(0, MAX_ZONE_VARIATIONS - 1);
+  newZone->buildingBM = 0;
+
+  // to start, all tile buildings available
+  for (int j = 0; j < 9; j++) {
+    newZone->TBRemaining.push_back(j);
+  }
 
   switch (zoneType) {
 
@@ -2238,12 +2256,17 @@ void _growZones(int zoneType) {
               int growth = _calcPopGrowth(Z);
               Z->totalPopCur += growth;
 
+              // Gain or Lose a tile building
+              _assignTileBuilding(Z, growth);
+
               // Bound on zero:
               if (Z->totalPopCur < 0)
                 Z->totalPopCur = 0;
 
               // update level:
               _updateZoneBuildingLevel(Z);
+              // Update pop cap:
+              Z->totalPopCap = _getZonePopMin(Z->zoneType, Z->zoneLevel);
 
           // update required power AFTER processing the zone:
           int newReqPower = _zoneGetTotalRequiredPower(Z);
@@ -2297,7 +2320,7 @@ int _calcPopGrowth(zone* Z) {
 
   if (isPowered) {
     // pop growth based on level, some randomness
-    popGrowth = 8*(level) + ((level)*(_getIntRange(-(level + 2), level + 2)));
+    popGrowth = 2*(level) + ((level)*(_getIntRange(-(level + 3), level + 3)));
 
     // Some land value impact:
     int lv = 100 - avg_LV;
@@ -2307,15 +2330,34 @@ int _calcPopGrowth(zone* Z) {
     popGrowth = popGrowth / lvImpact;
 
     // punish for low land value, reward for high:
-    double lvLuck = (avg_LV - 50) / 20;
-    double luck = _getIntRange(lvLuck - 1, lvLuck + 1);
-    if (luck == 0) // don't multiply by zero, but also allow negatives
-      luck = 1;
-    popGrowth = popGrowth*luck;
+    int lvLuck = (avg_LV - 50) / 10;
+    int popCap = Z->totalPopCap;
+    int popCur = Z->totalPopCur;
+    int diff = popCap - popCur;
+
+    // reward:
+    if (lvLuck > 0) {
+      int left = lvLuck;
+      while (left > 0) {
+        // gain 6.25% each time:
+        popGrowth += (diff / 16);
+        left--;
+      }
+
+    }
+    // punish:
+    else if (lvLuck <= 0) {
+      int left = -lvLuck;
+      while (left > 0) {
+        // lose 10% each time:
+        popGrowth -= (diff / 10);
+        left--;
+      }
+    }
 
     // Population can get crazy with high land values, so cap it:
-    //double popGrowthMax = (level + 1)*((level + 2) / 2) * 30;
-    double popGrowthMax = (_getZonePopMin(Z->zoneType, Z->zoneLevel + 1));
+    // Cap at 25% growth of current cap
+    double popGrowthMax = ((_getZonePopMin(Z->zoneType, Z->zoneLevel)))*(0.35);
     if (popGrowthMax == -1) {
       // this will catch my attention:
       popGrowth -= 150;
@@ -2484,22 +2526,21 @@ int _getZonePopMin(int zoneType, int level) {
 
 void _updateZoneBuildingLevel(zone* Z) {
 
-  // Goes up any levels?
   int curPop = Z->totalPopCur;
   int curLvl = Z->zoneLevel;
-  int curLvlCap = _getZonePopMin(Z->zoneType, curLvl);
 
-  while (curPop > curLvlCap) {
-    curLvl = (Z->zoneLevel++); // update zone level
+  // Goes up any levels?
+  int curLvlCap = _getZonePopMin(Z->zoneType, curLvl);
+  while ((curPop > curLvlCap) && curLvl <= MAX_ZONE_LEVEL) {
+    curLvl = (++Z->zoneLevel); // update zone level
     curLvlCap = _getZonePopMin(Z->zoneType, curLvl);
   }
 
   // Goes down any levels?
   int capBelow = _getZonePopMin(Z->zoneType, curLvl - 1);
-  while (curPop < capBelow) {
-    curLvl = (Z->zoneLevel--); // update zone level
-    if (curLvl > 0)
-      capBelow = _getZonePopMin(Z->zoneType, curLvl - 1);
+  while ((curPop < capBelow) && curLvl > 1) {
+    curLvl = (--Z->zoneLevel); // update zone level
+    capBelow = _getZonePopMin(Z->zoneType, curLvl - 1);
   }
 }
 
@@ -2508,6 +2549,146 @@ void _updateZoneBuildingLevel(zone* Z) {
 // remove zone function? Look at remove building code to make sure
 // that it handles zones too?
 
+
+// TODO TODO test
+void _addTileBuilding(zone* Z) {
+
+  if (Z != NULL) {
+    // get a random int within a range of
+    // buildings not yet assigned:
+    int vSize = Z->TBRemaining.size();
+
+    if (vSize > 0) {
+      int ran = _getIntRange(0, vSize - 1);
+      int index = Z->TBRemaining.at(ran);
+
+      // get correct power of 2:
+      int BM_code = bitmapConstants[index];
+
+
+      // 'OR' the bit:
+      Z->buildingBM |= BM_code;
+
+      // Remove the building from possible buildings:
+      Z->TBRemaining.erase(Z->TBRemaining.begin() + ran);
+
+      // Add to tile Buildings:
+      Z->TB.push_back(index);
+
+    } // end if size > 0
+
+  } // end if not null
+}
+
+void _removeTileBuilding(zone* Z) {
+
+  if (Z != NULL) {
+
+    int vSize = Z->TB.size();
+
+    if (vSize > 0) {
+      int ran = _getIntRange(0, vSize - 1);
+      int index = Z->TB.at(ran);
+
+      // get correct power of 2:
+      int BM_code = bitmapConstants[index];
+      // perform invert:
+      BM_code = ~BM_code;
+
+      // 'OR' the bit:
+      Z->buildingBM |= BM_code;
+
+      // Remove the building from possible buildings:
+      Z->TB.erase(Z->TB.begin() + ran);
+
+      // Add to tile Buildings remaining:
+      Z->TBRemaining.push_back(index);
+    } // end if size > 0
+
+
+  } // end if not null
+
+}
+
+void _assignTileBuilding(zone* Z, int growth) {
+
+  if (Z != NULL) {
+
+    int chance = 1;
+
+    // get combine level:
+    int type = Z->zoneType;
+    int combineLevel;
+    if (type == Z_RES)
+      combineLevel = R_ZONE_COMBINE_LEVEL;
+    else if (type == Z_COM)
+      combineLevel = C_ZONE_COMBINE_LEVEL;
+    else
+      combineLevel = I_ZONE_COMBINE_LEVEL;
+
+    int level = Z->zoneLevel;
+
+    // only grow or shrink if less than combine level:
+    if (level < combineLevel) {
+
+      int popCap = Z->totalPopCap;
+      int popCur = Z->totalPopCur;
+      int diff = popCap - popCur;
+
+      // gain a building
+      if (growth > 0) {
+
+
+        // bonus for growth over 5%
+        if (growth >= (diff / 20))
+          chance++;
+
+        // bonus for growth over 10%
+        if (growth >= (diff / 10))
+          chance++;
+
+        // bonus for growth over 15%
+        if (growth >= (diff / 7))
+          chance++;
+
+        if (growth >= (diff / 5))
+          chance += 2;
+
+        chance -= level;
+        chance += _getIntRange(0, combineLevel + 2);
+
+        if (chance > combineLevel)
+          _addTileBuilding(Z);
+
+      }
+
+      // lose a building (negative or no growth)
+      else {
+
+        int loss = -growth;
+
+        // bonus for loss over 5%
+        if (loss >= (diff / 20))
+          chance++;
+
+        // bonus for loss over 10%
+        if (loss >= (diff / 10))
+          chance++;
+
+        // bonus for loss over 15%
+        if (loss >= (diff / 7))
+          chance++;
+
+        chance += _getIntRange(0, 10);
+
+        // REMOVE BUILDING:
+        if (chance >= 8) {
+          _removeTileBuilding(Z);
+        }
+      } // end else
+    } // end if level less than combine level
+  } // end if not null
+}
 
 
 
@@ -4497,12 +4678,58 @@ double _getGameDataStuff() {
   std::cout << "Data Stuffs:" << std::endl;
   std::cout << "\tPopulation: " << getPopulation() << std::endl;
   std::cout << "\tMoney: " << getGameMoney() << std::endl;
+  std::cout << "Zone Levels:" << std::endl;
+
+  for (auto it : Rzones) {
+    std::cout << "\t" << it->xOrigin << ", " << it->yOrigin;
+    std::cout << "\t\tLevel: " << it->zoneLevel << std::endl;
+  }
 
   return 0;
 }
 
 
+double _printBMinfo() {
 
+  building* B = _getBuildingWithCoord(0, 0);
+  zone* Z = B->relatedZone;
+
+  std::cout << std::endl;
+  std::cout << "BP: " << Z->buildingBM << std::endl;
+  std::cout << "Buildings left: ";
+  int size = Z->TBRemaining.size();
+  for (int j = 0; j < size; j++) {
+    std::cout << Z->TBRemaining.at(j);
+    if (j != size - 1)
+      std::cout << ", ";
+    else
+      std::cout << std::endl;
+  }
+
+
+
+
+
+  return 0;
+}
+
+
+double _testAddBMbuilding() {
+
+  building* B = _getBuildingWithCoord(0, 0);
+  zone* Z = B->relatedZone;
+  _addTileBuilding(Z);
+
+  return 0;
+}
+
+double _testRemoveBMBuilding() {
+  building* B = _getBuildingWithCoord(0, 0);
+  zone* Z = B->relatedZone;
+  _removeTileBuilding(Z);
+
+  return 0;
+}
 
 
 

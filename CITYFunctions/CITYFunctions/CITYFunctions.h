@@ -48,6 +48,12 @@ const int ZONE_START_REQUIRED_POWER = 3;
 
 const int MAX_ZONE_VARIATIONS = 5;
 
+// TODO implement
+// Level that zones combine to one large sprite:
+const int R_ZONE_COMBINE_LEVEL = 8;
+const int C_ZONE_COMBINE_LEVEL = 6;
+const int I_ZONE_COMBINE_LEVEL = 4;
+
 
 // ENUMS -----------------------------------
 enum {
@@ -388,6 +394,31 @@ enum {
   IL14 = 750
 } IlevelPopMin;
 
+enum {
+  bm_TL = 1,
+  bm_T = 2,
+  bm_TR = 4,
+  bm_L = 8,
+  bm_M = 16,
+  bm_R = 32,
+  bm_BL = 64,
+  bm_B = 128,
+  bm_BR = 256
+} bitmapPlacement;
+
+// used to index the bitmap Placement array
+enum {
+  b_TL = 0,
+  b_T,
+  b_TR,
+  b_L,
+  b_M,
+  b_R,
+  b_BL,
+  b_B,
+  b_BR
+} bitmapIndex;
+
 
 // NO LONGER USED!!!
 typedef struct zoneBuilding {
@@ -410,6 +441,8 @@ typedef struct zoneBuilding {
   ~zoneBuilding();
 };
 
+
+// Still used!:
 typedef struct zone {
 
   int xOrigin;
@@ -426,9 +459,15 @@ typedef struct zone {
 
   int totalPollution; // TODO need to update
 
+  // The building object related to the zone
   building* relatedZoneBuilding;
 
-  // there are always 9 zone tiles inside:
+  // Buildings Bit Map
+  int buildingBM;
+  std::vector<int> TBRemaining;
+  std::vector<int> TB;
+
+  // Old:
   //std::vector<zoneBuilding*> zoneBuildings; // OLD
 
 }zone;
@@ -634,6 +673,10 @@ int _getZonePopMin(int zoneType, int level);
 
 void _updateZoneBuildingLevel(zone* Z);
 
+void _addTileBuilding(zone* Z);
+void _removeTileBuilding(zone* Z);
+void _assignTileBuilding(zone* Z, int growth);
+
 
 
 
@@ -814,5 +857,8 @@ GMEXPORT double _testPrintZoneLevels(int zoneType);
 GMEXPORT double _testCollectRevenue();
 GMEXPORT double _deepDebugPopGrowth();
 GMEXPORT double _getGameDataStuff();
+GMEXPORT double _printBMinfo();
+GMEXPORT double _testAddBMbuilding();
+GMEXPORT double _testRemoveBMBuilding();
 #endif
 

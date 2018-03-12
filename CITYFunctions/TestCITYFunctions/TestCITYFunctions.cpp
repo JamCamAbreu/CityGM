@@ -37,28 +37,23 @@ int main() {
   */
 
 
-  _getGameDataStuff();
-
   // add R zone:
-  addBuilding(BT_NUCLEAR, 0, 0);
-  addBuilding(BT_RZONE, 4, 0);
+  addBuilding(BT_RZONE, 0, 0);
+  addBuilding(BT_NUCLEAR, 3, 0);
   sendElectricity();
   _printMapTypes();
 
-  _getGameDataStuff();
+  // TEST REMOVAL:
 
-  // grow zone:
-  for (int j = 0; j < 6; j++) {
+  for (int p = 0; p < 10; p++) {
     growZone(Z_RES);
     _getGameDataStuff();
+    _printBMinfo();
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
   }
 
-  growZone(Z_RES);
-  _getGameDataStuff();
-
-
-  growZone(Z_RES);
-  _getGameDataStuff();
 
 
   // TEST COMPLETE:
