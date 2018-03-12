@@ -1,3 +1,5 @@
+// NOTE: OUTDATED!!!!
+
 // argument0 = main function that holds the arrays
 // argument1 = type of zone to update;
 
@@ -11,7 +13,7 @@
 
   
 var zoneBuildingString = ""; 
-zoneBuildingString += DLL_zoneBuildingsToString(argument1);
+//zoneBuildingString += DLL_zoneBuildingsToString(argument1);
 
 // count how many buildings with special dot char:
 var charPos;

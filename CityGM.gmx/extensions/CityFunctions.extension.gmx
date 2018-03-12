@@ -403,10 +403,10 @@
           <args/>
         </function>
         <function>
-          <name>DLL_zoneBuildingsToString</name>
-          <externalName>zoneBuildingsToString</externalName>
+          <name>DLL_zonesToString</name>
+          <externalName>zonesToString</externalName>
           <kind>12</kind>
-          <help>DLL_zoneBuildingsToString(int dataType)</help>
+          <help>DLL_zonesToString(int zoneType)</help>
           <returnType>1</returnType>
           <argCount>1</argCount>
           <args>
@@ -598,6 +598,17 @@
           <externalName>setBuildingTileData</externalName>
           <kind>12</kind>
           <help>DLL_setBuildingTileData(int tileDataType)</help>
+          <returnType>2</returnType>
+          <argCount>1</argCount>
+          <args>
+            <arg>2</arg>
+          </args>
+        </function>
+        <function>
+          <name>DLL_getNumZonesType</name>
+          <externalName>getNumZonesType</externalName>
+          <kind>12</kind>
+          <help>DLL_getNumZonesType(int zoneType)</help>
           <returnType>2</returnType>
           <argCount>1</argCount>
           <args>

@@ -67,6 +67,7 @@ while (elementsLeft > 0) {
     // add each VALID char to parseString:
     curChar = string_char_at(buildingString, curCharIndex);
     
+    // GET X VALUE:
     while (curChar != 'X') {
         curCharIndex++;
         curChar = string_char_at(buildingString, curCharIndex);

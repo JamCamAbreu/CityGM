@@ -2135,9 +2135,8 @@ std::string _zonesToString(int zoneType) {
   // FINISHED STRING WILL HAVE THE FOLLOWING SYNTAX:
   // xCoord,yCoord,ZoneType,level,typeVar.etc...
 
-  std::string zoneBuildingInfo = "";
+  std::string zoneInfo = "";
   std::string buffer = "";
-  char dataDivider = ',';
   char elementDivider = ';';
 
   bool debug = false;
@@ -2158,8 +2157,8 @@ std::string _zonesToString(int zoneType) {
     endZoneList = Izones.end();
   }
   else {
-    zoneBuildingInfo += "zoneType error: default case";
-    return zoneBuildingInfo;
+    zoneInfo += "zoneType error: default case";
+    return zoneInfo;
   }
 
 
@@ -2175,41 +2174,42 @@ std::string _zonesToString(int zoneType) {
     // ADD TO STRING:
     std::string data = "";
     // add x to string:
+    zoneInfo += 'X';
     data = std::to_string(CURxCordinate);
-    zoneBuildingInfo += data;
-    zoneBuildingInfo += dataDivider;
+    zoneInfo += data;
 
     // add y to string:
+    zoneInfo += 'Y';
     data = std::to_string(CURyCordinate);
-    zoneBuildingInfo += data;
-    zoneBuildingInfo += dataDivider;
+    zoneInfo += data;
 
     // add zoneType to string:
+    zoneInfo += 'Z';
     data = std::to_string(CURZoneType);
-    zoneBuildingInfo += data;
-    zoneBuildingInfo += dataDivider;
+    zoneInfo += data;
 
     // add level to string:
+    zoneInfo += 'L';
     data = std::to_string(CURlevel);
-    zoneBuildingInfo += data;
-    zoneBuildingInfo += dataDivider;
+    zoneInfo += data;
 
     // add typeVar to string:
+    zoneInfo += 'T';
     data = std::to_string(CURtypeVar);
-    zoneBuildingInfo += data;
-    zoneBuildingInfo += dataDivider;
+    zoneInfo += data;
 
     // add bip map shape to string:
+    zoneInfo += 'S';
     data = std::to_string(CURshape);
-    zoneBuildingInfo += data;
+    zoneInfo += data;
 
     // add divider between buildings:
-    zoneBuildingInfo += elementDivider;
+    zoneInfo += elementDivider;
 
     iter++;
   } // end while iter
 
-  return zoneBuildingInfo;
+  return zoneInfo;
 }
 
 
@@ -3543,6 +3543,21 @@ char* zonesToString(double dataType) {
 
   return dataString;
 }
+
+double getNumZonesType(double zoneType) {
+
+  int type = (int)zoneType;
+
+  if (type == Z_RES)
+    return Rzones.size();
+  else if (type == Z_COM)
+    return Czones.size();
+  else if (type == Z_IND)
+    return Izones.size();
+  else
+    return -20; // error!
+}
+
 
 double growZone(double zoneType) {
   int typeInt = (int)zoneType;

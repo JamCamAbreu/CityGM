@@ -266,12 +266,15 @@
       <script>scripts\scr_getViewY2.gml</script>
     </scripts>
     <scripts name="Zones">
-      <scripts name="DLLgetStringZones">
+      <scripts name="OLD(unused)">
         <script>scripts\scr_updateZoneBuildings.gml</script>
-        <script>scripts\scr_setZoneArray.gml</script>
         <script>scripts\scr_getZoneSprite.gml</script>
         <script>scripts\scr_getZoneImageIndex.gml</script>
         <script>scripts\scr_getNumZoneBuildings.gml</script>
+        <script>scripts\scr_setZoneArray.gml</script>
+      </scripts>
+      <scripts name="revised">
+        <script>scripts\scr_importZones.gml</script>
         <script>scripts\scr_growAllZones.gml</script>
         <script>scripts\scr_updateAlarmZoneType.gml</script>
       </scripts>

@@ -820,6 +820,7 @@ GMEXPORT double getRoadsVectorSize();
 GMEXPORT double addZone(double xCoord, double yCoord, double zoneType);
 //GMEXPORT char* zoneBuildingsToString(double dataType);
 GMEXPORT char* zonesToString(double zoneType); // NEW string function
+GMEXPORT double getNumZonesType(double zoneType);
 GMEXPORT double growZone(double zoneType);
 GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();

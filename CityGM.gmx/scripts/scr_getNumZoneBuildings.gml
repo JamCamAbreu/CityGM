@@ -1,3 +1,5 @@
+// NOTE!!! OUTDATED!!!
+
 // argument0 = id holding the variables
 // argument1 = type of zone
 
