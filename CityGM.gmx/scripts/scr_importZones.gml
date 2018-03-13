@@ -10,10 +10,6 @@
   */
 
 
-// RESET:
-argument0.zonesNum = 0;
-
-
 var zoneString = DLL_zonesToString(argument1);
 var zoneElements = DLL_getNumZonesType(argument1);
 var elementsLeft = zoneElements;
@@ -53,7 +49,12 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
 
     // add parseString to the Array passed in:  
-    argument0.zonesX[curElementNum] = real(parseString);
+    if (argument1 == Z_RES)
+        argument0.RzonesX[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesX[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesX[curElementNum] = real(parseString);
 
     
     
@@ -76,8 +77,12 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
     
     // add parseString to the Array passed in:
-    argument0.zonesY[curElementNum] = real(parseString);
-    
+    if (argument1 == Z_RES)
+        argument0.RzonesY[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesY[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesY[curElementNum] = real(parseString);
     
     
 
@@ -98,7 +103,12 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
     
     // add parseString to the Array passed in:
-    argument0.zonesZ[curElementNum] = real(parseString);
+    if (argument1 == Z_RES)
+        argument0.RzonesZ[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesZ[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesZ[curElementNum] = real(parseString);
     
     
     
@@ -122,8 +132,12 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
     
     // add parseString to the Array passed in:
-    argument0.zonesL[curElementNum] = real(parseString);
-    
+    if (argument1 == Z_RES)
+        argument0.RzonesL[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesL[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesL[curElementNum] = real(parseString);
     
     
     
@@ -146,10 +160,12 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
     
     // add parseString to the array passed in:
-    argument0.zonesT[curElementNum] = real(parseString);
-    
-    
-    
+    if (argument1 == Z_RES)
+        argument0.RzonesT[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesT[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesT[curElementNum] = real(parseString);
 
     
     
@@ -169,17 +185,27 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
     }
     
     // add parseString to the array passed in:
-    argument0.zonesS[curElementNum] = real(parseString);
+    if (argument1 == Z_RES)
+        argument0.RzonesS[curElementNum] = real(parseString);
+    else if (argument1 == Z_COM)
+        argument0.CzonesS[curElementNum] = real(parseString);
+    else if (argument1 == Z_IND)
+        argument0.IzonesS[curElementNum] = real(parseString);
     
     
     // FINAL STEP
     // move to next element:
     elementsLeft--;
-    argument0.zonesNum++;
     curElementNum++;
 }
 
-
+// finally, update the total amount of zones:
+if (argument1 == Z_RES)
+    argument0.RzonesNum = curElementNum;
+else if (argument1 == Z_COM)
+    argument0.CzonesNum = curElementNum;
+else if (argument1 == Z_IND)
+    argument0.IzonesNum = curElementNum;
 
 
 

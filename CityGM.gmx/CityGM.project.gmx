@@ -90,6 +90,72 @@
         <sprite>sprites\spr_zoneRBackup</sprite>
         <sprite>sprites\spr_zoneR1x1</sprite>
       </sprites>
+      <sprites name="RES">
+        <sprites name="lvl1">
+          <sprite>sprites\spr_res1a</sprite>
+          <sprite>sprites\spr_res1b</sprite>
+          <sprite>sprites\spr_res1c</sprite>
+        </sprites>
+        <sprites name="lvl2">
+          <sprite>sprites\spr_res2a</sprite>
+          <sprite>sprites\spr_res2b</sprite>
+          <sprite>sprites\spr_res3c</sprite>
+        </sprites>
+        <sprites name="lvl3">
+          <sprite>sprites\spr_res3a</sprite>
+        </sprites>
+        <sprites name="lvl4">
+          <sprite>sprites\spr_res4a</sprite>
+        </sprites>
+        <sprites name="lvl5">
+          <sprite>sprites\spr_res5a</sprite>
+        </sprites>
+        <sprites name="lvl6">
+          <sprite>sprites\spr_res6a</sprite>
+        </sprites>
+        <sprites name="lvl7">
+          <sprite>sprites\spr_res7a</sprite>
+        </sprites>
+        <sprites name="lvl8">
+          <sprite>sprites\spr_res8a</sprite>
+        </sprites>
+      </sprites>
+      <sprites name="COM">
+        <sprites name="lvl1">
+          <sprite>sprites\spr_com1a</sprite>
+          <sprite>sprites\spr_com1b</sprite>
+        </sprites>
+        <sprites name="lvl2">
+          <sprite>sprites\spr_com2a</sprite>
+        </sprites>
+        <sprites name="lvl3">
+          <sprite>sprites\spr_com3a</sprite>
+        </sprites>
+        <sprites name="lvl4">
+          <sprite>sprites\spr_com4a</sprite>
+        </sprites>
+        <sprites name="lvl5">
+          <sprite>sprites\spr_com5a</sprite>
+        </sprites>
+        <sprites name="lvl6">
+          <sprite>sprites\spr_com6a</sprite>
+        </sprites>
+      </sprites>
+      <sprites name="IND">
+        <sprites name="lvl1">
+          <sprite>sprites\spr_ind1a</sprite>
+        </sprites>
+        <sprites name="lvl2">
+          <sprite>sprites\spr_ind2a</sprite>
+        </sprites>
+        <sprites name="lvl3">
+          <sprite>sprites\spr_ind3a</sprite>
+        </sprites>
+        <sprites name="lvl4">
+          <sprite>sprites\spr_ind4a</sprite>
+        </sprites>
+      </sprites>
+      <sprite>sprites\spr_ZBerror</sprite>
     </sprites>
     <sprites name="other">
       <sprite>sprites\spr_DEBUG</sprite>
@@ -256,7 +322,6 @@
       <script>scripts\scr_drawQuitGameMessage.gml</script>
     </scripts>
     <scripts name="DrawGameScreen">
-      <script>scripts\scr_drawZones.gml</script>
       <script>scripts\scr_drawScreenBuildings.gml</script>
       <script>scripts\scr_drawRoads.gml</script>
       <script>scripts\scr_drawScreenTiles.gml</script>
@@ -264,6 +329,7 @@
       <script>scripts\scr_getViewY1.gml</script>
       <script>scripts\scr_getViewX2.gml</script>
       <script>scripts\scr_getViewY2.gml</script>
+      <script>scripts\scr_drawZones.gml</script>
     </scripts>
     <scripts name="Zones">
       <scripts name="OLD(unused)">
@@ -272,11 +338,13 @@
         <script>scripts\scr_getZoneImageIndex.gml</script>
         <script>scripts\scr_getNumZoneBuildings.gml</script>
         <script>scripts\scr_setZoneArray.gml</script>
+        <script>scripts\scr_drawZones_old.gml</script>
       </scripts>
       <scripts name="revised">
         <script>scripts\scr_importZones.gml</script>
         <script>scripts\scr_growAllZones.gml</script>
         <script>scripts\scr_updateAlarmZoneType.gml</script>
+        <script>scripts\scr_getZSprite.gml</script>
       </scripts>
     </scripts>
     <scripts name="Electricity">

@@ -74,31 +74,30 @@ roadTypeArray[MAX_BUILDINGS] = 0;
 updateZone = Z_RES; // changes every tick of alarm0
 surfaceZones = noone // init surface
 
-zonesX[MAX_ZONES] = 0;
-zonesY[MAX_ZONES] = 0;
-zonesZ[MAX_ZONES] = 0;
-zonesL[MAX_ZONES] = 0;
-zonesT[MAX_ZONES] = 0;
-zonesS[MAX_ZONES] = 0;
-zonesNum = 0;
+RzonesX[MAX_ZONES] = 0;
+RzonesY[MAX_ZONES] = 0;
+RzonesZ[MAX_ZONES] = 0;
+RzonesL[MAX_ZONES] = 0;
+rzonesT[MAX_ZONES] = 0;
+RzonesS[MAX_ZONES] = 0;
+RzonesNum = 0;
 
-/*
 CzonesX[MAX_ZONES] = 0;
 CzonesY[MAX_ZONES] = 0;
-CzonesZT[MAX_ZONES] = 0;
+CzonesZ[MAX_ZONES] = 0;
 CzonesL[MAX_ZONES] = 0;
-CzonesTV[MAX_ZONES] = 0;
+CzonesT[MAX_ZONES] = 0;
 CzonesS[MAX_ZONES] = 0;
 CzonesNum = 0;
 
 IzonesX[MAX_ZONES] = 0;
 IzonesY[MAX_ZONES] = 0;
-IzonesZT[MAX_ZONES] = 0;
+IzonesZ[MAX_ZONES] = 0;
 IzonesL[MAX_ZONES] = 0;
-IzonesTV[MAX_ZONES] = 0;
+IzonesT[MAX_ZONES] = 0;
 IzonesS[MAX_ZONES] = 0;
 IzonesNum = 0;
-*/
+
 
 // MINIMAP:
 surfaceMiniMap = noone; // init surface
@@ -594,8 +593,8 @@ if (canDraw) {
     scr_drawScreenTiles(tileString, tileStringSize, id);
     scr_drawRoads(roadElements, id);
     scr_drawScreenBuildings(buildingElements, id, DRAW_BUILDINGS);
-    //scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
-    scr_drawScreenBuildings(buildingElements, id, DRAW_POWER); // draw power signs
+    scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
+    //scr_drawScreenBuildings(buildingElements, id, DRAW_POWER); // draw power signs
     
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);

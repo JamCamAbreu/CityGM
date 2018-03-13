@@ -1102,6 +1102,51 @@
           <value>10</value>
           <hidden>0</hidden>
         </constant>
+        <constant>
+          <name>BM_TL</name>
+          <value>1</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_T</name>
+          <value>2</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_TR</name>
+          <value>4</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_L</name>
+          <value>8</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_M</name>
+          <value>16</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_R</name>
+          <value>32</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_BL</name>
+          <value>64</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_B</name>
+          <value>128</value>
+          <hidden>0</hidden>
+        </constant>
+        <constant>
+          <name>BM_BR</name>
+          <value>256</value>
+          <hidden>0</hidden>
+        </constant>
       </constants>
     </file>
   </files>
