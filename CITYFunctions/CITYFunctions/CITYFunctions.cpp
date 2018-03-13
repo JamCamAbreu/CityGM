@@ -1248,8 +1248,15 @@ void _setBuildingTiles(building* buildingID, int x, int y, int dimension) {
   for (int i = 0; i < dimension; i++) {
     for (int j = 0; j < dimension; j++) {
       containedTile = map(x + i, y + j);
-      containedTile->tileType = TT_BUILDING;
       containedTile->buildingOnTop = buildingID;
+      if (buildingID->type == BT_RZONE)
+        containedTile->tileType = TT_ZR;
+      else if (buildingID->type == BT_CZONE)
+        containedTile->tileType = TT_ZC;
+      else if (buildingID->type == BT_IZONE)
+        containedTile->tileType = TT_ZI;
+      else
+        containedTile->tileType = TT_BUILDING;
       buildingID->tiles.push_back(containedTile);
     }
   }
@@ -2658,7 +2665,7 @@ void _assignTileBuilding(zone* Z, int growth) {
         if (growth >= (diff / 5))
           chance += 2;
 
-        chance -= level;
+        chance += level;
         chance += _getIntRange(0, combineLevel + 2);
 
         if (chance > combineLevel)
@@ -2677,11 +2684,14 @@ void _assignTileBuilding(zone* Z, int growth) {
 
         // bonus for loss over 10%
         if (loss >= (diff / 10))
-          chance++;
+          chance += 2;
 
         // bonus for loss over 15%
         if (loss >= (diff / 7))
-          chance++;
+          chance += 3;
+
+        // smaller chance for higher level:
+        chance -= (level*(_getIntRange(1, level)));
 
         chance += _getIntRange(0, 10);
 
@@ -2731,11 +2741,11 @@ int _getPowerPlantPower(int type) {
 
   switch (type) {
     case BT_NUCLEAR: {
-      return 645;
+      return 800;
       break; }
 
     case BT_COAL: {
-      return 270;
+      return 425;
       break; }
 
     default: {
@@ -3683,10 +3693,11 @@ double addBuilding(double type, double x, double y) {
       removeBuilding(x, y);
       curTile->tileType = TT_GRASS;
 
-      // reminder: road is still in road vector
       building* newBuilding = _newBuilding(BT_POWERROAD, xInt, yInt);
       newBuilding->relatedZone = NULL;
+      // reminder: road is still in road vector
       v_buildings.push_back(newBuilding);
+      v_roads.push_back(newBuilding);
       deductFunds(price);
       return 1;
     } // end if

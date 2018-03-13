@@ -1,6 +1,7 @@
 // argument0 = zone type
 // argument1 = level
 // argument2 = variation
+// argument3 = shape Type (pass in SHAPE_BASIC for example, see macros)
 
 // basis for all sprites:
 var spriteName = "spr_";
@@ -19,6 +20,72 @@ spriteName += string(argument1);
 // variation:
 var a = 97; // ASCII for 'a'
 spriteName += chr(a + argument2); // converts to a...b...etc..
+
+
+// special shapes:
+switch (argument3) {
+    case SHAPE_BASIC: // no need to add any string name
+        break;
+        
+    case SHAPE_TLC:
+        spriteName += "TLC";
+        break;
+        
+    case SHAPE_TRC:
+        spriteName += "TRC";
+        break;
+        
+    case SHAPE_BLC:
+        spriteName += "BLC";
+        break;
+        
+    case SHAPE_BOX:
+        spriteName += "Box";
+        break;
+        
+    case SHAPE_TH:
+        spriteName += "TH";
+        break;
+        
+    case SHAPE_LV:
+        spriteName += "LV";
+        break;
+        
+    case SHAPE_RV:
+        spriteName += "RV";
+        break;
+        
+    case SHAPE_BH:
+        spriteName += "BH";
+        break;
+        
+    case SHAPE_MH:
+        spriteName += "MH";
+        break;
+        
+    case SHAPE_MV:
+        spriteName += "MV";
+        break;
+        
+    case SHAPE_ALL:
+        spriteName += "All";
+        break;
+        
+    case SHAPE_DONUT:
+        spriteName += "Donut";
+        break;
+        
+    case SHAPE_CROSS:
+        spriteName += "Cross";
+        break;
+        
+    default:
+        spriteName += "err";
+} // end variation switch
+
+
+
+
     
 // Look up the sprite:
 var ret = asset_get_index(spriteName);

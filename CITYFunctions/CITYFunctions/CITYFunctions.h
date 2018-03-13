@@ -46,7 +46,7 @@ const double SATISFIED_POWER = 0.6;
 
 const int ZONE_START_REQUIRED_POWER = 3;
 
-const int MAX_ZONE_VARIATIONS = 5;
+const int MAX_ZONE_VARIATIONS = 3;
 
 // TODO implement
 // Level that zones combine to one large sprite:

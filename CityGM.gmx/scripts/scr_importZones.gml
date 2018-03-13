@@ -28,7 +28,7 @@ while (elementsLeft > 0 && (curCharIndex <= string_length(zoneString)) ) {
 
     // reset string for each piece of data:
     parseString = "";
-    curChar = string_char_at(buildingString, curCharIndex);
+    curChar = string_char_at(zoneString, curCharIndex);
 
 
     // GET X VALUE:

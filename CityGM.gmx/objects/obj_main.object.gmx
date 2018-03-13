@@ -594,7 +594,7 @@ if (canDraw) {
     scr_drawRoads(roadElements, id);
     scr_drawScreenBuildings(buildingElements, id, DRAW_BUILDINGS);
     scr_drawZones(id); // Tried surfaces...did NOT work well because of updating
-    //scr_drawScreenBuildings(buildingElements, id, DRAW_POWER); // draw power signs
+    scr_drawScreenBuildings(buildingElements, id, DRAW_POWER); // draw power signs
     
     if (toggleMiniMap){ // 'M' key to toggle
         scr_drawMiniMap(id);
@@ -873,16 +873,16 @@ scr_importZones(id, Z_RES);
 
 var bigString = "";
 var i;
-for (i = 0; i &lt; zonesNum; i++) {
-    bigString += string(zonesX[i]) + " ";
-    bigString += string(zonesY[i]) + " ";
-    bigString += string(zonesZ[i]) + " ";
-    bigString += string(zonesL[i]) + " ";
-    bigString += string(zonesT[i]) + " ";
-    bigString += string(zonesS[i]);
+for (i = 0; i &lt; RzonesNum; i++) {
+    bigString += string(RzonesX[i]) + " ";
+    bigString += string(RzonesY[i]) + " ";
+    bigString += string(RzonesZ[i]) + " ";
+    bigString += string(RzonesL[i]) + " ";
+    bigString += string(RzonesT[i]) + " ";
+    bigString += string(RzonesS[i]);
     bigString += "; ";
 }
-show_message("zonesNum = " + string(zonesNum));
+show_message("RzonesNum = " + string(RzonesNum));
 show_message("Zone Array (GM): " + bigString);
 </string>
           </argument>

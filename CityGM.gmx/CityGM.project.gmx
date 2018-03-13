@@ -92,14 +92,34 @@
       </sprites>
       <sprites name="RES">
         <sprites name="lvl1">
-          <sprite>sprites\spr_res1a</sprite>
-          <sprite>sprites\spr_res1b</sprite>
-          <sprite>sprites\spr_res1c</sprite>
+          <sprites name="type-a">
+            <sprite>sprites\spr_res1a</sprite>
+          </sprites>
+          <sprites name="type-b">
+            <sprite>sprites\spr_res1b</sprite>
+          </sprites>
+          <sprites name="type-c">
+            <sprite>sprites\spr_res1c</sprite>
+            <sprite>sprites\spr_res1cTLC</sprite>
+            <sprite>sprites\spr_res1cTRC</sprite>
+            <sprite>sprites\spr_res1cBRC</sprite>
+            <sprite>sprites\spr_res1cBLC</sprite>
+            <sprite>sprites\spr_res1cBox</sprite>
+            <sprite>sprites\spr_res1cLV</sprite>
+            <sprite>sprites\spr_res1cTH</sprite>
+            <sprite>sprites\spr_res1cRV</sprite>
+            <sprite>sprites\spr_res1cBH</sprite>
+            <sprite>sprites\spr_res1cMH</sprite>
+            <sprite>sprites\spr_res1cMV</sprite>
+            <sprite>sprites\spr_res1cAll</sprite>
+            <sprite>sprites\spr_res1cCross</sprite>
+            <sprite>sprites\spr_res1cDonut</sprite>
+          </sprites>
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_res2a</sprite>
           <sprite>sprites\spr_res2b</sprite>
-          <sprite>sprites\spr_res3c</sprite>
+          <sprite>sprites\spr_res2c</sprite>
         </sprites>
         <sprites name="lvl3">
           <sprite>sprites\spr_res3a</sprite>
@@ -124,12 +144,16 @@
         <sprites name="lvl1">
           <sprite>sprites\spr_com1a</sprite>
           <sprite>sprites\spr_com1b</sprite>
+          <sprite>sprites\spr_com1c</sprite>
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_com2a</sprite>
+          <sprite>sprites\spr_com2b</sprite>
+          <sprite>sprites\spr_com2c</sprite>
         </sprites>
         <sprites name="lvl3">
           <sprite>sprites\spr_com3a</sprite>
+          <sprite>sprites\spr_com3b</sprite>
         </sprites>
         <sprites name="lvl4">
           <sprite>sprites\spr_com4a</sprite>
@@ -144,6 +168,8 @@
       <sprites name="IND">
         <sprites name="lvl1">
           <sprite>sprites\spr_ind1a</sprite>
+          <sprite>sprites\spr_ind1b</sprite>
+          <sprite>sprites\spr_ind1c</sprite>
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_ind2a</sprite>
@@ -345,6 +371,8 @@
         <script>scripts\scr_growAllZones.gml</script>
         <script>scripts\scr_updateAlarmZoneType.gml</script>
         <script>scripts\scr_getZSprite.gml</script>
+        <script>scripts\scr_drawZoneShape.gml</script>
+        <script>scripts\scr_drawZoneShapeLogic.gml</script>
       </scripts>
     </scripts>
     <scripts name="Electricity">
@@ -379,7 +407,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="132">
+  <constants number="147">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -512,6 +540,21 @@
     <constant name="SFX_BUILDONLY">1</constant>
     <constant name="SFX_ERRORONLY">2</constant>
     <constant name="SFX_ALL">3</constant>
+    <constant name="SHAPE_BASIC">0</constant>
+    <constant name="SHAPE_TLC">1</constant>
+    <constant name="SHAPE_TRC">2</constant>
+    <constant name="SHAPE_BLC">3</constant>
+    <constant name="SHAPE_BRC">4</constant>
+    <constant name="SHAPE_TH">5</constant>
+    <constant name="SHAPE_LV">6</constant>
+    <constant name="SHAPE_RV">7</constant>
+    <constant name="SHAPE_BH">8</constant>
+    <constant name="SHAPE_MH">9</constant>
+    <constant name="SHAPE_MV">10</constant>
+    <constant name="SHAPE_BOX">11</constant>
+    <constant name="SHAPE_ALL">12</constant>
+    <constant name="SHAPE_DONUT">13</constant>
+    <constant name="SHAPE_CROSS">14</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
