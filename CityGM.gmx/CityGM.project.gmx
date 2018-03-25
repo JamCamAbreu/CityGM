@@ -92,93 +92,72 @@
       </sprites>
       <sprites name="RES">
         <sprites name="lvl1">
-          <sprites name="type-a">
-            <sprite>sprites\spr_res1a</sprite>
-          </sprites>
-          <sprites name="type-b">
-            <sprite>sprites\spr_res1b</sprite>
-          </sprites>
-          <sprites name="type-c">
-            <sprite>sprites\spr_res1c</sprite>
-            <sprite>sprites\spr_res1cTLC</sprite>
-            <sprite>sprites\spr_res1cTRC</sprite>
-            <sprite>sprites\spr_res1cBRC</sprite>
-            <sprite>sprites\spr_res1cBLC</sprite>
-            <sprite>sprites\spr_res1cBox</sprite>
-            <sprite>sprites\spr_res1cLV</sprite>
-            <sprite>sprites\spr_res1cTH</sprite>
-            <sprite>sprites\spr_res1cRV</sprite>
-            <sprite>sprites\spr_res1cBH</sprite>
-            <sprite>sprites\spr_res1cMH</sprite>
-            <sprite>sprites\spr_res1cMV</sprite>
-            <sprite>sprites\spr_res1cAll</sprite>
-            <sprite>sprites\spr_res1cCross</sprite>
-            <sprite>sprites\spr_res1cDonut</sprite>
-          </sprites>
+          <sprite>sprites\spr_res1</sprite>
+          <sprite>sprites\spr_res1TLC</sprite>
+          <sprite>sprites\spr_res1TRC</sprite>
+          <sprite>sprites\spr_res1BRC</sprite>
+          <sprite>sprites\spr_res1BLC</sprite>
+          <sprite>sprites\spr_res1Box</sprite>
+          <sprite>sprites\spr_res1V</sprite>
+          <sprite>sprites\spr_res1H</sprite>
+          <sprite>sprites\spr_res1All</sprite>
+          <sprite>sprites\spr_res1Cross</sprite>
+          <sprite>sprites\spr_res1Donut</sprite>
         </sprites>
         <sprites name="lvl2">
-          <sprite>sprites\spr_res2a</sprite>
-          <sprite>sprites\spr_res2b</sprite>
-          <sprite>sprites\spr_res2c</sprite>
+          <sprite>sprites\spr_res2</sprite>
         </sprites>
         <sprites name="lvl3">
-          <sprite>sprites\spr_res3a</sprite>
+          <sprite>sprites\spr_res3</sprite>
         </sprites>
         <sprites name="lvl4">
-          <sprite>sprites\spr_res4a</sprite>
+          <sprite>sprites\spr_res4</sprite>
         </sprites>
         <sprites name="lvl5">
-          <sprite>sprites\spr_res5a</sprite>
+          <sprite>sprites\spr_res5</sprite>
         </sprites>
         <sprites name="lvl6">
-          <sprite>sprites\spr_res6a</sprite>
+          <sprite>sprites\spr_res6</sprite>
         </sprites>
         <sprites name="lvl7">
-          <sprite>sprites\spr_res7a</sprite>
+          <sprite>sprites\spr_res7</sprite>
         </sprites>
         <sprites name="lvl8">
-          <sprite>sprites\spr_res8a</sprite>
+          <sprite>sprites\spr_res8</sprite>
         </sprites>
       </sprites>
       <sprites name="COM">
         <sprites name="lvl1">
-          <sprite>sprites\spr_com1a</sprite>
-          <sprite>sprites\spr_com1b</sprite>
-          <sprite>sprites\spr_com1c</sprite>
+          <sprite>sprites\spr_com1</sprite>
         </sprites>
         <sprites name="lvl2">
-          <sprite>sprites\spr_com2a</sprite>
-          <sprite>sprites\spr_com2b</sprite>
-          <sprite>sprites\spr_com2c</sprite>
+          <sprite>sprites\spr_com2</sprite>
         </sprites>
         <sprites name="lvl3">
-          <sprite>sprites\spr_com3a</sprite>
-          <sprite>sprites\spr_com3b</sprite>
+          <sprite>sprites\spr_com3</sprite>
         </sprites>
         <sprites name="lvl4">
-          <sprite>sprites\spr_com4a</sprite>
+          <sprite>sprites\spr_com4</sprite>
         </sprites>
         <sprites name="lvl5">
-          <sprite>sprites\spr_com5a</sprite>
+          <sprite>sprites\spr_com5</sprite>
         </sprites>
         <sprites name="lvl6">
-          <sprite>sprites\spr_com6a</sprite>
+          <sprite>sprites\spr_com6</sprite>
         </sprites>
       </sprites>
       <sprites name="IND">
         <sprites name="lvl1">
-          <sprite>sprites\spr_ind1a</sprite>
-          <sprite>sprites\spr_ind1b</sprite>
-          <sprite>sprites\spr_ind1c</sprite>
+          <sprite>sprites\spr_ind1</sprite>
         </sprites>
         <sprites name="lvl2">
-          <sprite>sprites\spr_ind2a</sprite>
+          <sprite>sprites\spr_ind2</sprite>
         </sprites>
         <sprites name="lvl3">
-          <sprite>sprites\spr_ind3a</sprite>
+          <sprite>sprites\spr_ind3</sprite>
         </sprites>
         <sprites name="lvl4">
-          <sprite>sprites\spr_ind4a</sprite>
+          <sprite>sprites\spr_ind4</sprite>
         </sprites>
       </sprites>
       <sprite>sprites\spr_ZBerror</sprite>
@@ -347,7 +326,7 @@
       <script>scripts\scr_drawPowerBar.gml</script>
       <script>scripts\scr_drawQuitGameMessage.gml</script>
     </scripts>
-    <scripts name="DrawGameScreen">
+    <scripts name="ScreenDrawing">
       <script>scripts\scr_drawScreenBuildings.gml</script>
       <script>scripts\scr_drawRoads.gml</script>
       <script>scripts\scr_drawScreenTiles.gml</script>
@@ -371,7 +350,8 @@
         <script>scripts\scr_growAllZones.gml</script>
         <script>scripts\scr_updateAlarmZoneType.gml</script>
         <script>scripts\scr_getZSprite.gml</script>
-        <script>scripts\scr_drawZoneShape.gml</script>
+        <script>scripts\scr_drawZoneGroundRowCol_Old.gml</script>
+        <script>scripts\scr_drawZoneGroundBitmap.gml</script>
         <script>scripts\scr_drawZoneShapeLogic.gml</script>
       </scripts>
     </scripts>
@@ -407,7 +387,7 @@
   <rooms name="rooms">
     <room>rooms\rm_testRoom</room>
   </rooms>
-  <constants number="147">
+  <constants number="149">
     <constant name="TILE_SIZE">16</constant>
     <constant name="CAMERA_ALARM">10</constant>
     <constant name="CAMERA_ALARM_FAST">5</constant>
@@ -555,6 +535,8 @@
     <constant name="SHAPE_ALL">12</constant>
     <constant name="SHAPE_DONUT">13</constant>
     <constant name="SHAPE_CROSS">14</constant>
+    <constant name="SHAPE_H">15</constant>
+    <constant name="SHAPE_V">16</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

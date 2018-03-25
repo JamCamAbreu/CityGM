@@ -95,86 +95,14 @@ for (t = Z_RES; t <= Z_IND; t++) {
                 shape = argument0.IzonesS[i];
             }
             
-            // Get the correct image:
-            var zoneSprite = scr_getZSprite(zoneType, level, variation, SHAPE_BASIC);
-        
-            // ROW 1:
-            // top left:
-            if (shape & BM_TL) {
-                var dX = posX;
-                var dY = posY;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-        
-            // top:
-            if (shape & BM_T) {
-                var dX = posX + col;
-                var dY = posY;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-                
-            // top right:
-            if (shape & BM_TR) {
-                var dX = posX + col*2;
-                var dY = posY;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-                
-        
-            // ROW 2
-            // left:
-            if (shape & BM_L) {
-                var dX = posX;
-                var dY = posY + row;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-                
-            // middle:
-            if (shape & BM_M) {
-                var dX = posX + col;
-                var dY = posY + row;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-             
-            // right:
-            if (shape & BM_M) {
-                var dX = posX + col*2;
-                var dY = posY + row;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-        
-                
-                
-            // ROW 3
-            // Bottom Left:
-            if (shape & BM_BL) {
-                var dX = posX;
-                var dY = posY + row*2;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-                
-            // Bottom:
-            if (shape & BM_B) {
-                var dX = posX + col;
-                var dY = posY + row*2;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
-             
-            // Bottom Right:
-            if (shape & BM_BR) {
-                var dX = posX + col*2;
-                var dY = posY + row*2;
-                draw_sprite(spr_ground, argument0.gameSeason, dX, dY);
-                draw_sprite(zoneSprite, sub, dX, dY);
-            }
+            var season = argument0.gameSeason;
+            
+            // Only draw ground under tiles that are active (bits are set):
+            scr_drawZoneGroundBitmap(posX, posY, season, shape);
+            
+            // All the logic for drawing and combining the zone building sprites:
+            scr_drawZoneShapeLogic(posX, posY, zoneType, level, variation, shape, season, sub);
+            
                 
         } // end if drawZoneBuilding
     } // end each number of zones in that zone type

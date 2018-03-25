@@ -18,8 +18,9 @@ else if (argument0 == Z_IND)
 spriteName += string(argument1);
 
 // variation:
-var a = 97; // ASCII for 'a'
-spriteName += chr(a + argument2); // converts to a...b...etc..
+//var a = 97; // ASCII for 'a'
+//spriteName += chr(a + argument2); // converts to a...b...etc..
+var apparentlyNeedToUseItSomehow = argument2;
 
 
 // special shapes:
@@ -39,32 +40,21 @@ switch (argument3) {
         spriteName += "BLC";
         break;
         
+    case SHAPE_BRC:
+        spriteName += "BRC";
+        break;
+        
     case SHAPE_BOX:
         spriteName += "Box";
         break;
         
-    case SHAPE_TH:
-        spriteName += "TH";
+    // lines:
+    case SHAPE_H:
+        spriteName += "H";
         break;
         
-    case SHAPE_LV:
-        spriteName += "LV";
-        break;
-        
-    case SHAPE_RV:
-        spriteName += "RV";
-        break;
-        
-    case SHAPE_BH:
-        spriteName += "BH";
-        break;
-        
-    case SHAPE_MH:
-        spriteName += "MH";
-        break;
-        
-    case SHAPE_MV:
-        spriteName += "MV";
+    case SHAPE_V:
+        spriteName += "V";
         break;
         
     case SHAPE_ALL:
