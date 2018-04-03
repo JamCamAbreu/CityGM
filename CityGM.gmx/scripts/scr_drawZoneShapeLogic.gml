@@ -54,14 +54,7 @@ else if (S & BM_DONUT == BM_DONUT) {
     draw_sprite(zoneSprite, SI, c1, r1);
 }
 
-// CROSS
-//  -   X   -
-//  X   X   X
-//  -   X   -
-else if (S & BM_CROSS == BM_CROSS) {
-    var zoneSprite = scr_getZSprite(ZT, L, V, SHAPE_CROSS);
-    draw_sprite(zoneSprite, SI, c1, r1);
-}
+
 
 
 
@@ -71,6 +64,19 @@ else {
 
     // Modified at every step to ensure no overlapping:
     var Smod = S;
+    
+    
+    
+    // CROSS
+    //  -   X   -
+    //  X   X   X
+    //  -   X   -
+    if (S & BM_CROSS == BM_CROSS) {
+        var zoneSprite = scr_getZSprite(ZT, L, V, SHAPE_CROSS);
+        draw_sprite(zoneSprite, SI, c1, r1);
+        Smod = Smod & ~BM_CROSS; // remove used bits:
+    }
+    
     
     // LINES
     // (FAVORS HORIZONTALS OVER VERTICLES)

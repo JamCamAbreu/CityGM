@@ -97,12 +97,24 @@ for (t = Z_RES; t <= Z_IND; t++) {
             
             var season = argument0.gameSeason;
             
-            // Only draw ground under tiles that are active (bits are set):
-            scr_drawZoneGroundBitmap(posX, posY, season, shape);
             
-            // All the logic for drawing and combining the zone building sprites:
-            scr_drawZoneShapeLogic(posX, posY, zoneType, level, variation, shape, season, sub);
+            // Use level to determine how to draw the zone:
+            var minLevel = DLL_getZoneCombineLevel(zoneType);
             
+            // Small buildings:
+            if (level < minLevel) {
+                // Only draw ground under tiles that are active (bits are set):
+                scr_drawZoneGroundBitmap(posX, posY, season, shape);
+                
+                // All the logic for drawing and combining the zone building sprites:
+                scr_drawZoneShapeLogic(posX, posY, zoneType, level, variation, shape, season, sub);
+            }
+            
+            // Large 3X3 buildings:
+            else {
+                var zoneSprite = scr_getZBigSprite(zoneType, level, variation);
+                draw_sprite(zoneSprite, image_index, posX, posY);
+            }
                 
         } // end if drawZoneBuilding
     } // end each number of zones in that zone type

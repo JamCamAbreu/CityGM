@@ -40,7 +40,7 @@ const char CHAR_IZONE = 'i';
 
 const int TILE_SECTION_DEFAULT = -1;
 
-const int MAX_ZONE_LEVEL = 14;
+const int MAX_ZONE_LEVEL = 11;
 
 const double SATISFIED_POWER = 0.6;
 
@@ -50,9 +50,9 @@ const int MAX_ZONE_VARIATIONS = 3;
 
 // TODO implement
 // Level that zones combine to one large sprite:
-const int R_ZONE_COMBINE_LEVEL = 8;
-const int C_ZONE_COMBINE_LEVEL = 6;
-const int I_ZONE_COMBINE_LEVEL = 4;
+const int R_ZONE_COMBINE_LEVEL = 5;
+const int C_ZONE_COMBINE_LEVEL = 7;
+const int I_ZONE_COMBINE_LEVEL = 5;
 
 
 // ENUMS -----------------------------------
@@ -340,58 +340,44 @@ enum {
 
 enum {
   RL0 = 0,
-  RL1 = 12,
-  RL2 = 35,
-  RL3 = 65,
-  RL4 = 100,
-  RL5 = 150,
-  RL6 = 220,
-  RL7 = 350,
-  RL8 = 500,
-  RL9 = 700,
-  RL10 = 1000,
-  RL11 = 1500,
-  RL12 = 3000,
-  RL13 = 5000,
-  RL14 = 8500
+  RL1 = 45,
+  RL2 = 95,
+  RL3 = 175,
+  RL4 = 325,
+  RL5 = 565,
+  RL6 = 895,
+  RL7 = 1450,
+  RL8 = 2650,
+  RL9 = 5000,
+  RL10 = 8500
 } RlevelPopMin;
 
 enum {
-
   CL0 = 0,
-  CL1 = 5,
-  CL2 = 12,
-  CL3 = 24,
-  CL4 = 50,
-  CL5 = 80,
-  CL6 = 120,
-  CL7 = 175,
-  CL8 = 230,
-  CL9 = 300,
-  CL10 = 400,
-  CL11 = 550,
-  CL12 = 800,
-  CL13 = 1000,
-  CL14 = 1250
+  CL1 = 15,
+  CL2 = 42,
+  CL3 = 75,
+  CL4 = 130,
+  CL5 = 230,
+  CL6 = 375,
+  CL7 = 550,
+  CL8 = 700,
+  CL9 = 1000,
+  CL10 = 1550
 } ClevelPopMin;
 
 enum {
-
   IL0 = 0,
-  IL1 = 10,
-  IL2 = 25,
-  IL3 = 40,
-  IL4 = 70,
-  IL5 = 110,
-  IL6 = 150,
-  IL7 = 190,
-  IL8 = 230,
-  IL9 = 280,
-  IL10 = 340,
-  IL11 = 410,
-  IL12 = 500,
-  IL13 = 600,
-  IL14 = 750
+  IL1 = 20,
+  IL2 = 55,
+  IL3 = 100,
+  IL4 = 140,
+  IL5 = 200,
+  IL6 = 280,
+  IL7 = 360,
+  IL8 = 500,
+  IL9 = 700,
+  IL10 = 1000
 } IlevelPopMin;
 
 enum {
@@ -825,6 +811,7 @@ GMEXPORT double growZone(double zoneType);
 GMEXPORT double getPopulationZone(double zoneType);
 GMEXPORT double cleanUpAllZones();
 GMEXPORT double collectTax(double zoneType);
+GMEXPORT double getZoneCombineLevel(double zoneType);
 
 
 // POWER & ELECTRICITY FUNCTIONS ----------------

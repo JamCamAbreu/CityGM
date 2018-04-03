@@ -95,8 +95,8 @@
           <sprite>sprites\spr_res1</sprite>
           <sprite>sprites\spr_res1TLC</sprite>
           <sprite>sprites\spr_res1TRC</sprite>
-          <sprite>sprites\spr_res1BRC</sprite>
           <sprite>sprites\spr_res1BLC</sprite>
+          <sprite>sprites\spr_res1BRC</sprite>
           <sprite>sprites\spr_res1Box</sprite>
           <sprite>sprites\spr_res1V</sprite>
           <sprite>sprites\spr_res1H</sprite>
@@ -106,58 +106,182 @@
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_res2</sprite>
+          <sprite>sprites\spr_res2TLC</sprite>
+          <sprite>sprites\spr_res2TRC</sprite>
+          <sprite>sprites\spr_res2BRC</sprite>
+          <sprite>sprites\spr_res2BLC</sprite>
+          <sprite>sprites\spr_res2Box</sprite>
+          <sprite>sprites\spr_res2V</sprite>
+          <sprite>sprites\spr_res2H</sprite>
+          <sprite>sprites\spr_res2All</sprite>
+          <sprite>sprites\spr_res2Cross</sprite>
+          <sprite>sprites\spr_res2Donut</sprite>
         </sprites>
         <sprites name="lvl3">
           <sprite>sprites\spr_res3</sprite>
+          <sprite>sprites\spr_res3TLC</sprite>
+          <sprite>sprites\spr_res3TRC</sprite>
+          <sprite>sprites\spr_res3BLC</sprite>
+          <sprite>sprites\spr_res3BRC</sprite>
+          <sprite>sprites\spr_res3Box</sprite>
+          <sprite>sprites\spr_res3V</sprite>
+          <sprite>sprites\spr_res3H</sprite>
+          <sprite>sprites\spr_res3All</sprite>
+          <sprite>sprites\spr_res3Cross</sprite>
+          <sprite>sprites\spr_res3Donut</sprite>
         </sprites>
         <sprites name="lvl4">
           <sprite>sprites\spr_res4</sprite>
+          <sprite>sprites\spr_res4TLC</sprite>
+          <sprite>sprites\spr_res4TRC</sprite>
+          <sprite>sprites\spr_res4BLC</sprite>
+          <sprite>sprites\spr_res4BRC</sprite>
+          <sprite>sprites\spr_res4Box</sprite>
+          <sprite>sprites\spr_res4V</sprite>
+          <sprite>sprites\spr_res4H</sprite>
+          <sprite>sprites\spr_res4All</sprite>
+          <sprite>sprites\spr_res4Cross</sprite>
+          <sprite>sprites\spr_res4Donut</sprite>
         </sprites>
-        <sprites name="lvl5">
-          <sprite>sprites\spr_res5</sprite>
-        </sprites>
-        <sprites name="lvl6">
-          <sprite>sprites\spr_res6</sprite>
-        </sprites>
-        <sprites name="lvl7">
-          <sprite>sprites\spr_res7</sprite>
-        </sprites>
-        <sprites name="lvl8">
-          <sprite>sprites\spr_res8</sprite>
-        </sprites>
+        <sprite>sprites\spr_res5</sprite>
+        <sprite>sprites\spr_res6</sprite>
+        <sprite>sprites\spr_res7</sprite>
+        <sprite>sprites\spr_res8</sprite>
+        <sprite>sprites\spr_res9</sprite>
+        <sprite>sprites\spr_res10</sprite>
+        <sprite>sprites\spr_res11</sprite>
       </sprites>
       <sprites name="COM">
         <sprites name="lvl1">
           <sprite>sprites\spr_com1</sprite>
+          <sprite>sprites\spr_com1TLC</sprite>
+          <sprite>sprites\spr_com1TRC</sprite>
+          <sprite>sprites\spr_com1BRC</sprite>
+          <sprite>sprites\spr_com1BLC</sprite>
+          <sprite>sprites\spr_com1Box</sprite>
+          <sprite>sprites\spr_com1V</sprite>
+          <sprite>sprites\spr_com1All</sprite>
+          <sprite>sprites\spr_com1Cross</sprite>
+          <sprite>sprites\spr_com1Donut</sprite>
+          <sprite>sprites\spr_com1H</sprite>
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_com2</sprite>
+          <sprite>sprites\spr_com2TLC</sprite>
+          <sprite>sprites\spr_com2TRC</sprite>
+          <sprite>sprites\spr_com2BRC</sprite>
+          <sprite>sprites\spr_com2BLC</sprite>
+          <sprite>sprites\spr_com2Box</sprite>
+          <sprite>sprites\spr_com2V</sprite>
+          <sprite>sprites\spr_com2H</sprite>
+          <sprite>sprites\spr_com2All</sprite>
+          <sprite>sprites\spr_com2Cross</sprite>
+          <sprite>sprites\spr_com2Donut</sprite>
         </sprites>
         <sprites name="lvl3">
           <sprite>sprites\spr_com3</sprite>
+          <sprite>sprites\spr_com3TLC</sprite>
+          <sprite>sprites\spr_com3TRC</sprite>
+          <sprite>sprites\spr_com3BRC</sprite>
+          <sprite>sprites\spr_com3BLC</sprite>
+          <sprite>sprites\spr_com3Box</sprite>
+          <sprite>sprites\spr_com3V</sprite>
+          <sprite>sprites\spr_com3H</sprite>
+          <sprite>sprites\spr_com3All</sprite>
+          <sprite>sprites\spr_com3Cross</sprite>
+          <sprite>sprites\spr_com3Donut</sprite>
         </sprites>
         <sprites name="lvl4">
           <sprite>sprites\spr_com4</sprite>
+          <sprite>sprites\spr_com4TLC</sprite>
+          <sprite>sprites\spr_com4TRC</sprite>
+          <sprite>sprites\spr_com4BRC</sprite>
+          <sprite>sprites\spr_com4BLC</sprite>
+          <sprite>sprites\spr_com4Box</sprite>
+          <sprite>sprites\spr_com4V</sprite>
+          <sprite>sprites\spr_com4H</sprite>
+          <sprite>sprites\spr_com4All</sprite>
+          <sprite>sprites\spr_com4Cross</sprite>
+          <sprite>sprites\spr_com4Donut</sprite>
         </sprites>
         <sprites name="lvl5">
           <sprite>sprites\spr_com5</sprite>
+          <sprite>sprites\spr_com5TLC</sprite>
+          <sprite>sprites\spr_com5TRC</sprite>
+          <sprite>sprites\spr_com5BRC</sprite>
+          <sprite>sprites\spr_com5BLC</sprite>
+          <sprite>sprites\spr_com5Box</sprite>
+          <sprite>sprites\spr_com5V</sprite>
+          <sprite>sprites\spr_com5H</sprite>
+          <sprite>sprites\spr_com5All</sprite>
+          <sprite>sprites\spr_com5Cross</sprite>
+          <sprite>sprites\spr_com5Donut</sprite>
         </sprites>
         <sprites name="lvl6">
           <sprite>sprites\spr_com6</sprite>
+          <sprite>sprites\spr_com6TLC</sprite>
+          <sprite>sprites\spr_com6TRC</sprite>
+          <sprite>sprites\spr_com6BRC</sprite>
+          <sprite>sprites\spr_com6BLC</sprite>
+          <sprite>sprites\spr_com6Box</sprite>
+          <sprite>sprites\spr_com6V</sprite>
+          <sprite>sprites\spr_com6All</sprite>
+          <sprite>sprites\spr_com6Cross</sprite>
+          <sprite>sprites\spr_com6Donut</sprite>
         </sprites>
       </sprites>
       <sprites name="IND">
         <sprites name="lvl1">
           <sprite>sprites\spr_ind1</sprite>
+          <sprite>sprites\spr_ind1TLC</sprite>
+          <sprite>sprites\spr_ind1TRC</sprite>
+          <sprite>sprites\spr_ind1BRC</sprite>
+          <sprite>sprites\spr_ind1BLC</sprite>
+          <sprite>sprites\spr_ind1Box</sprite>
+          <sprite>sprites\spr_ind1V</sprite>
+          <sprite>sprites\spr_ind1H</sprite>
+          <sprite>sprites\spr_ind1All</sprite>
+          <sprite>sprites\spr_ind1Cross</sprite>
+          <sprite>sprites\spr_ind1Donut</sprite>
         </sprites>
         <sprites name="lvl2">
           <sprite>sprites\spr_ind2</sprite>
+          <sprite>sprites\spr_ind2TLC</sprite>
+          <sprite>sprites\spr_ind2TRC</sprite>
+          <sprite>sprites\spr_ind2BRC</sprite>
+          <sprite>sprites\spr_ind2BLC</sprite>
+          <sprite>sprites\spr_ind2Box</sprite>
+          <sprite>sprites\spr_ind2V</sprite>
+          <sprite>sprites\spr_ind2H</sprite>
+          <sprite>sprites\spr_ind2All</sprite>
+          <sprite>sprites\spr_ind2Cross</sprite>
+          <sprite>sprites\spr_ind2Donut</sprite>
         </sprites>
         <sprites name="lvl3">
           <sprite>sprites\spr_ind3</sprite>
+          <sprite>sprites\spr_ind3TLC</sprite>
+          <sprite>sprites\spr_ind3TRC</sprite>
+          <sprite>sprites\spr_ind3BRC</sprite>
+          <sprite>sprites\spr_ind3BLC</sprite>
+          <sprite>sprites\spr_ind3Box</sprite>
+          <sprite>sprites\spr_ind3V</sprite>
+          <sprite>sprites\spr_ind3H</sprite>
+          <sprite>sprites\spr_ind3All</sprite>
+          <sprite>sprites\spr_ind3Cross</sprite>
+          <sprite>sprites\spr_ind3Donut</sprite>
         </sprites>
         <sprites name="lvl4">
           <sprite>sprites\spr_ind4</sprite>
+          <sprite>sprites\spr_ind4TLC</sprite>
+          <sprite>sprites\spr_ind4TRC</sprite>
+          <sprite>sprites\spr_ind4BRC</sprite>
+          <sprite>sprites\spr_ind4BLC</sprite>
+          <sprite>sprites\spr_ind4Box</sprite>
+          <sprite>sprites\spr_ind4V</sprite>
+          <sprite>sprites\spr_ind4H</sprite>
+          <sprite>sprites\spr_ind4All</sprite>
+          <sprite>sprites\spr_ind4Cross</sprite>
+          <sprite>sprites\spr_ind4Donut</sprite>
         </sprites>
       </sprites>
       <sprite>sprites\spr_ZBerror</sprite>
@@ -353,6 +477,7 @@
         <script>scripts\scr_drawZoneGroundRowCol_Old.gml</script>
         <script>scripts\scr_drawZoneGroundBitmap.gml</script>
         <script>scripts\scr_drawZoneShapeLogic.gml</script>
+        <script>scripts\scr_getZBigSprite.gml</script>
       </scripts>
     </scripts>
     <scripts name="Electricity">

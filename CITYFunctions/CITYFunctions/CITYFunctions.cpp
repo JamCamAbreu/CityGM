@@ -57,11 +57,7 @@ const int R_minPop[] = {
   RL7,
   RL8,
   RL9,
-  RL10,
-  RL11,
-  RL12,
-  RL13,
-  RL14
+  RL10
 };
 
 const int C_minPop[] = {
@@ -75,11 +71,7 @@ const int C_minPop[] = {
   CL7,
   CL8,
   CL9,
-  CL10,
-  CL11,
-  CL12,
-  CL13,
-  CL14
+  CL10
 };
 
 const int I_minPop[] = {
@@ -93,11 +85,7 @@ const int I_minPop[] = {
   IL7,
   IL8,
   IL9,
-  IL10,
-  IL11,
-  IL12,
-  IL13,
-  IL14
+  IL10
 };
 
 // bitmap Placement enums:
@@ -3599,6 +3587,20 @@ double collectTax(double zoneType) {
   return amount;
 }
 
+double getZoneCombineLevel(double zoneType) {
+  int type = (int)zoneType;
+
+  if (type == Z_RES) {
+    return (double)R_ZONE_COMBINE_LEVEL;
+  }
+
+  else if (type == Z_COM) {
+    return (double)C_ZONE_COMBINE_LEVEL;
+  }
+
+  else
+    return (double)I_ZONE_COMBINE_LEVEL;
+}
 
 
 
